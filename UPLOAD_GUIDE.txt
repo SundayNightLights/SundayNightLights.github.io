@@ -1,0 +1,41 @@
+SNL FEATURED STORIES — APPROVED 9:16 PORTRAIT CARDS
+4 November 2026
+
+Repository: https://github.com/SundayNightLights/SundayNightLights.github.io
+Branch: main
+
+UPLOAD ALL SIX FILES with their folder paths intact:
+
+  assets/story-opener.webp
+  assets/story-trade.webp
+  assets/story-batbros.webp
+  assets/story-expansion.webp
+  css/style.css
+  js/data.js
+
+Open the repository root and use Add file > Upload files. Drag the
+three folders (assets, css, js) into the GitHub uploader and verify
+the full paths. Existing same-named files should be replaced.
+Commit directly to main with message:
+  Publish four portrait featured cards and align article headlines
+
+What changes:
+- Four original approved story graphics in 9:16 format
+- Common website-rendered gradient and headline positioning
+- Rematch promotional lettering adjusted to mirror Trade Alert spacing
+- Same story title on homepage, Highlights page and each article H1
+
+Article headlines:
+  Season & Week 1 Preview: Championship Rematch
+  Pacific Maul, IHT Shake Up SNL with Historic Trade
+  Canadian Bat Bros Join SNL
+  SNL Expands to Six Teams
+
+What is NOT changed:
+- js/main.js or any Excel integration / feed files
+- js/articles.js or the article bodies, dates or photographs
+- Calendar hub, schedules, standings, player stats or the website banner
+
+After GitHub Pages is green, hard refresh the homepage; check all four
+cards, click each to confirm headline matches the article page.
+If the cards appear old, allow browser cache to expire or hard refresh.

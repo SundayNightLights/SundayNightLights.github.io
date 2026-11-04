@@ -214,3 +214,27 @@ main{padding-bottom:30px}.hero{border:1px solid #43617a;background:#102f4d;margi
 .join-choice:hover{border-color:#ffde19}.join-choice span{font-size:11px;color:#ffde19;font-weight:900}.join-choice strong{font-size:23px}.join-choice small{font-size:13px;color:#d5e3ed;line-height:1.5}.join-choice b{font-size:12px;color:#ffde19;margin-top:9px}
 .join-detail{margin-top:18px;scroll-margin-top:15px}
 @media(max-width:620px){.join-choice-grid{grid-template-columns:1fr}.join-home-prompt{padding:14px}.about-numbers strong{font-size:28px}}
+
+
+/* Featured Stories — approved 9:16 portrait covers, November 2026.
+   Use one broadcast-style fade on all cards. Keep live headline text in HTML.
+   No changes to scorecards, schedules, standings, navigation or articles. */
+.stories .story,.story-archive .story {
+  aspect-ratio:9/16;
+  height:auto!important;
+  min-height:0;
+}
+.story .story-illustration img.story-poster {
+  width:100%;height:100%;object-fit:cover;object-position:center top;
+}
+.story:after {
+  background:linear-gradient(180deg,#00102620 0%,transparent 52%,#00071116 75%,#010711e0 100%);
+}
+.story .story-bottom {
+  padding:26px 13px 9px;
+  background:linear-gradient(180deg,transparent 0%,#020b1650 52%,#020b16ee 100%);
+}
+.story .story-bottom h3{font-size:17px;line-height:1.18;margin-bottom:6px}
+/* Preserve the chosen 9:16 ratio even on narrow mobile carousel cards. */
+@media(max-width:800px){.stories .story,.story-archive .story{height:auto!important}}
+@media(max-width:480px){.stories .story,.story-archive .story{height:auto!important}}
