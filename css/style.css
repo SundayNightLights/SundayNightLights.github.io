@@ -17,3 +17,200 @@ main{padding-bottom:30px}.hero{border:1px solid #43617a;background:#102f4d;margi
 .logo-team:not(:last-child):after{top:0;bottom:0;right:0;height:100%;width:26px;transform:none;box-shadow:none;clip-path:polygon(93% 0,100% 0,7% 100%,0 100%)}
 @media(max-width:800px){.newsline .news-updates{gap:6px 12px}.newsline .news-updates>span{white-space:normal}.logo-team:not(:last-child):after{height:100%;width:17px}}
 @media(max-width:480px){.newsline{flex-wrap:wrap}.newsline .news-updates{gap:5px 10px}.newsline>a{margin-left:auto}.logo-team:not(:last-child):after{height:100%;width:12px}}
+
+
+/* SNL APPROVED ARTWORK CORRECTION (Nov 2026)
+   Source: original team logos, reviewed/approved matchup mockups.
+   Crop is achieved with background-position and background-size, not AI redrawing. */
+/* The banner is its own continuous image. The dark blue ribbon is a different block. */
+.hero {background:transparent;border-color:#52718d;overflow:visible}
+.hero-banner {background:#07192b;overflow:hidden;position:relative}
+.hero-banner img{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
+/* Each of the five dividers belongs to the boundary BETWEEN equally sized teams. */
+.logo-ribbon {position:relative;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));height:120px;overflow:hidden;
+ background:#123654;border-top:1px solid #4d7190;isolation:isolate}
+.logo-team {position:relative;height:100%;overflow:visible;min-width:0;display:flex;justify-content:center;align-items:center;padding:9px 17px}
+.logo-team img,.logo-team.buffaloes img{width:100%;height:89%;max-width:100%;object-fit:contain;filter:drop-shadow(0 3px 2px #0008)}
+.logo-team.buffaloes img{height:79%}
+.logo-team::after {display:none!important}
+.logo-ribbon .logo-team:not(:last-child)::before {content:"";display:block;position:absolute;z-index:5;
+ width:3px;height:145%;top:-22.5%;right:-1px;background:#ffde19;transform:rotate(15deg);pointer-events:none;
+ box-shadow:0 0 1px #060f1a}
+/* Matchups: single consistent inward-looking color layout and original artwork crops */
+.match{position:relative;isolation:isolate;border-radius:9px;overflow:hidden;border:1px solid #b9cddd;background:#0b192c}
+.match .half{position:absolute;top:0;height:100%;width:53%;overflow:hidden}
+.match .half.away{left:0;right:auto;clip-path:polygon(0 0,100% 0,91% 100%,0 100%);z-index:1}
+.match .half.home{right:0;left:auto;clip-path:polygon(9% 0,100% 0,100% 100%,0% 100%);z-index:1}
+.match .teamart{position:absolute;inset:-2%;background-repeat:no-repeat;background-color:transparent;
+ transform:rotate(-3deg) scale(1.035);transform-origin:50% 50%;}
+/* Home primary, away secondary. Never dim or fade source artwork. */
+.match .half--raccoons.home{background:linear-gradient(125deg,#00692f,#0b8a3e)}
+.match .half--raccoons.away{background:linear-gradient(120deg,#192c31,#253c36)}
+.match .half--raccoons .teamart{background-image:url('../assets/raccoons_feature.webp');background-size:auto 300%;background-position:51% 45%}
+.match .half--morsl.home{background:linear-gradient(130deg,#0a8a38,#087c3d 75%,#0755ba)}
+.match .half--morsl.away{background:linear-gradient(128deg,#0b5ab8,#f5f7fb 60%,#dc1228)}
+.match .half--morsl .teamart{background-image:url('../assets/morsl_feature.webp');background-size:auto 202%;background-position:49% 47%}
+.match .half--maul.home{background:linear-gradient(130deg,#08090d,#20232b 65%,#3a0e0e)}
+.match .half--maul.away{background:linear-gradient(120deg,#414d5b,#1b2028 65%,#0d1116)}
+.match .half--maul .teamart{background-image:url('../assets/maul_feature.webp');background-size:auto 240%;background-position:49% 44%}
+.match .half--outcasts.home{background:#080b0f}
+.match .half--outcasts.away{background:linear-gradient(130deg,#eef2f6,#cfd7df)}
+.match .half--outcasts .teamart{background-image:url('../assets/outcasts_feature.webp');background-size:auto 180%;background-position:55% 28%}
+.match .half--iht.home{background:linear-gradient(120deg,#be5409,#e8781d)}
+.match .half--iht.away{background:linear-gradient(130deg,#f8f7f2,#e9e6df)}
+.match .half--iht .teamart{background-image:url('../assets/iht.webp');background-size:auto 175%;background-position:50% 50%}
+.match .half--buffaloes.home{background:linear-gradient(135deg,#1757ac,#0c478e)}
+.match .half--buffaloes.away{background:linear-gradient(135deg,#eed8a2,#f7e2ab)}
+.match .half--buffaloes .teamart{background-image:url('../assets/buffaloes.webp');background-size:auto 194%;background-position:0% 37%}
+.match .half .half-label{font-size:18px;bottom:6px;left:12px;right:auto;letter-spacing:-.35px;z-index:5;color:#fff;text-shadow:1px 2px 3px #000,0 0 5px #000;white-space:nowrap}
+.match .half.home .half-label{left:auto;right:12px;text-align:right}
+.match .half .position-label{top:7px;font-size:9px;letter-spacing:1px;color:white;z-index:5}
+.match .slash{left:50%;top:-11px;height:calc(100% + 22px);width:4px;transform:rotate(27deg);z-index:4;background:#ffde19}
+.match .matchtime{border:1.5px solid #ffde19;border-radius:27px;min-width:105px;padding:5px 9px;z-index:8}
+.match .matchtime b{font-size:15px;color:#ffde19}
+.match .matchtime small{font-size:8px}
+/* Size of visual match art should scale with available card width, not inherited img dimensions. */
+.split .match{height:88px}
+.large-matches .match{height:145px}
+.large-matches .half .half-label{font-size:28px;bottom:9px}
+.large-matches .half .position-label{font-size:11px;top:9px}
+.large-matches .half--morsl .teamart{background-size:auto 202%;background-position:49% 47%}
+.large-matches .matchtime{min-width:129px;padding:7px 12px}
+.large-matches .matchtime b{font-size:20px}
+.large-matches .matchtime small{font-size:11px}
+/* At phone width: approved smaller MORSL, enlarged Buffaloes wordmark, panda close-up,
+   same tilt, equal white names, small capsule, readable IHT bats. */
+@media(max-width:800px){
+  .logo-ribbon{height:78px}
+  .logo-team{padding:5px 9px}
+  .logo-ribbon .logo-team:not(:last-child)::before{height:135%;top:-17.5%;width:2px}
+  .logo-team img,.logo-team.buffaloes img{height:84%;width:100%}
+}
+@media(max-width:480px){
+  .logo-ribbon{height:65px}
+  .logo-team{padding:3px 5px}
+  .logo-team img,.logo-team.buffaloes img{height:87%;width:99%}
+  .logo-ribbon .logo-team:not(:last-child)::before{width:2px;height:138%;top:-19%}
+  .split .match,.large-matches .match{height:110px}
+  .match .half .half-label,.large-matches .half .half-label{font-size:18px;bottom:7px;left:7px}
+  .match .half.home .half-label,.large-matches .half.home .half-label{right:7px;left:auto}
+  .match .half .position-label,.large-matches .half .position-label{font-size:8px;top:7px}
+  .match .half--raccoons .teamart{background-size:auto 205%;background-position:51% 48%}
+  .match .half--morsl .teamart,.large-matches .half--morsl .teamart{background-size:auto 159%;background-position:50% 47%}
+  .match .half--maul .teamart{background-size:auto 190%;background-position:49% 49%}
+  .match .half--iht .teamart{background-size:auto 145%;background-position:50% 48%}
+  .match .half--outcasts .teamart{background-size:auto 155%;background-position:55% 44%}
+  .match .half--buffaloes .teamart{background-size:auto 152%;background-position:0% 36%}
+  .match .slash{width:3px}
+  .match .matchtime,.large-matches .matchtime{min-width:93px;padding:5px 6px}
+  .match .matchtime b,.large-matches .matchtime b{font-size:14px}
+  .match .matchtime small,.large-matches .matchtime small{font-size:8px}
+}
+@media(max-width:380px){.match .half .half-label,.large-matches .half .half-label{font-size:16px}}
+
+/* Prevent intrinsic logo image height from expanding the grid track and clipping logos. */
+.logo-ribbon{grid-template-rows:minmax(0,1fr)}
+.logo-team{min-height:0;max-height:100%}
+.logo-team img,.logo-team.buffaloes img{max-height:100%}
+
+
+/* FEATURED ARTICLES & NEWS — 2026 CONTENT UPDATE */
+.story .story-illustration img.story-poster{position:absolute;inset:0;width:100%;height:100%;max-width:none;object-fit:cover;object-position:center top;filter:none;transform:none}
+.story:hover .story-illustration{transform:scale(1.025)}
+.story:after{background:linear-gradient(180deg,#00102620 0%,transparent 43%,#00071140 61%,#010711dc 100%)}
+.story .story-bottom{padding:25px 13px 15px;background:linear-gradient(180deg,transparent,#020b16d9 23%,#020b16ed 100%)}
+.story .story-bottom h3{font-size:17px;line-height:1.18;margin-bottom:6px}
+.story.opener,.story.trade,.story.batbros,.story.expansion{background:#06192b}
+.newsline .news-updates .news-inline-link{color:var(--yellow);font-size:11px;font-weight:900;margin-left:4px;white-space:nowrap}
+.newsline .news-updates .news-inline-link:hover{text-decoration:underline}
+.league-news-panel{scroll-margin-top:20px}
+.news-item{display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding:13px 0;border-top:1px solid #3d6380}
+.news-item time{color:var(--yellow);font-weight:900;font-size:11px;white-space:nowrap}
+.news-item span{flex:1;font-size:13px}
+.news-item a{font-weight:900;color:var(--yellow);font-size:11px;white-space:nowrap}
+.snl-article{max-width:840px;margin:32px auto 0}
+.snl-article h1{font-size:clamp(29px,4vw,45px);line-height:1.09;margin:16px 0 20px}
+.snl-article .article-head{margin-top:22px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.snl-article .article-head .article-tag{color:#06192b;background:var(--yellow);border-radius:3px;font-weight:900;font-size:11px;padding:7px 11px;text-transform:uppercase}
+.snl-article .article-head time{font-size:12px;color:#b4c7d9}
+.snl-article .article-content{font-size:16px;line-height:1.74;color:#e5edf6}
+.snl-article .article-content p{margin:0 0 19px}
+.snl-article .article-content strong{color:#fff}
+.snl-article .article-content h2{font-size:22px;margin:20px 0 12px;color:var(--yellow)}
+.article-photo{margin:23px 0 27px}
+.article-photo img{display:block;width:100%;height:auto;border-radius:11px;border:1px solid #4d6a83}
+.article-photo figcaption{margin-top:8px;color:#aec4d9;font-size:12px;line-height:1.5}
+.article-brand{margin:20px 0 27px;border:1px solid #425a71;background:#091a2c;border-radius:10px;padding:20px;display:flex;justify-content:center}
+.article-brand img{width:165px;height:165px;object-fit:contain}
+.article-close{font-weight:900;color:var(--yellow)!important;font-size:17px}
+.article-meta-end{font-size:12px;color:#b9cbdc}
+.article-back{display:inline-block;margin-top:25px}
+.article-predictions{background:#102e49;border:1px solid #56738f;border-top:3px solid var(--yellow);border-radius:9px;padding:18px 20px;margin:25px 0}
+.article-predictions h2{margin-top:0}
+.prediction-list{list-style:none;padding:0;counter-reset:rank;display:grid;grid-template-columns:1fr 1fr;gap:8px 16px}
+.prediction-list li{display:flex;align-items:center;gap:11px;font-weight:800;border-bottom:1px solid #355372;padding:5px 0;counter-increment:rank}
+.prediction-list li:before{content:counter(rank);display:inline-flex;background:#ffde19;color:#071728;border-radius:4px;font-weight:900;justify-content:center;align-items:center;width:27px;height:27px;flex:0 0 27px}
+.trade-spotlight{display:grid;grid-template-columns:minmax(0,1fr) 38px minmax(0,1fr);gap:10px;align-items:center;margin:19px 0 25px}
+.spotlight-player{min-width:0;background:#09233a;border:1px solid #52738c;border-radius:10px;overflow:hidden}
+.spotlight-player img{width:100%;height:230px;object-fit:cover;object-position:center 28%;display:block}
+.spotlight-copy{padding:11px;text-align:center;display:flex;flex-direction:column;gap:2px}
+.spotlight-copy b{font-size:14px}.spotlight-copy span{font-size:12px;color:var(--yellow);font-weight:900}
+.spotlight-copy small{font-size:11px;line-height:1.4;color:#b8ccdb}
+.spotlight-arrow{font-size:34px;color:var(--yellow);text-align:center;font-weight:900}
+.article-cta{margin-top:25px;padding:20px;border:1px solid #9a8b26;border-radius:10px;background:#14273b;display:flex;flex-direction:column;gap:7px}
+.article-cta a{display:inline-block;width:fit-content;background:#ffde19;color:#051528;font-weight:900;padding:12px 17px;border-radius:6px;font-size:14px}
+.article-cta small{color:#bbcadd;font-size:12px}
+.rules-intro{display:flex;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap;background:#0d2b45;border:1px solid #4c6b87;border-radius:10px;padding:18px;margin-bottom:17px}
+.rules-intro p{margin:0;color:#d6e4ef;font-size:13px}
+.rules-download{display:inline-flex;background:#ffde19;color:#061a2e;padding:10px 13px;border-radius:6px;font-size:12px;font-weight:900;align-items:center}
+.rules-section{border:1px solid #4d6b85;background:linear-gradient(120deg,#133a58,#092238);border-radius:10px;margin-bottom:14px;overflow:hidden;padding:17px 22px}
+.rules-section h2{color:var(--yellow);font-size:19px;margin:0 0 12px}
+.rules-list{padding-left:23px;margin:0;color:#e1ebf4;font-size:14px;line-height:1.65}
+.rules-list>li{margin-bottom:12px;padding-left:4px}
+.rules-list>li:last-child{margin-bottom:0}
+.rules-list>li::marker{font-weight:900;color:var(--yellow)}
+.rules-list ul{padding-left:19px;margin:5px 0}.rules-list ul li{margin-bottom:3px}
+.rules-end{margin-top:22px;padding:18px;background:#0b2c46;border-top:2px solid #ffde19;border-radius:9px}
+.rules-end strong{color:var(--yellow)}.rules-end p{color:#bdd0e0;font-size:12px;line-height:1.6}
+@media(max-width:1030px) and (min-width:801px){.masthead{position:relative}.brand{flex:1}.menu-toggle{display:block;margin-left:auto}.nav{display:none;position:absolute;z-index:40;top:100%;left:0;right:0;background:#071b2f;border:1px solid #42627b;border-bottom:2px solid var(--yellow);padding:8px 17px;flex-direction:column;align-items:stretch;box-shadow:0 10px 25px #0008}.nav.open{display:flex}.nav a,.nav a.active{padding:10px 8px;font-size:14px}.nav a.active:after{left:0;right:auto;bottom:5px;width:3px;height:27px}}
+@media(max-width:480px){.snl-article .article-content{font-size:15px}.prediction-list{grid-template-columns:1fr}.spotlight-player img{height:140px}.spotlight-copy b{font-size:11px}.spotlight-copy span{font-size:10px}.spotlight-copy small{font-size:9px}.trade-spotlight{gap:4px;grid-template-columns:minmax(0,1fr) 22px minmax(0,1fr)}.spotlight-arrow{font-size:22px}.rules-section{padding:14px}.rules-list{font-size:13px}}
+
+/* SNL approved November design and navigation finish. */
+/* Keep the whole centred banner artwork visible on desktop AND mobile. */
+.hero-banner,.hero-banner img {object-position:center center}
+.hero-banner {aspect-ratio:2172 / 448}
+.hero-banner img {object-fit:contain}
+/* Show full-length diagonal dividers between the six team logos. */
+.logo-ribbon {overflow:hidden}
+.logo-team {overflow:visible}
+.logo-team::after {display:none!important}
+.logo-ribbon .logo-team:not(:last-child)::before {
+  content:"";display:block;position:absolute;z-index:5;
+  width:3px;height:145%;top:-22.5%;right:-1px;background:#ffde19;
+  transform:rotate(15deg);pointer-events:none;
+}
+@media(max-width:800px){.logo-ribbon .logo-team:not(:last-child)::before{width:2px;height:135%;top:-17.5%}}
+@media(max-width:480px){.logo-ribbon .logo-team:not(:last-child)::before{width:2px;height:138%;top:-19%}.hero-banner{aspect-ratio:2172 / 448}}
+/* Twelve navigation destinations, without squeezing labels or displacing branding. */
+@media(min-width:1121px){.masthead-in{gap:12px}.nav{gap:7px}.nav a{font-size:12px}}
+@media(min-width:1121px) and (max-width:1320px){.brand{flex:0 0 290px}.brand-mark{font-size:48px}.brand-txt b{font-size:15px}}
+@media(min-width:801px) and (max-width:1120px){
+  .masthead{position:relative}.brand{flex:1}.menu-toggle{display:block;margin-left:auto}
+  .nav{display:none;position:absolute;z-index:40;top:100%;left:0;right:0;background:#071b2f;border:1px solid #42627b;border-bottom:2px solid var(--yellow);padding:8px 17px;flex-direction:column;align-items:stretch;box-shadow:0 10px 25px #0008}
+  .nav.open{display:flex}.nav a,.nav a.active{padding:10px 8px;font-size:14px}
+  .nav a.active:after{left:0;right:auto;bottom:5px;width:3px;height:27px}
+}
+.join-home-prompt{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap;background:linear-gradient(125deg,#113956,#081c30);border:1px solid #55758e;border-left:4px solid #ffde19;border-radius:9px;padding:16px 20px;margin:22px 0}
+.join-home-prompt strong,.info-kicker{color:#ffde19;font-size:12px;letter-spacing:1px;font-weight:900}
+.join-home-prompt p{margin:6px 0 0;color:#d7e3ed;font-size:13px}
+.join-home-action{border-radius:5px;background:#ffde19;color:#06192b;padding:11px 16px;font-size:12px;font-weight:900;white-space:nowrap}
+.info-landing{margin-top:23px}.info-landing h2{font-size:clamp(22px,3vw,30px);margin:8px 0 12px}.info-landing .section-note,.join-detail .section-note{line-height:1.7}
+.info-links{display:flex;gap:18px;flex-wrap:wrap;margin-top:20px}
+.about-numbers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:20px 0}
+.about-numbers>div{background:#0d2942;border:1px solid #416483;border-radius:7px;display:flex;flex-direction:column;align-items:center;gap:4px;padding:17px 9px}
+.about-numbers strong{font-size:37px;color:#ffde19}.about-numbers span{font-size:11px;font-weight:900;letter-spacing:1px}
+.join-choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:22px}
+.join-choice{border:1px solid #68839a;background:#102f4d;border-radius:9px;padding:20px;display:flex;flex-direction:column;gap:10px;transition:border-color .15s}
+.join-choice:hover{border-color:#ffde19}.join-choice span{font-size:11px;color:#ffde19;font-weight:900}.join-choice strong{font-size:23px}.join-choice small{font-size:13px;color:#d5e3ed;line-height:1.5}.join-choice b{font-size:12px;color:#ffde19;margin-top:9px}
+.join-detail{margin-top:18px;scroll-margin-top:15px}
+@media(max-width:620px){.join-choice-grid{grid-template-columns:1fr}.join-home-prompt{padding:14px}.about-numbers strong{font-size:28px}}
