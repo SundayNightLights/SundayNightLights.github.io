@@ -507,3 +507,5 @@ main{padding-bottom:30px}.hero{border:1px solid #43617a;background:#102f4d;margi
 .snl-matchups-filter select{width:100%}
 #snlMatchupsCount{width:100%;line-height:1.5}
 }
+/* Let longer full diamond labels wrap cleanly on compact scorecards. */
+.snl-overview-scorecard .scoremeta{flex-wrap:wrap;gap:3px 8px}
