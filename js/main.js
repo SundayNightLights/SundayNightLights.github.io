@@ -72,18 +72,45 @@
  }
 
   function statsPage(){return `${pageHero('LEAGUE','STATS','Team performance and individual player leaderboards')}<div class="stat-summary"><div class="stat-box"><b>6</b><small>TEAMS</small></div><div class="stat-box"><b>10</b><small>PLAYING WEEKS</small></div><div class="stat-box"><b>60</b><small>REGULAR-SEASON GAMES</small></div><div class="stat-box"><b>2</b><small>DIAMONDS</small></div></div><section class="section">${sectionHead('TEAM','STATISTICS')}<div style="overflow:auto">${standingsTable(false)}</div></section><section class="section leaders-full">${sectionHead('LEAGUE','LEADERS')}${leaders()}</section><div class="notice">Player statistics will be shown after GameChanger data is connected and verified. No statistics, leaders, or player identities have been invented.</div>`;}
- function livePage(){return `${pageHero('LIVE','GAME CENTRE','Follow SNL games, live scores and results with GameChanger')}
-<section class="snl-live-section" aria-labelledby="snlLiveTitle">
-  <div class="snl-live-section-head">
-    <div><span class="snl-live-kicker"><i class="light-dot"></i> OFFICIAL SNL LIVE SCORES</span><h2 id="snlLiveTitle">GAMECHANGER SCOREBOARD</h2><p>Follow games as they are scored. Game status and scores are provided directly by GameChanger.</p></div>
-    <span class="snl-live-provider">POWERED BY GAMECHANGER</span>
-  </div>
-  <div class="snl-live-widget-panel">
-    <p class="snl-live-status" id="snlGcLoadStatus" role="status">Loading GameChanger scoreboard…</p>
-    <div id="gc-scoreboard-widget-snl" aria-label="SNL live GameChanger scoreboard"></div>
-  </div>
-  <p class="snl-live-note">Live scores appear when game scoring is active in GameChanger. For the official SNL standings and season schedule, visit <a href="standings.html">Standings</a> or <a href="schedule.html">Schedule</a>.</p>
-</section>`;}
+
+ function liveFixtureCard(g){
+   const isFinal=g.status==='Final'&&g.awayScore!=null&&g.homeScore!=null;
+   const label=isFinal?'FINAL':g.date>=torontoToday()?'UPCOMING':'RESULT PENDING';
+   const score=id=>isFinal?escapeHtml(id==='away'?g.awayScore:g.homeScore):'—';
+   return `<article class="snl-live-fixture">
+     <div class="snl-live-fixture-meta"><span>${label}</span><span>DIAMOND ${g.diamond} · ${g.diamond===1?'NEAR':'FAR'}</span></div>
+     <div class="snl-live-team"><div class="snl-live-identity">${im(g.away,'','')}<span>${escapeHtml(teamMap[g.away].name)}</span></div><b>${score('away')}</b></div>
+     <div class="snl-live-team"><div class="snl-live-identity">${im(g.home,'','')}<span>${escapeHtml(teamMap[g.home].name)}</span></div><b>${score('home')}</b></div>
+     <div class="snl-live-fixture-foot"><span>${escapeHtml(gameStart(g))} · SLOT ${g.slot}</span><span>${isFinal?'VERIFIED FINAL · SNL MASTER':'NOT A LIVE SCORE'}</span></div>
+   </article>`;
+ }
+ function livePage(){
+   const week=upcomingWeek();
+   const games=weekGames(week);
+   return `${pageHero('SNL','GAME CENTRE','SNL matchups, verified results and official GameChanger live coverage')}
+   <section class="snl-native-gamecenter" aria-labelledby="snlNativeTitle">
+     <div class="snl-native-lede">
+       <div><span class="snl-native-eyebrow"><i class="light-dot"></i> SUNDAY NIGHT LIGHTS · GAME DAY</span>
+         <h2 id="snlNativeTitle">SNL GAME <em>CENTRE</em></h2>
+         <p>Follow the league in SNL colours. Games and verified final scores below are from the SNL Master schedule. For scores while a game is in progress, open the official GameChanger live feed.</p></div>
+       <button type="button" class="snl-live-action" id="snlLiveOpen">VIEW LIVE SCORES <span aria-hidden="true">↓</span></button>
+     </div>
+     <div class="snl-live-match-head"><div><span class="snl-live-kicker">SNL MATCHUPS</span><h3>WEEK ${week} <small>${games.length?dateLabel(games[0].date):'SCHEDULE UNAVAILABLE'}</small></h3></div><a href="schedule.html">FULL SCHEDULE ›</a></div>
+     <div class="snl-live-fixture-grid">${games.length?games.map(liveFixtureCard).join(''):'<div class="snl-live-empty">SNL schedule data is temporarily unavailable. Open the official GameChanger live feed below to follow games.</div>'}</div>
+     <div class="snl-native-footnote">Upcoming games and unconfirmed scores show a dash, not a live score. <a href="standings.html">View official SNL standings ›</a></div>
+   </section>
+   <details class="snl-official-feed" id="snlOfficialFeed">
+     <summary><span><strong>OFFICIAL LIVE SCORES</strong><small>Expand GameChanger for live scores, innings and game details</small></span><span class="snl-official-chevron" aria-hidden="true">⌄</span></summary>
+     <div class="snl-official-body">
+       <p class="snl-live-intro">This live feed is supplied by GameChanger. Its scores can update during games and may differ from the last published SNL Master results.</p>
+       <div class="snl-live-widget-panel">
+         <p class="snl-live-status" id="snlGcLoadStatus" role="status">Loading GameChanger scoreboard…</p>
+         <div id="gc-scoreboard-widget-snl" aria-label="Official GameChanger live scoreboard"></div>
+       </div>
+     </div>
+   </details>
+   <p class="snl-live-note">GameChanger handles real-time scorekeeping; SNL Master remains the source for published standings and calendar schedules. The embedded live feed is provided by GameChanger.</p>`;
+ }
  function highlightsPage(){return `${pageHero('SNL','HIGHLIGHTS','Featured stories, league news and season developments')}${sectionHead('FEATURED','STORIES')}<section class="section story-archive">${stories()}</section><section class="flat-card league-news-panel" id="league-news"><h2>LEAGUE NEWS · QUICK UPDATES</h2><div class="news-item"><time datetime="2026-11-02">NOV 2, 2026</time><span>Time slots changed for Weeks 2, 8 &amp; 9.</span><a href="schedule.html">VIEW SCHEDULE ›</a></div></section>`;}
  function articlePage(){const id=new URLSearchParams(location.search).get('id')||'opener',s=D.stories.find(s=>s.id===id)||D.stories[0],a=window.SNL_ARTICLES?.[s.id];document.title=s.title+' | Sunday Night Lights';return `<article class="article snl-article"><a href="highlights.html" class="feature-link">← ALL FEATURED STORIES</a><div class="article-head"><span class="article-tag">${a?.category||s.tag}</span><time datetime="${s.id==='opener'?'2026-11-01':s.id==='trade'?'2026-09-30':'2026-09-25'}">${a?.date||'2026'}</time></div><h1>${s.title}</h1><div class="article-content">${a?.body||`<p>${s.dek}</p>`}</div><a class="neutral-link article-back" href="highlights.html">← BACK TO ALL STORIES</a></article>`;}
  function rulesPage(){return `${pageHero('LEAGUE','RULES','2026–27 · SNL Season Rules · Markham Sports Dome')}<div class="rules-intro"><p>Review the rules below or open the official one-page PDF.</p><a class="rules-download" href="assets/SNL-Rules-2026-27.pdf" target="_blank" rel="noopener noreferrer" download>↓ DOWNLOAD OFFICIAL RULES (PDF)</a></div>
