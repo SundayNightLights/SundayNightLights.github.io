@@ -38,10 +38,13 @@
 
   const css = [
     '.scorehead{flex-wrap:nowrap;}',
-    '.scorehead .snl-seasonbar{display:inline-flex;align-items:center;gap:7px;flex:0 0 auto;margin-left:10px;white-space:nowrap;}',
-    '.scorehead .snl-seasonbar label{font-size:10px;font-weight:900;color:#c2d6e5;text-transform:uppercase;letter-spacing:.06em;}',
-    '.scorehead .snl-seasonbar select{background:#06192b;border:1px solid #8197ac;border-radius:9px;padding:8px 12px;color:#fff;font-size:12px;font-weight:800;max-width:220px;cursor:pointer;}',
-    '.scorehead .snl-seasonbar select:focus-visible{outline:2px solid #ffde19;outline-offset:2px;}',
+    '.scorehead .snl-seasonbar{display:inline-flex;align-items:stretch;gap:0;flex:0 0 auto;margin-left:auto;white-space:nowrap;border:1px solid #d1b52e;border-radius:9px;overflow:hidden;background:#133653;}',
+    '.scorehead .snl-seasonbar label{display:flex;align-items:center;justify-content:center;background:#ffde19;color:#071c31;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;padding:0 10px;}',
+    '.scorehead .snl-season-select-wrap{position:relative;display:inline-flex;align-items:center;background:#143654;}',
+    '.scorehead .snl-season-select-wrap::after{content:"⌄";font-family:Arial,sans-serif;font-size:21px;font-weight:900;line-height:1;color:#ffde19;position:absolute;right:9px;top:45%;transform:translateY(-50%);pointer-events:none;}',
+    '.scorehead .snl-seasonbar select{-webkit-appearance:none;appearance:none;background:transparent;color:#fff;border:0;border-radius:0;outline:0;padding:9px 28px 9px 11px;width:183px;max-width:183px;font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.025em;cursor:pointer;}',
+    '.scorehead .snl-seasonbar select:focus-visible{outline:2px solid #fff;outline-offset:-3px;}',
+    '.scorehead .snl-seasonbar select option{background:#143654;color:#fff;}',
     '.scorehead .right-text{margin-left:auto;}',
     '@media(max-width:1100px){.scorehead .right-text{display:none;}}',
     '.snl-ticker-soon{opacity:1!important;flex:1 0 220px;max-width:560px;padding:14px 16px;}',
@@ -52,9 +55,9 @@
     '.snl-unpublished h2{font-size:clamp(22px,3vw,32px);margin:12px 0;}',
     '.snl-unpublished p{color:#c6d7e5;line-height:1.6;max-width:670px;}',
     '.snl-unpublished button{margin-top:18px;border:1px solid #ffde19;color:#ffde19;background:transparent;border-radius:9px;padding:10px 16px;font-weight:900;cursor:pointer;}',
-    '@media(max-width:800px){.scorehead .snl-seasonbar label{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}.scorehead .snl-seasonbar select{max-width:190px;}}',
-    '@media(max-width:480px){.scorehead{gap:7px;}.scorehead h2{font-size:12px;letter-spacing:.5px;}.scorehead .snl-seasonbar{margin-left:auto;}.scorehead .snl-seasonbar select{max-width:48vw;width:min(165px,48vw);font-size:11px;padding:7px 6px;}.scorehead .scorebtn{display:none;}}',
-    // The live GameChanger statistics page retains its internal selector for data purposes.
+    '@media(max-width:800px){.scorehead .snl-seasonbar select{width:160px;max-width:160px;font-size:11px;}.scorehead .snl-seasonbar label{padding:0 8px;font-size:9px;}}',
+    '@media(max-width:480px){.scorehead{gap:5px;}.scorehead h2{font-size:12px;letter-spacing:.35px;}.scorehead .snl-seasonbar{margin-left:auto;}.scorehead .snl-seasonbar select{width:min(139px,38vw);max-width:38vw;font-size:10px;padding:8px 23px 8px 7px;letter-spacing:0;}.scorehead .snl-seasonbar label{padding:0 7px;font-size:8px;letter-spacing:.01em;}.scorehead .snl-season-select-wrap::after{right:6px;font-size:17px;}.scorehead .scorebtn{display:none;}}',
+    // Preserve existing GameChanger stats data flow.
     'body[data-page="stats"] #gc-stats .gc-seasonbar label[for="gcSeason"]{display:none;}'
   ].join('\n');
 
@@ -170,7 +173,10 @@
       select.appendChild(option);
     }
     select.addEventListener('change',() => navigateTo(select.value));
-    bar.append(label,select);
+    const selectWrap = document.createElement('span');
+    selectWrap.className = 'snl-season-select-wrap';
+    selectWrap.appendChild(select);
+    bar.append(label,selectWrap);
     // One compact selector beside SNL SCOREBOARD on every page.
     target.appendChild(bar);
 
