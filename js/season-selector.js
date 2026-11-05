@@ -37,12 +37,13 @@
   }
 
   const css = [
-    '.scorehead{flex-wrap:wrap;}',
-    '.scorehead .snl-seasonbar{display:inline-flex;align-items:center;gap:7px;flex:0 1 auto;margin-left:3px;white-space:nowrap;}',
+    '.scorehead{flex-wrap:nowrap;}',
+    '.scorehead .snl-seasonbar{display:inline-flex;align-items:center;gap:7px;flex:0 0 auto;margin-left:10px;white-space:nowrap;}',
     '.scorehead .snl-seasonbar label{font-size:10px;font-weight:900;color:#c2d6e5;text-transform:uppercase;letter-spacing:.06em;}',
     '.scorehead .snl-seasonbar select{background:#06192b;border:1px solid #8197ac;border-radius:9px;padding:8px 12px;color:#fff;font-size:12px;font-weight:800;max-width:220px;cursor:pointer;}',
     '.scorehead .snl-seasonbar select:focus-visible{outline:2px solid #ffde19;outline-offset:2px;}',
     '.scorehead .right-text{margin-left:auto;}',
+    '@media(max-width:1100px){.scorehead .right-text{display:none;}}',
     '.snl-ticker-soon{opacity:1!important;flex:1 0 220px;max-width:560px;padding:14px 16px;}',
     '.snl-ticker-soon .scoremeta{margin-bottom:9px;}',
     '.snl-ticker-soon .scoreteam{line-height:1.5;font-weight:700;color:#d7e7f2;white-space:normal;}',
@@ -52,7 +53,7 @@
     '.snl-unpublished p{color:#c6d7e5;line-height:1.6;max-width:670px;}',
     '.snl-unpublished button{margin-top:18px;border:1px solid #ffde19;color:#ffde19;background:transparent;border-radius:9px;padding:10px 16px;font-weight:900;cursor:pointer;}',
     '@media(max-width:800px){.scorehead .snl-seasonbar label{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}.scorehead .snl-seasonbar select{max-width:190px;}}',
-    '@media(max-width:480px){.scorehead{gap:7px;}.scorehead h2{font-size:12px;letter-spacing:.5px;}.scorehead .snl-seasonbar{margin-left:auto;}.scorehead .snl-seasonbar select{max-width:165px;width:165px;font-size:11px;padding:7px 6px;}.scorehead .scorebtn{display:none;}}',
+    '@media(max-width:480px){.scorehead{gap:7px;}.scorehead h2{font-size:12px;letter-spacing:.5px;}.scorehead .snl-seasonbar{margin-left:auto;}.scorehead .snl-seasonbar select{max-width:48vw;width:min(165px,48vw);font-size:11px;padding:7px 6px;}.scorehead .scorebtn{display:none;}}',
     // The live GameChanger statistics page retains its internal selector for data purposes.
     'body[data-page="stats"] #gc-stats .gc-seasonbar label[for="gcSeason"]{display:none;}'
   ].join('\n');
@@ -171,7 +172,7 @@
     select.addEventListener('change',() => navigateTo(select.value));
     bar.append(label,select);
     // One compact selector beside SNL SCOREBOARD on every page.
-    target.insertBefore(bar, target.querySelector('.right-text'));
+    target.appendChild(bar);
 
     const footer = wrap.querySelector('.footer');
     if (footer?.lastElementChild) footer.lastElementChild.textContent = selected.label;
