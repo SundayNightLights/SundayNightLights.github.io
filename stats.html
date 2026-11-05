@@ -5,13 +5,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#06192b">
-<meta name="description" content="Sunday Night Lights batting leaders and player statistics, powered by GameChanger.">
+<meta name="description" content="Sunday Night Lights batting leaders and player statistics.">
 <title>Stats | Sunday Night Lights</title>
 <link rel="stylesheet" href="css/style.css?v=snl-content-20261104">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+
 <style>
-/* These rules only affect the main SNL site's Stats page. */
-#gc-stats { color: var(--text, #f7faff); }
+#gc-stats {
+  color:var(--text,#f7faff);
+}
 #gc-stats .gc-seasonbar {
   display:flex;
   align-items:center;
@@ -31,16 +33,16 @@
   font-size:12px;
   font-weight:900;
   color:#d9e5f0;
-  letter-spacing:.04em;
 }
-#gc-stats select,#gc-stats input {
+#gc-stats select,
+#gc-stats input {
   width:100%;
   min-width:0;
   padding:10px 12px;
   border:1px solid #64809c;
   border-radius:8px;
   background:#06192b;
-  color:#fff;
+  color:white;
   font:inherit;
   font-size:13px;
 }
@@ -61,7 +63,6 @@
 #gc-stats .gc-leader {
   display:flex;
   flex-direction:column;
-  align-items:stretch;
   text-align:left;
   min-width:0;
   min-height:218px;
@@ -78,9 +79,11 @@
   border-color:var(--yellow,#ffde19);
   transform:translateY(-2px);
 }
-#gc-stats .gc-leader:focus-visible {
-  outline:2px solid var(--yellow,#ffde19);
-  outline-offset:2px;
+#gc-stats .gc-qualifier {
+  margin-top:7px;
+  color:#b5cbe0;
+  font-size:10px;
+  font-weight:850;
 }
 #gc-stats .gc-cat {
   font-size:11px;
@@ -91,11 +94,11 @@
 }
 #gc-stats .gc-top-value {
   font-size:31px;
-  font-weight:1000;
+  font-weight:900;
   line-height:1.18;
   color:var(--yellow,#ffde19);
-  font-variant-numeric:tabular-nums;
   margin:12px 0 4px;
+  font-variant-numeric:tabular-nums;
 }
 #gc-stats .gc-top-player {
   font-size:15px;
@@ -118,7 +121,6 @@
   display:grid;
   grid-template-columns:22px minmax(0,1fr) auto;
   gap:5px;
-  align-items:center;
   border-top:1px solid #37546e;
   padding-top:5px;
   font-size:11px;
@@ -128,12 +130,11 @@
   font-weight:900;
 }
 #gc-stats .gc-runner-name {
-  white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
+  white-space:nowrap;
 }
 #gc-stats .gc-runner-value {
-  color:#f7faff;
   font-weight:800;
   font-variant-numeric:tabular-nums;
 }
@@ -142,19 +143,18 @@
   grid-template-columns:repeat(3,minmax(0,1fr));
   gap:12px;
   padding:16px;
-  margin:0 0 13px;
+  margin-bottom:13px;
   border:1px solid #486580;
   border-radius:12px;
   background:var(--panel2,#0c2943);
 }
 #gc-stats .gc-filter-grid label {
-  display:block;
   color:#c5d6e6;
   font-size:12px;
   font-weight:800;
 }
-#gc-stats .gc-filter-grid label select,
-#gc-stats .gc-filter-grid label input {
+#gc-stats .gc-filter-grid select,
+#gc-stats .gc-filter-grid input {
   display:block;
   margin-top:7px;
 }
@@ -166,7 +166,6 @@
   border-radius:7px;
   color:#d6e5f1;
   font-size:12px;
-  line-height:1.55;
 }
 #gc-stats .gc-table-wrap {
   overflow-x:auto;
@@ -189,18 +188,18 @@
 }
 #gc-stats .gc-table th {
   background:#173c5b;
-  color:#f7faff;
+  color:#fff;
   font-size:12px;
 }
-#gc-stats .gc-table .gc-num {
+#gc-stats .gc-num {
   text-align:right;
   font-variant-numeric:tabular-nums;
 }
-#gc-stats .gc-table th.gc-rate {
+#gc-stats th.gc-rate {
   color:var(--yellow,#ffde19);
 }
-#gc-stats .gc-table td.gc-rate,
-#gc-stats .gc-table td.gc-player {
+#gc-stats td.gc-rate,
+#gc-stats td.gc-player {
   font-weight:850;
 }
 #gc-stats .gc-table tbody tr:hover {
@@ -210,11 +209,10 @@
   display:grid;
   grid-template-columns:repeat(3,minmax(0,1fr));
   gap:10px;
-  margin:14px 0 0;
+  margin-top:14px;
 }
 #gc-stats .gc-team {
   display:flex;
-  align-items:center;
   justify-content:space-between;
   gap:9px;
   padding:12px 13px;
@@ -223,15 +221,12 @@
   border-radius:9px;
   font-size:12px;
 }
-#gc-stats .gc-team strong {
-  font-weight:900;
-}
 #gc-stats .gc-state {
   font-size:11px;
   color:#bccfe0;
   text-align:right;
 }
-#gc-stats .gc-state.is-reporting {
+#gc-stats .is-reporting {
   color:#a5e9c2;
 }
 #gc-stats .gc-error {
@@ -240,7 +235,6 @@
 #gc-stats .gc-section-spaced {
   margin-top:30px;
 }
-
 @media(max-width:1000px) {
   #gc-stats .gc-leader-grid {
     grid-template-columns:repeat(2,minmax(0,1fr));
@@ -266,9 +260,6 @@
     width:100%;
     justify-content:space-between;
   }
-  #gc-stats .gc-seasonbar select {
-    max-width:65%;
-  }
 }
 </style>
 </head>
@@ -286,6 +277,9 @@
 
   const FEED =
     'https://sundaynightlights.github.io/SNL-Stats-Hub/stats-data.json';
+
+  const SCHEDULE_FEED =
+    '/SNL-Calendar-Hub/site-data.json';
 
   const stats = [
     'GP','PA','AVG','OBP','SLG','OPS',
@@ -308,53 +302,52 @@
   ];
 
   let data = null;
+  let schedule = null;
   let section = null;
 
-  const create = (tag, content, className) => {
+  function create(tag, content, className = '') {
     const node = document.createElement(tag);
 
     if (content !== undefined) {
       node.textContent = String(content);
     }
 
-    if (className) {
-      node.className = className;
-    }
+    if (className) node.className = className;
 
     return node;
-  };
+  }
 
-  const byId = id =>
-    section.querySelector('#' + id);
+  function byId(id) {
+    return section.querySelector('#' + id);
+  }
 
-  const stat = (p, key) => {
-    const value = p.stats?.[key];
+  function stat(player, key) {
+    const value = player.stats?.[key];
 
     return typeof value === 'number' &&
-      Number.isFinite(value)
-      ? value
-      : null;
-  };
+      Number.isFinite(value) ? value : null;
+  }
 
-  const fmt = (p, key) => {
-    const value = stat(p, key);
+  function fmt(player, key) {
+    const value = stat(player, key);
 
-    return value === null
-      ? '—'
-      : rateStats.has(key)
-        ? value.toFixed(3)
-        : String(value);
-  };
+    if (value === null) return '—';
 
-  const season = () =>
-    data?.seasons.find(
+    return rateStats.has(key)
+      ? value.toFixed(3)
+      : String(value);
+  }
+
+  function currentSeason() {
+    return data?.seasons.find(
       s => s.season_id === byId('gcSeason').value
     );
+  }
 
-  const sorted = (players, key) =>
-    [...players].sort((a, b) => {
-      const x = stat(a, key);
-      const y = stat(b, key);
+  function sorted(players, key) {
+    return [...players].sort((a,b) => {
+      const x = stat(a,key);
+      const y = stat(b,key);
 
       if (x === null) return y === null ? 0 : 1;
       if (y === null) return -1;
@@ -362,29 +355,143 @@
       return y - x ||
         String(a.name).localeCompare(String(b.name));
     });
+  }
 
-  const addOption = (select, value, label) => {
+  function torontoToday() {
+    const parts = new Intl.DateTimeFormat(
+      'en-US', {
+        timeZone:'America/Toronto',
+        year:'numeric',
+        month:'2-digit',
+        day:'2-digit'
+      }
+    ).formatToParts(new Date());
+
+    const p = Object.fromEntries(
+      parts.map(part => [part.type, part.value])
+    );
+
+    return `${p.year}-${p.month}-${p.day}`;
+  }
+
+  // Find the schedule matching the selected season.
+  function matchingSchedule(season) {
+    const games = schedule?.regularSeason;
+
+    if (!Array.isArray(games) || !games.length) {
+      return null;
+    }
+
+    const dates = games
+      .map(g => g.date)
+      .filter(d => /^\d{4}-\d{2}-\d{2}$/.test(d))
+      .sort();
+
+    const firstDate = dates[0];
+
+    const code = /^([FW])(\d{2})$/i.exec(
+      season.season_id || ''
+    );
+
+    if (!firstDate || !code) return null;
+
+    const year = 2000 + Number(code[2]);
+    const startYear = Number(firstDate.slice(0,4));
+    const month = Number(firstDate.slice(5,7));
+
+    const matches =
+      startYear === year &&
+      (
+        code[1].toUpperCase() === 'F'
+          ? month >= 8
+          : month <= 6
+      );
+
+    return matches ? games : null;
+  }
+
+  // Progressive qualification:
+  // Week 1 = 1 GP ... Week 10 = 10 GP.
+  function requiredGames(season) {
+    if (data?.current_season !== season.season_id) {
+      return {
+        minimum:10,
+        method:'final'
+      };
+    }
+
+    const games = matchingSchedule(season);
+
+    if (games) {
+      const completedWeeks = new Set(
+        games
+          .filter(g =>
+            Number.isInteger(g.week) &&
+            g.week >= 1 &&
+            g.week <= 10 &&
+            typeof g.date === 'string' &&
+            g.date < torontoToday()
+          )
+          .map(g => g.week)
+      );
+
+      return {
+        minimum:Math.min(
+          10,
+          Math.max(1, completedWeeks.size)
+        ),
+        method:'schedule'
+      };
+    }
+
+    // Fallback for future seasons without a schedule:
+    // Estimate the current week using reported GP.
+    const maxGP = Math.max(
+      0,
+      ...season.players.map(
+        p => stat(p,'GP') ?? 0
+      )
+    );
+
+    return {
+      minimum:Math.min(
+        10,
+        Math.max(1, Math.ceil(maxGP / 2))
+      ),
+      method:'estimated'
+    };
+  }
+
+  function addOption(select, value, label) {
     const option = create('option', label);
     option.value = value;
     select.appendChild(option);
-  };
+  }
 
-  function renderLeaders(s) {
+  function renderLeaders(season) {
+    const minimum = requiredGames(season).minimum;
     const root = byId('gcLeaderCards');
+
     root.replaceChildren();
 
-    for (const [key, label] of categories) {
-      const ranked = sorted(
-        s.players.filter(p => stat(p, key) !== null),
-        key
+    for (const [key,label] of categories) {
+      const eligible = season.players.filter(
+        player =>
+          stat(player,key) !== null &&
+          (
+            !rateStats.has(key) ||
+            (stat(player,'GP') ?? 0) >= minimum
+          )
       );
 
-      const hasPositive =
-        rateStats.has(key) ||
-        ranked.some(p => stat(p, key) > 0);
+      const ranked = sorted(eligible,key);
 
-      const display = hasPositive
-        ? ranked.slice(0, 3)
+      const hasResults =
+        rateStats.has(key) ||
+        ranked.some(player => stat(player,key) > 0);
+
+      const leaders = hasResults
+        ? ranked.slice(0,3)
         : [];
 
       const card = create(
@@ -395,21 +502,26 @@
 
       card.type = 'button';
 
-      card.setAttribute(
-        'aria-label',
-        'Sort batting statistics by ' + label
-      );
-
       card.appendChild(
-        create('span', label, 'gc-cat')
+        create('span',label,'gc-cat')
       );
 
-      const first = display[0];
+      if (rateStats.has(key)) {
+        card.appendChild(
+          create(
+            'span',
+            `MIN ${minimum} GP`,
+            'gc-qualifier'
+          )
+        );
+      }
+
+      const first = leaders[0];
 
       card.appendChild(
         create(
           'strong',
-          first ? fmt(first, key) : '—',
+          first ? fmt(first,key) : '—',
           'gc-top-value'
         )
       );
@@ -419,7 +531,9 @@
           'span',
           first
             ? first.name
-            : 'No recorded stats yet',
+            : rateStats.has(key)
+              ? 'No qualified players yet'
+              : 'No recorded stats yet',
           'gc-top-player'
         )
       );
@@ -438,41 +552,45 @@
         'gc-runners'
       );
 
-      display.slice(1).forEach((p, i) => {
-        const line = create(
+      leaders.slice(1).forEach((player,i) => {
+        const row = create(
           'div',
           undefined,
           'gc-runner'
         );
 
-        line.appendChild(
-          create('span', '#' + (i + 2), 'gc-rank')
+        row.appendChild(
+          create('span','#'+(i+2),'gc-rank')
         );
 
-        line.appendChild(
-          create('span', p.name, 'gc-runner-name')
-        );
-
-        line.appendChild(
+        row.appendChild(
           create(
             'span',
-            fmt(p, key),
+            player.name,
+            'gc-runner-name'
+          )
+        );
+
+        row.appendChild(
+          create(
+            'span',
+            fmt(player,key),
             'gc-runner-value'
           )
         );
 
-        runners.appendChild(line);
+        runners.appendChild(row);
       });
 
       card.appendChild(runners);
 
-      card.addEventListener('click', () => {
+      card.addEventListener('click',() => {
         byId('gcSort').value = key;
         renderTable();
 
         byId('gcBattingSection').scrollIntoView({
-          behavior: 'smooth',
-          block: 'start'
+          behavior:'smooth',
+          block:'start'
         });
       });
 
@@ -481,11 +599,10 @@
   }
 
   function renderTable() {
-    const s = season();
-    if (!s) return;
+    const season = currentSeason();
+    if (!season) return;
 
     const team = byId('gcTeam').value;
-
     const query = byId('gcSearch').value
       .trim()
       .toLowerCase();
@@ -493,9 +610,9 @@
     const key = byId('gcSort').value;
 
     const players = sorted(
-      s.players.filter(p =>
-        (!team || p.team_id === team) &&
-        String(p.name || '')
+      season.players.filter(player =>
+        (!team || player.team_id === team) &&
+        String(player.name || '')
           .toLowerCase()
           .includes(query)
       ),
@@ -505,94 +622,100 @@
     const tbody = byId('gcRows');
     tbody.replaceChildren();
 
-    for (let i = 0; i < players.length; i++) {
-      const p = players[i];
+    players.forEach((player,i) => {
       const tr = create('tr');
 
-      tr.appendChild(create('td', i + 1));
+      tr.appendChild(create('td',i+1));
       tr.appendChild(
-        create('td', p.name, 'gc-player')
+        create('td',player.name,'gc-player')
       );
-      tr.appendChild(create('td', p.team));
+      tr.appendChild(create('td',player.team));
 
-      stats.forEach(k => {
+      for (const key of stats) {
         tr.appendChild(
           create(
             'td',
-            fmt(p, k),
-            rateStats.has(k)
+            fmt(player,key),
+            rateStats.has(key)
               ? 'gc-num gc-rate'
               : 'gc-num'
           )
         );
-      });
+      }
 
       tbody.appendChild(tr);
-    }
+    });
 
     if (!players.length) {
-      const tr = create('tr');
-
-      const td = create(
+      const row = create('tr');
+      const cell = create(
         'td',
         'No matching player statistics.'
       );
 
-      td.colSpan = 14;
-
-      tr.appendChild(td);
-      tbody.appendChild(tr);
+      cell.colSpan = stats.length + 3;
+      row.appendChild(cell);
+      tbody.appendChild(row);
     }
 
-    const count = s.teams.filter(
-      t => t.reporting_status === 'stats_available'
+    const reporting = season.teams.filter(
+      team =>
+        team.reporting_status === 'stats_available'
     ).length;
 
     byId('gcMeta').textContent =
       `${players.length} player records · ` +
-      `${count} of 6 teams reporting · ` +
-      `${s.season_label || s.season_id}`;
+      `${reporting} of 6 teams reporting · ` +
+      `${season.season_label || season.season_id}`;
   }
 
   function renderSeason() {
-    const s = season();
-    if (!s) return;
+    const season = currentSeason();
+    if (!season) return;
 
-    renderLeaders(s);
+    renderLeaders(season);
+
+    const qualification = requiredGames(season);
+
+    byId('gcQualification').textContent =
+      `AVG, OBP, SLG and OPS require at least ` +
+      `${qualification.minimum} games played. ` +
+      `All players remain visible in the full table.` +
+      (
+        qualification.method === 'estimated'
+          ? ' Current threshold is estimated from reported games.'
+          : ''
+      );
 
     const teamSelect = byId('gcTeam');
     teamSelect.replaceChildren();
 
-    addOption(
-      teamSelect,
-      '',
-      'All Teams'
-    );
+    addOption(teamSelect,'','All Teams');
 
-    s.teams.forEach(t => {
+    season.teams.forEach(team => {
       addOption(
         teamSelect,
-        t.team_id,
-        t.name
+        team.team_id,
+        team.name
       );
     });
 
     const report = byId('gcReporting');
     report.replaceChildren();
 
-    s.teams.forEach(t => {
+    season.teams.forEach(team => {
       const card = create(
         'div',
         undefined,
         'gc-team'
       );
 
-      const available =
-        t.reporting_status === 'stats_available';
-
       card.appendChild(
-        create('strong', t.name)
+        create('strong',team.name)
       );
+
+      const available =
+        team.reporting_status === 'stats_available';
 
       card.appendChild(
         create(
@@ -615,78 +738,93 @@
     try {
       const response = await fetch(
         FEED,
-        { cache: 'no-store' }
+        {cache:'no-store'}
       );
 
       if (!response.ok) {
         throw new Error(
-          'HTTP ' + response.status
+          'Statistics HTTP ' + response.status
         );
       }
 
       const incoming = await response.json();
 
-      if (
-        !Array.isArray(incoming.seasons) ||
-        !incoming.seasons.length
-      ) {
-        throw new Error(
-          'No seasons available'
-        );
+      if (!Array.isArray(incoming.seasons) ||
+          !incoming.seasons.length) {
+        throw new Error('No seasons available');
       }
 
       data = incoming;
 
-      const seasons = byId('gcSeason');
-      seasons.replaceChildren();
+      // Schedule lookup is optional.
+      try {
+        const response = await fetch(
+          SCHEDULE_FEED,
+          {cache:'no-store'}
+        );
 
-      data.seasons.forEach(s => {
+        if (response.ok) {
+          schedule = await response.json();
+        }
+      } catch(error) {
+        console.warn(
+          'Schedule unavailable for qualification',
+          error
+        );
+      }
+
+      const seasonSelect = byId('gcSeason');
+      seasonSelect.replaceChildren();
+
+      data.seasons.forEach(season => {
         addOption(
-          seasons,
-          s.season_id,
-          s.season_label || s.season_id
+          seasonSelect,
+          season.season_id,
+          season.season_label || season.season_id
         );
       });
 
-      seasons.value = data.current_season;
+      seasonSelect.value = data.current_season;
 
-      if (seasons.selectedIndex < 0) {
-        seasons.selectedIndex = 0;
+      if (seasonSelect.selectedIndex < 0) {
+        seasonSelect.selectedIndex = 0;
       }
 
-      seasons.disabled = false;
+      seasonSelect.disabled = false;
       byId('gcTeam').disabled = false;
 
-      const updated = new Date(
-        data.generated_at_utc
-      );
+      if (data.generated_at_utc) {
+        const date = new Date(
+          data.generated_at_utc
+        );
 
-      if (!Number.isNaN(updated.getTime())) {
-        byId('gcUpdated').textContent =
-          'Last processed: ' +
-          updated.toLocaleString(
-            'en-CA',
-            { timeZone: 'America/Toronto' }
-          );
+        if (!Number.isNaN(date.getTime())) {
+          byId('gcUpdated').textContent =
+            'Last processed: ' +
+            date.toLocaleString(
+              'en-CA',
+              {timeZone:'America/Toronto'}
+            );
+        }
       }
 
       renderSeason();
 
-    } catch (error) {
+    } catch(error) {
       console.error(
-        'SNL GameChanger stats unavailable:',
+        'SNL statistics error:',
         error
       );
 
       byId('gcMeta').textContent =
-        'Player batting statistics are temporarily unavailable.';
+        'Player statistics are temporarily unavailable.';
 
       byId('gcMeta').classList.add(
         'gc-error'
       );
 
       byId('gcLeaderCards').textContent =
-        'The latest league leaders could not be loaded.';
+        'League leaders could not be loaded.';
     }
   }
 
@@ -697,17 +835,11 @@
       ':scope > .wrap'
     );
 
-    if (
-      !wrap ||
-      !wrap.querySelector('.page-hero') ||
-      !wrap.querySelector('.footer')
-    ) {
+    if (!wrap ||
+        !wrap.querySelector('.page-hero') ||
+        !wrap.querySelector('.footer')) {
       return false;
     }
-
-    // Preserve the SNL header, ticker and footer.
-    // Replace the entire old Stats-page content,
-    // including the duplicate standings table.
 
     const footer = wrap.querySelector('.footer');
 
@@ -734,21 +866,15 @@
               <option>Loading seasons…</option>
             </select>
           </label>
-
           <span class="gc-faint">
             Statistics from participating SNL teams
           </span>
         </div>
 
-        <section
-          class="section"
-          aria-labelledby="gcLeadersTitle">
-
+        <section class="section">
           <div class="section-top">
             <div>
-              <h2 id="gcLeadersTitle">
-                BATTING <em>LEADERS</em>
-              </h2>
+              <h2>BATTING <em>LEADERS</em></h2>
               <div class="section-rule"></div>
             </div>
             <small>
@@ -756,20 +882,16 @@
             </small>
           </div>
 
-          <div
-            id="gcLeaderCards"
-            class="gc-leader-grid">
-          </div>
+          <div id="gcLeaderCards"
+               class="gc-leader-grid"></div>
         </section>
 
-        <section
-          class="section"
-          id="gcBattingSection"
-          aria-labelledby="gcBattingTitle">
+        <section class="section"
+                 id="gcBattingSection">
 
           <div class="section-top">
             <div>
-              <h2 id="gcBattingTitle">
+              <h2>
                 COMPLETE <em>BATTING STATS</em>
               </h2>
               <div class="section-rule"></div>
@@ -804,14 +926,17 @@
 
             <label for="gcSearch">
               SEARCH PLAYER
-              <input
-                id="gcSearch"
-                type="search"
-                placeholder="Player name">
+              <input id="gcSearch"
+                     type="search"
+                     placeholder="Player name">
             </label>
           </div>
 
-          <p class="gc-faint" id="gcMeta">
+          <p class="gc-faint"
+             id="gcQualification"></p>
+
+          <p class="gc-faint"
+             id="gcMeta">
             Loading player statistics…
           </p>
 
@@ -825,40 +950,37 @@
           </div>
 
           <p class="gc-note">
-            These GameChanger statistics are voluntarily
-            recorded by participating teams.
-            Not all teams submit stats.
-            Rate-stat leaders currently have
-            <strong>no minimum plate-appearance
-            requirement</strong>; small samples can
-            produce unusually high averages.
+            Batting statistics are voluntarily recorded
+            by participating GameChanger teams.
+            AVG, OBP, SLG and OPS require minimum games
+            played to qualify for the leaderboards.
+            Everyone remains visible in the full table.
+            HR, RBI, H and 2B have no qualification
+            requirement.
           </p>
+
         </section>
 
-        <section
-          class="section gc-section-spaced"
-          aria-labelledby="gcReportingTitle">
-
+        <section class="section gc-section-spaced">
           <div class="section-top">
             <div>
-              <h2 id="gcReportingTitle">
-                TEAM <em>REPORTING</em>
-              </h2>
+              <h2>TEAM <em>REPORTING</em></h2>
               <div class="section-rule"></div>
             </div>
           </div>
 
-          <div
-            id="gcReporting"
-            class="gc-team-list">
-          </div>
+          <div id="gcReporting"
+               class="gc-team-list"></div>
 
-          <p class="gc-faint" id="gcUpdated"></p>
+          <p class="gc-faint"
+             id="gcUpdated"></p>
         </section>
 
       </div>
     `;
 
+    // Preserve the existing SNL footer.
+    // Replace the old standings-based Stats page.
     wrap.replaceChildren(
       template.content,
       footer
@@ -868,24 +990,21 @@
 
     const headers = byId('gcHeaders');
 
-    [
-      '#',
-      'Player',
-      'Team',
-      ...stats
-    ].forEach((name, i) => {
-      headers.appendChild(
-        create(
-          'th',
-          name,
-          i >= 3
-            ? rateStats.has(name)
-              ? 'gc-num gc-rate'
-              : 'gc-num'
-            : ''
-        )
-      );
-    });
+    ['#','Player','Team',...stats].forEach(
+      (name,i) => {
+        headers.appendChild(
+          create(
+            'th',
+            name,
+            i >= 3
+              ? rateStats.has(name)
+                ? 'gc-num gc-rate'
+                : 'gc-num'
+              : ''
+          )
+        );
+      }
+    );
 
     byId('gcSeason').addEventListener(
       'change',
@@ -908,30 +1027,21 @@
     );
 
     loadStats();
-
     return true;
   }
 
-  // The original SNL website renders asynchronously.
-  // Replace only this page's content once it's ready.
-
+  // Wait for the original website to render.
   if (!mount()) {
     const app = document.getElementById('app');
 
     const observer = new MutationObserver(() => {
-      if (mount()) {
-        observer.disconnect();
-      }
+      if (mount()) observer.disconnect();
     });
 
-    observer.observe(
-      app,
-      {
-        childList: true
-      }
-    );
+    observer.observe(app,{
+      childList:true
+    });
   }
-
 })();
 </script>
 </body>
