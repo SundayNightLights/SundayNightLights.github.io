@@ -1,2 +1,578 @@
+
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#06192b"><meta name="description" content="Sunday Night Lights softball league — schedule, standings, teams, highlights and player statistics."><title>Stats | Sunday Night Lights</title><link rel="stylesheet" href="css/style.css?v=snl-content-20261104"><link rel="icon" href="assets/favicon.svg" type="image/svg+xml"></head><body data-page="stats"><div id="siteHeader"></div><main id="app"></main><script src="js/data.js?v=snl-content-20261104"></script><script src="js/main.js?v=snl-content-20261104"></script></body></html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#06192b">
+  <meta name="description" content="Sunday Night Lights softball league — schedule, standings, teams, highlights and player statistics.">
+  <title>Stats | Sunday Night Lights</title>
+  <link rel="stylesheet" href="css/style.css?v=snl-content-20261104">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+
+  <style>
+    /* Stats-specific styling; preserves the main SNL theme */
+    .snl-gc-controls {
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
+      padding:16px;
+      margin:0 0 15px;
+      border:1px solid var(--stroke,#587592);
+      background:var(--panel2,#0c2943);
+      border-radius:12px;
+    }
+
+    .snl-gc-controls label {
+      display:block;
+      color:var(--muted,#a9bfd2);
+      font-size:12px;
+      font-weight:800;
+    }
+
+    .snl-gc-controls select,
+    .snl-gc-controls input {
+      width:100%;
+      min-width:0;
+      margin-top:7px;
+      padding:10px;
+      border:1px solid #64809c;
+      border-radius:7px;
+      background:#061b30;
+      color:white;
+      font:inherit;
+      font-size:13px;
+    }
+
+    .snl-gc-note {
+      border-left:3px solid var(--yellow,#ffde19);
+      padding:10px 13px;
+      background:#12314e;
+      border-radius:5px;
+      margin:12px 0;
+      color:#d4e1ed;
+      font-size:13px;
+    }
+
+    .snl-gc-meta {
+      margin:9px 0;
+      color:var(--muted,#a9bfd2);
+      font-size:12px;
+    }
+
+    .snl-gc-table-wrap {
+      width:100%;
+      overflow-x:auto;
+      border:1px solid var(--stroke,#587592);
+      border-radius:10px;
+      background:#0c2943;
+    }
+
+    .snl-gc-table {
+      width:100%;
+      border-collapse:collapse;
+      min-width:880px;
+      white-space:nowrap;
+      font-size:13px;
+    }
+
+    .snl-gc-table th,
+    .snl-gc-table td {
+      padding:12px 10px;
+      border-bottom:1px solid #335570;
+      text-align:left;
+    }
+
+    .snl-gc-table th {
+      background:#173e5a;
+      color:#fff;
+      font-size:12px;
+    }
+
+    .snl-gc-table .num {
+      text-align:right;
+      font-variant-numeric:tabular-nums;
+    }
+
+    .snl-gc-table th.rate {
+      color:var(--yellow,#ffde19);
+    }
+
+    .snl-gc-table td.rate,
+    .snl-gc-table td.player {
+      font-weight:800;
+    }
+
+    .snl-gc-table tbody tr:hover {
+      background:#163b59;
+    }
+
+    .snl-gc-report {
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:9px;
+      margin-top:14px;
+    }
+
+    .snl-gc-team {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:9px;
+      border:1px solid #446480;
+      border-radius:8px;
+      padding:10px;
+      background:#102d47;
+      font-size:12px;
+    }
+
+    .snl-gc-team span {
+      color:var(--muted,#a9bfd2);
+      text-align:right;
+      font-size:11px;
+    }
+
+    .snl-gc-team span.yes {
+      color:#a5e9c2;
+    }
+
+    .snl-gc-error {
+      color:#ffd0cb;
+    }
+
+    @media(max-width:850px) {
+      .snl-gc-controls {
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+
+      .snl-gc-report {
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+    }
+
+    @media(max-width:520px) {
+      .snl-gc-controls,
+      .snl-gc-report {
+        grid-template-columns:1fr;
+      }
+    }
+  </style>
+</head>
+
+<body data-page="stats">
+  <div id="siteHeader"></div>
+  <main id="app"></main>
+
+  <!-- Original SNL website functionality -->
+  <script src="js/data.js?v=snl-content-20261104"></script>
+  <script src="js/main.js?v=snl-content-20261104"></script>
+
+  <!-- GameChanger statistics integration -->
+  <script>
+  (() => {
+    'use strict';
+
+    const DATA_URL =
+      '/SNL-Stats-Hub/stats-data.json';
+
+    const columns = [
+      'GP','PA','AVG','OBP','SLG','OPS',
+      'H','2B','3B','HR','RBI'
+    ];
+
+    const rateColumns = new Set([
+      'AVG','OBP','SLG','OPS'
+    ]);
+
+    let data = null;
+    let host = null;
+
+    const el = (tag, text, cls) => {
+      const node = document.createElement(tag);
+
+      if (text !== undefined) {
+        node.textContent = String(text);
+      }
+
+      if (cls) node.className = cls;
+
+      return node;
+    };
+
+    const field = (p, key) => {
+      const v = p.stats?.[key];
+
+      return typeof v === 'number' &&
+        Number.isFinite(v) ? v : null;
+    };
+
+    const display = (p, key) => {
+      const n = field(p, key);
+
+      if (n === null) return '—';
+
+      return rateColumns.has(key)
+        ? n.toFixed(3)
+        : String(n);
+    };
+
+    const select = id =>
+      host.querySelector('#' + id);
+
+    const activeSeason = () =>
+      data?.seasons.find(
+        s => s.season_id === select('snlSeason').value
+      );
+
+    function renderRows() {
+      const s = activeSeason();
+      if (!s) return;
+
+      const team = select('snlTeam').value;
+
+      const q = select('snlSearch').value
+        .trim()
+        .toLowerCase();
+
+      const key = select('snlSort').value;
+
+      const players = s.players.filter(p =>
+        (!team || p.team_id === team) &&
+        String(p.name || '').toLowerCase().includes(q)
+      );
+
+      players.sort((a, b) => {
+        const x = field(a, key);
+        const y = field(b, key);
+
+        if (x === null) return y === null ? 0 : 1;
+        if (y === null) return -1;
+
+        return y - x ||
+          String(a.name).localeCompare(String(b.name));
+      });
+
+      const tbody = select('snlRows');
+      tbody.replaceChildren();
+
+      players.forEach((p, i) => {
+        const row = el('tr');
+
+        [i + 1, p.name, p.team].forEach((v, j) =>
+          row.appendChild(
+            el('td', v, j === 1 ? 'player' : '')
+          )
+        );
+
+        columns.forEach(k =>
+          row.appendChild(
+            el(
+              'td',
+              display(p, k),
+              rateColumns.has(k) ? 'num rate' : 'num'
+            )
+          )
+        );
+
+        tbody.appendChild(row);
+      });
+
+      if (!players.length) {
+        const row = el('tr');
+        const cell = el('td', 'No matching player records');
+
+        cell.colSpan = columns.length + 3;
+        row.appendChild(cell);
+        tbody.appendChild(row);
+      }
+
+      const reporting = s.reporting_team_count ??
+        s.teams.filter(
+          t => t.reporting_status === 'stats_available'
+        ).length;
+
+      select('snlMeta').textContent =
+        `${players.length} player records · ` +
+        `${reporting} of 6 teams reporting · ` +
+        `${s.season_label || s.season_id}`;
+    }
+
+    function renderSeason() {
+      const s = activeSeason();
+      if (!s) return;
+
+      const teamSelect = select('snlTeam');
+      teamSelect.replaceChildren();
+
+      const everyone = el('option', 'All teams');
+      everyone.value = '';
+      teamSelect.appendChild(everyone);
+
+      s.teams.forEach(t => {
+        const o = el('option', t.name);
+        o.value = t.team_id;
+        teamSelect.appendChild(o);
+      });
+
+      const reporting = select('snlReporting');
+      reporting.replaceChildren();
+
+      s.teams.forEach(t => {
+        const card = el('div', undefined, 'snl-gc-team');
+        card.appendChild(el('strong', t.name));
+
+        const yes =
+          t.reporting_status === 'stats_available';
+
+        card.appendChild(
+          el(
+            'span',
+            yes ? 'Stats available' : 'Not submitted',
+            yes ? 'yes' : ''
+          )
+        );
+
+        reporting.appendChild(card);
+      });
+
+      renderRows();
+    }
+
+    async function load() {
+      try {
+        const response = await fetch(
+          DATA_URL,
+          { cache: 'no-store' }
+        );
+
+        if (!response.ok) {
+          throw new Error(
+            `Stats feed HTTP ${response.status}`
+          );
+        }
+
+        const result = await response.json();
+
+        if (!Array.isArray(result.seasons) ||
+            !result.seasons.length) {
+          throw new Error('No seasons found');
+        }
+
+        data = result;
+
+        const seasonSelect = select('snlSeason');
+        seasonSelect.replaceChildren();
+
+        result.seasons.forEach(s => {
+          const o = el(
+            'option',
+            s.season_label || s.season_id
+          );
+
+          o.value = s.season_id;
+          seasonSelect.appendChild(o);
+        });
+
+        seasonSelect.value = result.current_season;
+
+        if (seasonSelect.selectedIndex < 0) {
+          seasonSelect.selectedIndex = 0;
+        }
+
+        seasonSelect.disabled = false;
+        select('snlTeam').disabled = false;
+
+        const dt = new Date(result.generated_at_utc);
+
+        select('snlUpdated').textContent =
+          Number.isFinite(dt.getTime())
+            ? 'Last processed: ' +
+              dt.toLocaleString('en-CA', {
+                timeZone: 'America/Toronto'
+              })
+            : '';
+
+        renderSeason();
+
+      } catch (err) {
+        console.error(
+          'SNL GameChanger statistics unavailable',
+          err
+        );
+
+        select('snlMeta').textContent =
+          'Live batting statistics are temporarily unavailable.';
+
+        select('snlMeta').classList.add(
+          'snl-gc-error'
+        );
+      }
+    }
+
+    function mount() {
+      host = document.querySelector(
+        '#app .leaders-full'
+      );
+
+      if (!host) return false;
+
+      host.innerHTML = `
+        <div class="section-top">
+          <div>
+            <h2>LEAGUE <em>LEADERS</em></h2>
+            <div class="section-rule"></div>
+          </div>
+        </div>
+
+        <div class="snl-gc-controls">
+          <label>
+            Season
+            <select id="snlSeason" disabled>
+              <option>Loading…</option>
+            </select>
+          </label>
+
+          <label>
+            Team
+            <select id="snlTeam" disabled>
+              <option>All teams</option>
+            </select>
+          </label>
+
+          <label>
+            Sort by
+            <select id="snlSort">
+              <option value="AVG">Batting Average</option>
+              <option value="OBP">On-Base Percentage</option>
+              <option value="SLG">Slugging</option>
+              <option value="OPS">OPS</option>
+              <option value="HR">Home Runs</option>
+              <option value="RBI">Runs Batted In</option>
+              <option value="H">Hits</option>
+              <option value="PA">Plate Appearances</option>
+              <option value="GP">Games Played</option>
+            </select>
+          </label>
+
+          <label>
+            Search players
+            <input
+              id="snlSearch"
+              type="search"
+              placeholder="Player name">
+          </label>
+        </div>
+
+        <p class="snl-gc-note">
+          Batting statistics are voluntarily recorded by
+          participating teams in GameChanger. Teams without
+          submitted statistics are listed below.
+          Leaderboards reflect available data only.
+        </p>
+
+        <p class="snl-gc-meta" id="snlMeta">
+          Loading batting statistics…
+        </p>
+
+        <div class="snl-gc-table-wrap">
+          <table class="snl-gc-table">
+            <thead>
+              <tr id="snlHeaders"></tr>
+            </thead>
+            <tbody id="snlRows"></tbody>
+          </table>
+        </div>
+
+        <div class="section-top" style="margin-top:22px">
+          <div>
+            <h2>TEAM <em>REPORTING</em></h2>
+            <div class="section-rule"></div>
+          </div>
+        </div>
+
+        <div
+          id="snlReporting"
+          class="snl-gc-report">
+        </div>
+
+        <p class="snl-gc-meta" id="snlUpdated"></p>
+      `;
+
+      const note = host.nextElementSibling;
+
+      if (
+        note?.classList.contains('notice') &&
+        note.textContent.includes(
+          'Player statistics will be shown'
+        )
+      ) {
+        note.remove();
+      }
+
+      const headers = select('snlHeaders');
+
+      ['#', 'Player', 'Team', ...columns].forEach(
+        (name, i) => {
+          headers.appendChild(
+            el(
+              'th',
+              name,
+              i >= 3
+                ? rateColumns.has(name)
+                  ? 'num rate'
+                  : 'num'
+                : ''
+            )
+          );
+        }
+      );
+
+      select('snlSeason').addEventListener(
+        'change',
+        renderSeason
+      );
+
+      select('snlTeam').addEventListener(
+        'change',
+        renderRows
+      );
+
+      select('snlSort').addEventListener(
+        'change',
+        renderRows
+      );
+
+      select('snlSearch').addEventListener(
+        'input',
+        renderRows
+      );
+
+      load();
+      return true;
+    }
+
+    /*
+      The original main.js builds the Stats page after
+      loading the league schedule and standings.
+
+      We wait for that render, then enhance ONLY the
+      existing League Leaders section.
+    */
+
+    const app = document.getElementById('app');
+
+    if (!mount()) {
+      const observer = new MutationObserver(() => {
+        if (mount()) observer.disconnect();
+      });
+
+      observer.observe(app, {
+        childList: true,
+        subtree: true
+      });
+    }
+
+  })();
+  </script>
+</body>
+</html>
