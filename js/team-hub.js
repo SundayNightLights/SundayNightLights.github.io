@@ -14,7 +14,7 @@
    const intro=document.querySelector('.team-detail');
    if(!intro||intro.dataset.hubReady)return false;
    const roster=intro.nextElementSibling, schedule=roster?.nextElementSibling;
-   if(!roster||!schedule||!schedule.querySelector('#snlOpponentSelect'))return false;
+   if(!roster||!schedule||!roster.classList.contains('flat-card')||!schedule.classList.contains('flat-card'))return false;
    intro.dataset.hubReady='1';
    roster.id='team-roster';schedule.id='team-schedule';
    roster.classList.add('snl-team-hub-section');schedule.classList.add('snl-team-hub-section');
