@@ -358,3 +358,17 @@ main{padding-bottom:30px}.hero{border:1px solid #43617a;background:#102f4d;margi
   .match .matchtime b,.large-matches .match .matchtime b{font-size:15px}
   .match .matchtime small,.large-matches .match .matchtime small{font-size:8px}
 }
+
+/* SNL scoreboard: desktop hover-reveal edge navigation (mobile remains swipe-first). */
+.score-viewport{position:relative;min-width:0;isolation:isolate}
+.score-viewport .ticker-arrow{position:absolute;z-index:5;top:0;bottom:0;width:56px;height:auto;display:flex;align-items:center;justify-content:center;margin:0;padding:0;border:0;border-radius:0;opacity:0;pointer-events:none;transition:opacity .16s ease;color:var(--yellow)}
+.score-viewport .ticker-arrow-prev{left:0;background:linear-gradient(90deg,rgba(5,21,38,.97),rgba(5,21,38,.03))}
+.score-viewport .ticker-arrow-next{right:0;background:linear-gradient(270deg,rgba(5,21,38,.97),rgba(5,21,38,.03))}
+.score-viewport .ticker-arrow span{display:grid;place-items:center;width:37px;height:37px;border-radius:50%;border:1px solid #c4ac28;background:#123653;color:var(--yellow);font-family:Arial,Helvetica,sans-serif;font-size:30px;font-weight:700;line-height:1;box-shadow:0 2px 12px rgba(0,0,0,.45)}
+.score-viewport .ticker-arrow.has-scroll{pointer-events:auto;cursor:pointer}
+.score-viewport .ticker-arrow.has-scroll:hover,.score-viewport .ticker-arrow.has-scroll:focus-visible{opacity:1}
+.score-viewport .ticker-arrow:focus-visible{outline:2px solid #ffde19;outline-offset:-2px}
+.score-viewport .ticker-arrow:disabled{pointer-events:none}
+.score-viewport .ticker-arrow[hidden]{display:none!important}
+@media(max-width:800px),(hover:none),(pointer:coarse){.score-viewport .ticker-arrow{display:none!important}}
+@media(prefers-reduced-motion:reduce){.score-viewport .ticker-arrow{transition:none}.score-viewport .scoretrack{scroll-behavior:auto}}
