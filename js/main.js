@@ -114,4 +114,4 @@ function joinPage(){return `${pageHero('JOIN','SNL','Interested in playing Sunda
 })();
 
 // Loads the shared website season selector; the data feed and live scoreboard remain untouched.
-document.head.appendChild(Object.assign(document.createElement('script'), {src:'js/season-selector.js?v=20261105a'}));
+document.head.appendChild(Object.assign(document.createElement('script'), {src:'js/season-selector.js?v=20261105b'}));
