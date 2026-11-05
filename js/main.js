@@ -24,7 +24,7 @@
  const extraNav=[['playoffs','Playoffs','playoffs.html'],['tournaments','Tournaments','tournaments.html'],['rules','Rules','rules.html'],['about','About','about.html'],['registration','Registration & Waivers','registration.html']];
  const playoffStarted=()=>{
    if(!Array.isArray(feed?.playoffs))return false;
-   const dates=feed.playoffs.map(g=>g.date).filter(date=>typeof date==='string'&&/^\\d{4}-\\d{2}-\\d{2}$/.test(date)).sort();
+   const dates=feed.playoffs.map(g=>g.date).filter(date=>typeof date==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(date)).sort();
    return dates.length>0&&dates[0]<=torontoToday();
  };
  const navActive=k=>page===k||(page==='article'&&k==='highlights')||(page==='team'&&k==='teams');
