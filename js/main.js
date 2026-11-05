@@ -30,7 +30,7 @@
  function header(){return `<header id="top">
   <div class="utility"><div class="wrap utility-in"><span class="presence"><i class="light-dot"></i>SUNDAY NIGHT LIGHTS</span><span class="venue">MARKHAM SPORTS DOME · ONTARIO</span><div class="socials"><span class="utility-follow">FOLLOW SNL</span><a class="social-pill" href="https://www.instagram.com/snl_416/" target="_blank" rel="noopener noreferrer" aria-label="SNL Instagram profile">${insta}<span>Instagram</span></a><span class="social-pill disabled" title="YouTube link coming soon" aria-label="YouTube channel link coming soon">${yt}<span>YouTube</span></span><span class="utility-divider"></span><a class="calendar-pill" href="${cal}" target="_blank" rel="noopener noreferrer">${calendarIcon}<span>Subscribe to Calendar</span></a></div></div></div>
  <div class="masthead"><div class="wrap masthead-in"><a href="index.html" class="brand" aria-label="Sunday Night Lights home"><span class="brand-mark">S<i>N</i>L</span><span class="brand-divider"></span><span class="brand-txt"><b>SUNDAY NIGHT<br>LIGHTS</b><small>OFFICIAL LEAGUE HUB</small></span></a><button class="menu-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="siteNav">☰</button><nav class="nav" id="siteNav" aria-label="Main navigation">${linkNav.map(([k,label,href])=>`<a href="${href}" class="${page===k||(page==='article'&&k==='highlights')||(page==='team'&&k==='teams')?'active':''}">${label}</a>`).join('')}</nav></div></div>
- <div class="scoreboard"><div class="wrap"><div class="scorehead"><h2><i class="light-dot"></i>SNL SCOREBOARD</h2><span class="right-text">${latestResultsWeek()?`WEEK ${latestResultsWeek()} · ${dateLabel(weekGames(latestResultsWeek())[0].date)} · RESULTS`:'SCHEDULE & RESULTS'}</span><button class="scorebtn" data-score-step="-1" aria-label="Previous scores">‹</button><button class="scorebtn" data-score-step="1" aria-label="Next scores">›</button></div><div class="scoretrack" id="scoreTrack"><a href="schedule.html" class="gamecenter"><span class="live-disc"></span><div><strong>LIVE GAME<br>CENTRE</strong><small>Schedule &amp; results</small></div></a>${latestResultsWeek()?weekGames(latestResultsWeek()).map(g=>`<div class="scorecard ${g.status==='Final'?'':'pending'}"><div class="scoremeta">${g.status==='Final'?'FINAL':'PENDING'}<span>WEEK ${g.week}</span></div><div class="scoreteam">${im(g.away)}<span>${teamMap[g.away].short}</span><b>${g.awayScore??'—'}</b></div><div class="scoreteam">${im(g.home)}<span>${teamMap[g.home].short}</span><b>${g.homeScore??'—'}</b></div></div>`).join(''):'<div class="scorecard pending"><div class="scoremeta">LIVE DATA</div><div class="scoreteam">No verified results available</div></div>'}</div></div></div>
+ <div class="scoreboard"><div class="wrap"><div class="scorehead"><h2><i class="light-dot"></i>SNL SCOREBOARD</h2><span class="right-text">${latestResultsWeek()?`WEEK ${latestResultsWeek()} · ${dateLabel(weekGames(latestResultsWeek())[0].date)} · RESULTS`:'SCHEDULE & RESULTS'}</span></div><div class="score-viewport"><button type="button" class="scorebtn ticker-arrow ticker-arrow-prev" data-score-step="-1" aria-label="Scroll scoreboard left" aria-controls="scoreTrack"><span aria-hidden="true">‹</span></button><div class="scoretrack" id="scoreTrack"><a href="schedule.html" class="gamecenter"><span class="live-disc"></span><div><strong>LIVE GAME<br>CENTRE</strong><small>Schedule &amp; results</small></div></a>${latestResultsWeek()?weekGames(latestResultsWeek()).map(g=>`<div class="scorecard ${g.status==='Final'?'':'pending'}"><div class="scoremeta">${g.status==='Final'?'FINAL':'PENDING'}<span>WEEK ${g.week}</span></div><div class="scoreteam">${im(g.away)}<span>${teamMap[g.away].short}</span><b>${g.awayScore??'—'}</b></div><div class="scoreteam">${im(g.home)}<span>${teamMap[g.home].short}</span><b>${g.homeScore??'—'}</b></div></div>`).join(''):'<div class="scorecard pending"><div class="scoremeta">LIVE DATA</div><div class="scoreteam">No verified results available</div></div>'}</div><button type="button" class="scorebtn ticker-arrow ticker-arrow-next" data-score-step="1" aria-label="Scroll scoreboard right" aria-controls="scoreTrack"><span aria-hidden="true">›</span></button></div></div></div>
  </header>`;}
  function footer(){return `<footer class="footer"><span><strong>SUNDAY NIGHT <em>LIGHTS</em></strong></span><span><a href="rules.html">Rules</a> · <a href="tournaments.html">Tournaments</a> · <a href="about.html">About</a> · <a href="join.html">Join SNL</a> · <a href="registration.html">Registration</a> · <a href="${cal}" target="_blank" rel="noopener">Subscribe to Calendar</a></span><span>2026-27 Fall</span></footer>`;}
  const ribbon=()=>`<div class="logo-ribbon" aria-label="SNL team logos">${['buffaloes','outcasts','morsl','iht','maul','raccoons'].map(id=>`<a class="logo-team ${id}" href="team.html?team=${id}" title="${teamMap[id].name}">${im(id,'',teamMap[id].name)}</a>`).join('')}</div>`;
@@ -107,7 +107,31 @@ function joinPage(){return `${pageHero('JOIN','SNL','Interested in playing Sunda
    if (location.hash === '#league-news') requestAnimationFrame(() => document.getElementById('league-news')?.scrollIntoView());
    const menu=document.querySelector('.menu-toggle'),nav=document.querySelector('.nav');
    menu.addEventListener('click',()=>{let open=nav.classList.toggle('open');menu.setAttribute('aria-expanded',String(open))});
-   document.querySelectorAll('[data-score-step]').forEach(btn=>btn.addEventListener('click',()=>document.getElementById('scoreTrack').scrollBy({left:+btn.dataset.scoreStep*410,behavior:'smooth'})));
+   // FOX-style desktop edge controls; only reveal arrows at an edge with hidden scores.
+   const scoreTrack=document.getElementById('scoreTrack');
+   const scoreButtons=[...document.querySelectorAll('.score-viewport [data-score-step]')];
+   const updateScoreArrows=()=>{
+     if(!scoreTrack)return;
+     const last=Math.max(0,scoreTrack.scrollWidth-scoreTrack.clientWidth);
+     for(const btn of scoreButtons){
+       const direction=Number(btn.dataset.scoreStep);
+       const available=direction<0?scoreTrack.scrollLeft>2:scoreTrack.scrollLeft<last-2;
+       const enabled=last>2&&available&&!btn.hidden;
+       btn.disabled=!enabled;
+       btn.classList.toggle('has-scroll',enabled);
+     }
+   };
+   scoreButtons.forEach(btn=>btn.addEventListener('click',()=>{
+     const distance=Math.min(410,Math.max(210,scoreTrack.clientWidth*.75));
+     scoreTrack.scrollBy({left:Number(btn.dataset.scoreStep)*distance,behavior:'smooth'});
+   }));
+   if(scoreTrack){
+     scoreTrack.addEventListener('scroll',updateScoreArrows,{passive:true});
+     new MutationObserver(updateScoreArrows).observe(scoreTrack,{childList:true});
+     if(typeof ResizeObserver==='function')new ResizeObserver(updateScoreArrows).observe(scoreTrack);
+     window.addEventListener('resize',updateScoreArrows,{passive:true});
+     updateScoreArrows();
+   }
    document.querySelectorAll('[data-week]').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('[data-week]').forEach(b=>b.classList.toggle('active',b===btn));document.getElementById('scheduleArea').innerHTML=gamesPanel(true,Number(btn.dataset.week))}));
  }
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
