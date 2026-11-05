@@ -57,6 +57,7 @@
     '.snl-unpublished button{margin-top:18px;border:1px solid #ffde19;color:#ffde19;background:transparent;border-radius:9px;padding:10px 16px;font-weight:900;cursor:pointer;}',
     '@media(max-width:800px){.scorehead .snl-seasonbar select{width:160px;max-width:160px;font-size:11px;}.scorehead .snl-seasonbar label{padding:0 8px;font-size:9px;}}',
     '@media(max-width:480px){.scorehead{gap:5px;}.scorehead h2{font-size:12px;letter-spacing:.35px;}.scorehead .snl-seasonbar{margin-left:auto;}.scorehead .snl-seasonbar select{width:min(139px,38vw);max-width:38vw;font-size:10px;padding:8px 23px 8px 7px;letter-spacing:0;}.scorehead .snl-seasonbar label{padding:0 7px;font-size:8px;letter-spacing:.01em;}.scorehead .snl-season-select-wrap::after{right:6px;font-size:17px;}.scorehead .scorebtn{display:none;}}',
+    '@media(max-width:380px){.scorehead h2{font-size:11px;letter-spacing:0;}.scorehead .snl-seasonbar select{width:34vw;max-width:34vw;}.scorehead .snl-seasonbar label{padding:0 5px;}}',
     // Preserve existing GameChanger stats data flow.
     'body[data-page="stats"] #gc-stats .gc-seasonbar label[for="gcSeason"]{display:none;}'
   ].join('\n');
@@ -168,7 +169,8 @@
     for (const s of ordered) {
       const option = document.createElement('option');
       option.value = s.id;
-      option.textContent = s.label + (s.status === 'upcoming' ? ' · Coming Soon' : '');
+      // Keep the control compact; the scoreboard communicates Coming Soon for unpublished seasons.
+      option.textContent = s.label;
       option.selected = s.id === selected.id;
       select.appendChild(option);
     }
