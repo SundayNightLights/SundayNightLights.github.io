@@ -37,19 +37,20 @@
   }
 
   const css = [
-    '.snl-seasonbar{background:#0a2943;border-bottom:1px solid #45627e;}',
-    '.snl-seasonbar .wrap{display:flex;align-items:center;justify-content:flex-end;gap:12px;padding-top:8px;padding-bottom:8px;min-height:54px;}',
-    '.snl-seasonbar label{font-size:11px;font-weight:900;color:#c2d6e5;text-transform:uppercase;letter-spacing:.09em;}',
-    '.snl-seasonbar select{background:#06192b;border:1px solid #8197ac;border-radius:9px;padding:10px 14px;color:#fff;font-size:14px;font-weight:800;min-width:210px;cursor:pointer;}',
+    '.snl-seasonbar{display:inline-flex;align-items:center;gap:8px;flex:0 0 auto;margin-left:auto;white-space:nowrap;}',
+    '.snl-seasonbar label{font-size:10px;font-weight:900;color:#c2d6e5;text-transform:uppercase;letter-spacing:.06em;}',
+    '.snl-seasonbar select{background:#06192b;border:1px solid #8197ac;border-radius:9px;padding:9px 12px;color:#fff;font-size:13px;font-weight:800;max-width:220px;cursor:pointer;}',
     '.snl-seasonbar select:focus-visible{outline:2px solid #ffde19;outline-offset:2px;}',
-    '.snl-season-state{font-size:11px;font-weight:850;color:#ffde19;white-space:nowrap;}',
+    '.page-hero .snl-seasonbar{align-self:flex-end;margin-bottom:2px;}',
+    '.split > div:first-child > .section-top{flex-wrap:wrap;align-items:center;}',
+    '.split > div:first-child > .section-top .snl-seasonbar{margin-left:auto;}',
     '.snl-unpublished{border:1px solid #496d88;border-radius:14px;background:#0d2d49;color:#fff;padding:32px;margin:24px 0;}',
     '.snl-unpublished small{color:#ffde19;letter-spacing:.13em;font-weight:900;font-size:11px;}',
     '.snl-unpublished h2{font-size:clamp(22px,3vw,32px);margin:12px 0;}',
     '.snl-unpublished p{color:#c6d7e5;line-height:1.6;max-width:670px;}',
     '.snl-unpublished button{margin-top:18px;border:1px solid #ffde19;color:#ffde19;background:transparent;border-radius:9px;padding:10px 16px;font-weight:900;cursor:pointer;}',
-    '@media(max-width:650px){.snl-seasonbar .wrap{justify-content:flex-start;gap:8px;flex-wrap:wrap}.snl-seasonbar label{width:100%}.snl-seasonbar select{flex:1;min-width:0}.snl-season-state{font-size:10px}}',
-    // Stats already had an internal season dropdown. The shared bar replaces its visual control.
+    '@media(max-width:650px){.page-hero{flex-wrap:wrap}.page-hero .snl-seasonbar{margin-left:0}.snl-seasonbar select{max-width:195px;font-size:12px;padding:8px 10px}}',
+    // Stats has an internal technical selector; show only the shared page-level control.
     'body[data-page="stats"] #gc-stats .gc-seasonbar label[for="gcSeason"]{display:none;}'
   ].join('\n');
 
@@ -76,15 +77,25 @@
     if (!wrap) return;
     if (page === 'home') {
       const gamesAndStandings = wrap.querySelector('.split');
-      if (gamesAndStandings) gamesAndStandings.replaceWith(unpublished());
+      if (gamesAndStandings) {
+        // Keep the Upcoming Games heading and its inline selector when Winter is unpublished.
+        const heading = gamesAndStandings.querySelector(':scope > div:first-child > .section-top');
+        const summary = document.createElement('section');
+        summary.className = 'section snl-season-summary';
+        if (heading) summary.appendChild(heading);
+        summary.appendChild(unpublished());
+        gamesAndStandings.replaceWith(summary);
+      }
       for (const section of wrap.querySelectorAll('section.section')) {
         const heading = section.querySelector('.section-top h2')?.textContent || '';
         if (/LEAGUE\s*LEADERS/i.test(heading)) section.remove();
       }
     } else {
       const footer = wrap.querySelector('.footer');
+      const hero = wrap.querySelector(':scope > .page-hero');
+      // Preserve the page title and the selector; remove only old-season data.
       for (const child of [...wrap.children]) {
-        if (child !== footer) child.remove();
+        if (child !== footer && child !== hero) child.remove();
       }
       wrap.insertBefore(unpublished(), footer || null);
     }
@@ -103,9 +114,15 @@
 
   function install() {
     const header = document.getElementById('siteHeader');
-    const ticker = header?.querySelector('.scoreboard');
     const wrap = document.querySelector('#app > .wrap');
-    if (!ticker || !wrap?.querySelector('.footer')) return false;
+    if (!header?.querySelector('.scoreboard') || !wrap?.querySelector('.footer')) return false;
+    // Stats swaps its initial page markup for a GameChanger statistics view.
+    // Attach only after that swap so its heading (and selector) remain intact.
+    if (page === 'stats' && !wrap.querySelector('#gc-stats')) return false;
+    const target = page === 'home'
+      ? wrap.querySelector('.split > div:first-child > .section-top')
+      : wrap.querySelector(':scope > .page-hero');
+    if (!target) return false;
     if (document.getElementById('snlSeason')) return true;
 
     const style = document.createElement('style');
@@ -113,8 +130,6 @@
     document.head.appendChild(style);
     const bar = document.createElement('div');
     bar.className = 'snl-seasonbar';
-    const inner = document.createElement('div');
-    inner.className = 'wrap';
     const label = document.createElement('label');
     label.htmlFor = 'snlSeason';
     label.textContent = 'Select season';
@@ -129,13 +144,9 @@
       select.appendChild(option);
     }
     select.addEventListener('change',() => navigateTo(select.value));
-    const state = document.createElement('span');
-    state.className = 'snl-season-state';
-    state.textContent = selected.status === 'current' ? 'CURRENT' : selected.status === 'upcoming' ? 'COMING SOON' : 'ARCHIVED';
-    inner.append(label,select,state);
-    bar.appendChild(inner);
-    // Keep the season control below the full scoreboard/ticker on every supported page.
-    ticker.insertAdjacentElement('afterend',bar);
+    bar.append(label,select);
+    // Use the heading's existing row rather than introducing a new page-wide bar.
+    target.appendChild(bar);
 
     const footer = wrap.querySelector('.footer');
     if (footer?.lastElementChild) footer.lastElementChild.textContent = selected.label;
