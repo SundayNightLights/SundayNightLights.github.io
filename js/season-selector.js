@@ -6,9 +6,9 @@
 (() => {
   'use strict';
 
-  const pages = new Set(['home','schedule','standings','teams','team','playoffs','stats']);
+  // Every page has the scoreboard. Only these pages display season-specific body content.
+  const seasonPages = new Set(['home','schedule','standings','teams','team','playoffs','stats']);
   const page = document.body?.dataset.page || 'home';
-  if (!pages.has(page)) return;
 
   const seasons = [
     {id:'F26',label:'2026-27 Fall',status:'current',order:20261},
@@ -37,22 +37,23 @@
   }
 
   const css = [
-    '.snl-seasonbar{display:inline-flex;align-items:center;gap:8px;flex:0 0 auto;margin-left:auto;white-space:nowrap;}',
-    '.snl-seasonbar label{font-size:10px;font-weight:900;color:#c2d6e5;text-transform:uppercase;letter-spacing:.06em;}',
-    '.snl-seasonbar select{background:#06192b;border:1px solid #8197ac;border-radius:9px;padding:9px 12px;color:#fff;font-size:13px;font-weight:800;max-width:220px;cursor:pointer;}',
-    '.snl-seasonbar select:focus-visible{outline:2px solid #ffde19;outline-offset:2px;}',
-    '.page-hero .snl-seasonbar{align-self:flex-end;margin-bottom:2px;}',
-    '.split > div:first-child > .section-top{flex-wrap:wrap;align-items:center;}',
-    '.split > div:first-child > .section-top .snl-seasonbar{margin-left:auto;}',
-    '.split > div:first-child > .section-top .snl-seasonbar label{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}',
-    '.split > div:first-child > .section-top .snl-seasonbar select{max-width:190px;width:190px;}',
+    '.scorehead{flex-wrap:wrap;}',
+    '.scorehead .snl-seasonbar{display:inline-flex;align-items:center;gap:7px;flex:0 1 auto;margin-left:3px;white-space:nowrap;}',
+    '.scorehead .snl-seasonbar label{font-size:10px;font-weight:900;color:#c2d6e5;text-transform:uppercase;letter-spacing:.06em;}',
+    '.scorehead .snl-seasonbar select{background:#06192b;border:1px solid #8197ac;border-radius:9px;padding:8px 12px;color:#fff;font-size:12px;font-weight:800;max-width:220px;cursor:pointer;}',
+    '.scorehead .snl-seasonbar select:focus-visible{outline:2px solid #ffde19;outline-offset:2px;}',
+    '.scorehead .right-text{margin-left:auto;}',
+    '.snl-ticker-soon{opacity:1!important;flex:1 0 220px;max-width:560px;padding:14px 16px;}',
+    '.snl-ticker-soon .scoremeta{margin-bottom:9px;}',
+    '.snl-ticker-soon .scoreteam{line-height:1.5;font-weight:700;color:#d7e7f2;white-space:normal;}',
     '.snl-unpublished{border:1px solid #496d88;border-radius:14px;background:#0d2d49;color:#fff;padding:32px;margin:24px 0;}',
     '.snl-unpublished small{color:#ffde19;letter-spacing:.13em;font-weight:900;font-size:11px;}',
     '.snl-unpublished h2{font-size:clamp(22px,3vw,32px);margin:12px 0;}',
     '.snl-unpublished p{color:#c6d7e5;line-height:1.6;max-width:670px;}',
     '.snl-unpublished button{margin-top:18px;border:1px solid #ffde19;color:#ffde19;background:transparent;border-radius:9px;padding:10px 16px;font-weight:900;cursor:pointer;}',
-    '@media(max-width:650px){.page-hero{flex-wrap:wrap}.page-hero .snl-seasonbar{margin-left:0}.snl-seasonbar select{max-width:195px;font-size:12px;padding:8px 10px}}',
-    // Stats has an internal technical selector; show only the shared page-level control.
+    '@media(max-width:800px){.scorehead .snl-seasonbar label{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}.scorehead .snl-seasonbar select{max-width:190px;}}',
+    '@media(max-width:480px){.scorehead{gap:7px;}.scorehead h2{font-size:12px;letter-spacing:.5px;}.scorehead .snl-seasonbar{margin-left:auto;}.scorehead .snl-seasonbar select{max-width:165px;width:165px;font-size:11px;padding:7px 6px;}.scorehead .scorebtn{display:none;}}',
+    // The live GameChanger statistics page retains its internal selector for data purposes.
     'body[data-page="stats"] #gc-stats .gc-seasonbar label[for="gcSeason"]{display:none;}'
   ].join('\n');
 
@@ -74,20 +75,12 @@
   }
 
   function hideUnpublishedSeasonData() {
-    if (selected.id === current.id) return;
+    if (selected.id === current.id || !seasonPages.has(page)) return;
     const wrap = document.querySelector('#app > .wrap');
     if (!wrap) return;
     if (page === 'home') {
       const gamesAndStandings = wrap.querySelector('.split');
-      if (gamesAndStandings) {
-        // Keep the Upcoming Games heading and its inline selector when Winter is unpublished.
-        const heading = gamesAndStandings.querySelector(':scope > div:first-child > .section-top');
-        const summary = document.createElement('section');
-        summary.className = 'section snl-season-summary';
-        if (heading) summary.appendChild(heading);
-        summary.appendChild(unpublished());
-        gamesAndStandings.replaceWith(summary);
-      }
+      if (gamesAndStandings) gamesAndStandings.replaceWith(unpublished());
       for (const section of wrap.querySelectorAll('section.section')) {
         const heading = section.querySelector('.section-top h2')?.textContent || '';
         if (/LEAGUE\s*LEADERS/i.test(heading)) section.remove();
@@ -95,12 +88,45 @@
     } else {
       const footer = wrap.querySelector('.footer');
       const hero = wrap.querySelector(':scope > .page-hero');
-      // Preserve the page title and the selector; remove only old-season data.
-      for (const child of [...wrap.children]) {
-        if (child !== footer && child !== hero) child.remove();
+      // Keep the page title; prevent archived or unpublished seasons showing Fall data.
+      // GameChanger still updates its stats DOM asynchronously, so keep that DOM hidden
+      // rather than removing nodes needed by its existing data callbacks.
+      const statsRoot = page === 'stats' ? wrap.querySelector('#gc-stats') : null;
+      if (statsRoot) {
+        statsRoot.hidden = true;
+        statsRoot.setAttribute('aria-hidden','true');
       }
-      wrap.insertBefore(unpublished(), footer || null);
+      for (const child of [...wrap.children]) {
+        if (child !== footer && child !== hero && child !== statsRoot) child.remove();
+      }
+      wrap.insertBefore(unpublished(), statsRoot || footer || null);
     }
+  }
+
+  function syncTicker() {
+    if (selected.id === current.id) return; // Preserve the existing verified Fall feed.
+    const head = document.querySelector('#siteHeader .scorehead');
+    const track = document.getElementById('scoreTrack');
+    if (!head || !track) return;
+
+    const text = head.querySelector('.right-text');
+    if (text) text.textContent = selected.label.toUpperCase() + ' · COMING SOON';
+    head.querySelectorAll('[data-score-step]').forEach(btn => {
+      btn.hidden = true;
+      btn.disabled = true;
+    });
+    // No Winter feed has been published. Never relabel Fall scores as Winter scores.
+    const notice = document.createElement('div');
+    notice.className = 'scorecard snl-ticker-soon';
+    notice.setAttribute('role','status');
+    const heading = document.createElement('div');
+    heading.className = 'scoremeta';
+    heading.textContent = selected.label.toUpperCase() + ' · COMING SOON';
+    const message = document.createElement('div');
+    message.className = 'scoreteam';
+    message.textContent = 'Schedule and results will appear when this season is published.';
+    notice.append(heading,message);
+    track.replaceChildren(notice);
   }
 
   function syncStats() {
@@ -117,14 +143,11 @@
   function install() {
     const header = document.getElementById('siteHeader');
     const wrap = document.querySelector('#app > .wrap');
-    if (!header?.querySelector('.scoreboard') || !wrap?.querySelector('.footer')) return false;
-    // Stats swaps its initial page markup for a GameChanger statistics view.
-    // Attach only after that swap so its heading (and selector) remain intact.
+    const target = header?.querySelector('.scorehead');
+    if (!target || !wrap?.querySelector('.footer')) return false;
+    // The Stats page swaps its initial content for a GameChanger view.
+    // For Winter, don't hide nodes until GameChanger has completed that swap.
     if (page === 'stats' && !wrap.querySelector('#gc-stats')) return false;
-    const target = page === 'home'
-      ? wrap.querySelector('.split > div:first-child > .section-top')
-      : wrap.querySelector(':scope > .page-hero');
-    if (!target) return false;
     if (document.getElementById('snlSeason')) return true;
 
     const style = document.createElement('style');
@@ -147,11 +170,12 @@
     }
     select.addEventListener('change',() => navigateTo(select.value));
     bar.append(label,select);
-    // Use the heading's existing row rather than introducing a new page-wide bar.
-    target.appendChild(bar);
+    // One compact selector beside SNL SCOREBOARD on every page.
+    target.insertBefore(bar, target.querySelector('.right-text'));
 
     const footer = wrap.querySelector('.footer');
     if (footer?.lastElementChild) footer.lastElementChild.textContent = selected.label;
+    syncTicker();
     hideUnpublishedSeasonData();
     syncStats();
     return true;
