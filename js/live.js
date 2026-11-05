@@ -17,10 +17,11 @@
   if (!widgetId) return;
 
   let started = false;
+  let wired = false;
 
-  function mount() {
+  function mountWidget() {
     const container = document.getElementById('gc-scoreboard-widget-snl');
-    if (!container || started) return false;
+    if (!container || started) return;
     started = true;
 
     const status = document.getElementById('snlGcLoadStatus');
@@ -31,7 +32,7 @@
       }
     };
     const initialize = () => {
-      if (!window.GC || !window.GC.scoreboard || typeof window.GC.scoreboard.init !== 'function') {
+      if (!window.GC?.scoreboard || typeof window.GC.scoreboard.init !== 'function') {
         fail();
         return;
       }
@@ -49,9 +50,8 @@
       }
     };
 
-    if (window.GC?.scoreboard?.init) {
-      initialize();
-    } else {
+    if (window.GC?.scoreboard?.init) initialize();
+    else {
       const sdk = document.createElement('script');
       sdk.src = 'https://widgets.gc.com/static/js/sdk.v1.js';
       sdk.async = true;
@@ -59,13 +59,31 @@
       sdk.addEventListener('error',fail,{once:true});
       document.head.appendChild(sdk);
     }
+  }
+
+  function bindControls() {
+    if (wired) return true;
+    const details = document.getElementById('snlOfficialFeed');
+    if (!details) return false;
+    wired = true;
+    const button = document.getElementById('snlLiveOpen');
+    button?.addEventListener('click',() => {
+      details.open = true;
+      details.scrollIntoView({behavior:'smooth',block:'start'});
+      mountWidget();
+    });
+    details.addEventListener('toggle',() => { if (details.open) mountWidget(); });
+    if (location.hash === '#snlOfficialFeed') {
+      details.open = true;
+      mountWidget();
+    }
     return true;
   }
 
   function start() {
-    if (mount()) return;
+    if (bindControls()) return;
     const observer = new MutationObserver(() => {
-      if (mount()) observer.disconnect();
+      if (bindControls()) observer.disconnect();
     });
     observer.observe(document.getElementById('app') || document.documentElement,{childList:true,subtree:true});
   }
