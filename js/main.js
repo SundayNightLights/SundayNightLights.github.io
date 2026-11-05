@@ -50,23 +50,26 @@
  // "All" reuses the compact SNL previous-results scoreboard card design.
  function overviewScorecard(g){
    const finished=g.status==='Final';
+   const status=finished?'FINAL':(g.date < torontoToday()?'PENDING':'SCHEDULED');
    const time=escapeHtml(gameStart(g));
    const diamond=escapeHtml(diamondCode(g));
    const away=teamMap[g.away], home=teamMap[g.home];
    return '<article class="scorecard snl-overview-scorecard' + (finished?'':' snl-scheduled') +
      '" aria-label="' + escapeHtml(away.name+' at '+home.name+', '+(finished?'final':'scheduled')+', '+gameStart(g)+', '+diamondCode(g)) + '">' +
-     '<div class="scoremeta"><span>' + (finished?'FINAL':'SCHEDULED') + '</span><span>' + time + ' · ' + diamond + '</span></div>' +
+     '<div class="scoremeta"><span>' + status + '</span><span>' + time + ' · ' + diamond + '</span></div>' +
      '<div class="scoreteam">' + im(g.away) + '<span>' + escapeHtml(away.short) + '</span>' +
        (finished?'<b>'+escapeHtml(g.awayScore??'—')+'</b>':'') + '</div>' +
      '<div class="scoreteam">' + im(g.home) + '<span>' + escapeHtml(home.short) + '</span>' +
        (finished?'<b>'+escapeHtml(g.homeScore??'—')+'</b>':'') + '</div></article>';
  }
 
- function allWeeksPanel(full=false){
+ function allWeeksPanel(full=false,selectedWeek=null){
    if(!regular().length) return '<div class="panel"><div class="panel-foot">Live schedule unavailable.</div></div>';
+   const label=selectedWeek===null?'All regular-season weeks':'Week '+selectedWeek+' results';
    let html='<div class="snl-all-weeks ' + (full?'snl-all-weeks-full':'snl-all-weeks-home') +
-     '" aria-label="All regular-season weeks"' + (full?'':' tabindex="0"') + '>';
-   for(let week=1;week<=10;week++){
+     '" aria-label="' + label + '"' + (full?'':' tabindex="0"') + '>';
+   const weeks=selectedWeek===null?Array.from({length:10},(_,i)=>i+1):[selectedWeek];
+   for(const week of weeks){
      const games=weekGames(week);
      if(!games.length) continue;
      html+='<section class="snl-week-group"><div class="panel-h"><span>' +
@@ -79,7 +82,7 @@
  function gamesPanel(all=false,week=upcomingWeek()){
   const games=weekGames(week);
   if(!games.length)return `<div class="panel"><div class="panel-h"><span>LEAGUE SCHEDULE</span></div><div class="panel-foot">Live schedule unavailable.</div></div>`;
-  if(games.some(g=>g.status==='Final'))return resultsTable(week);
+  if(games.some(g=>g.status==='Final') || games[0].date < torontoToday())return allWeeksPanel(all,week);
   return `<div class="panel"><div class="panel-h"><span>${dateLabel(games[0].date)}</span><small>WEEK ${week}</small></div><div class="matches ${all?'large-matches':''}">${games.map(g=>matchup(gameCard(g))).join('')}</div>${all?`<div class="panel-foot">All times local to Markham · ${D.venue} · Diamond 1 (Near) and Diamond 2 (Far)</div>`:''}</div>`;
  }
  function standingsTable(compact=true){
@@ -93,10 +96,7 @@
  function home(){return `${hero()}<section class="section" id="featured">${sectionHead('FEATURED','STORIES','VIEW ALL STORIES ›','highlights.html')}${stories()}<div class="newsline"><b>LEAGUE NEWS</b><span class="news-updates"><span><strong>NOV 2</strong> Time slots changed for Weeks 2, 8 &amp; 9. <a class="news-inline-link" href="schedule.html">Check schedule ›</a></span></span><a href="highlights.html#league-news">VIEW ALL NEWS ›</a></div></section><section class="split"><div><div class="section-top"><div><h2>UPCOMING <em>GAMES</em></h2><div class="section-rule"></div></div><label class="snl-week-control"><span class="snl-screenreader">View week</span><select id="homeWeekSelect" aria-label="Choose week for Upcoming Games">${weekOptions(upcomingWeek())}</select></label></div><div id="homeGamesArea">${gamesPanel(false)}</div></div><div><div class="section-top"><div><h2>LEAGUE <em>STANDINGS</em></h2><div class="section-rule"></div></div><a href="standings.html">FULL TABLE ›</a></div>${standingsTable(true)}</div></section><section class="section">${sectionHead('LEAGUE','LEADERS','VIEW ALL STATS ›','stats.html')}<p class="hint" style="margin:0 0 13px">Player batting leaders · GameChanger statistics</p>${leaders()}</section><section class="join-home-prompt"><div><strong>INTERESTED IN JOINING SNL?</strong><p>Bring a team or join as a free agent. Explore your options for future sessions.</p></div><a class="join-home-action" href="join.html">JOIN SNL ›</a></section><section class="flat-card" style="display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap"><div><b style="color:var(--yellow);font-size:13px">PLAYER REGISTRATION &amp; WAIVERS</b><p class="section-note" style="margin:6px 0 0">Roster registration and league waivers are being prepared.</p></div><a class="neutral-link" href="registration.html">HOW IT WILL WORK ›</a></section>`;}
  const pageHero=(a,b,sub='',action='')=>`<div class="page-hero"><div><h1>${a} <em>${b}</em></h1><p>${sub}</p></div>${action}</div>`;
  function schedule(){const active=requestedWeek();return `${pageHero('SNL','SCHEDULE','2026-27 Fall · Markham Sports Dome')}<div class="filters"><button class="filterbtn" data-week="all">All</button>${Array.from({length:10},(_,i)=>i+1).map(w=>`<button class="filterbtn ${w===active?'active':''}" data-week="${w}">Week ${w}</button>`).join('')}<span class="not-live">Schedules and scores from the SNL Master workbook</span></div><div id="scheduleArea">${gamesPanel(true,active)}</div>${feedNotice()}<div class="notice">Ten playing Sundays · Holiday break December 27, 2026. Times and diamonds may change; the website reflects the most recently published workbook export.</div>`;}
- function resultsTable(week){
-  const games=weekGames(week);if(!games.length)return '<div class="panel">No data available</div>';
-  return `<div class="panel"><div class="panel-h"><span>${dateLabel(games[0].date)}</span><small>WEEK ${week} · RESULTS & TIMES</small></div><div style="overflow-x:auto"><table class="game-table"><thead><tr><th>TIME</th><th>DIAMOND</th><th>AWAY</th><th>HOME</th><th>RESULT</th></tr></thead><tbody>${games.map(g=>`<tr><td>${escapeHtml(gameStart(g))}</td><td>${diamondCode(g)}</td><td><div class="result-row">${im(g.away)}<span>${teamMap[g.away].short}</span></div></td><td><div class="result-row">${im(g.home)}<span>${teamMap[g.home].short}</span></div></td><td>${g.status==='Final'?`<b>${g.awayScore} – ${g.homeScore}</b>`:'<span class="result-pending">Not played</span>'}</td></tr>`).join('')}</tbody></table></div></div>`;
- }
+
  function standingsPage(){return `${pageHero('LEAGUE','STANDINGS','Provisional standings from SNL Master results.')}<div style="overflow-x:auto">${standingsTable(false)}</div>${feedNotice()}<div class="notice">Points: 2 per win, 1 per tie. Official tie-breakers: points, wins, head-to-head points, season capped run differential, fewest runs allowed, most runs scored, then a draw if required.</div>`;}
 
   function playoffsPage(){return `${pageHero('SNL','PLAYOFFS','Seeds and series will be determined after the regular season.')}<div class="playoff-grid"><div class="round-card"><h3>QUARTERFINALS</h3><div class="series">#3 vs #6<small>Best of 3 · Higher seed home</small></div><div class="series">#4 vs #5<small>Best of 3 · Higher seed home</small></div></div><div class="round-card"><h3>SEMIFINALS</h3><div class="series">#1 vs lowest remaining seed<small>Best of 3</small></div><div class="series">#2 vs other remaining seed<small>Best of 3</small></div></div><div class="round-card"><h3>FINALS</h3><div class="series">Semifinal Winner vs Winner<small>Best of 3 · Championship</small></div></div></div><div class="notice">The top two regular-season seeds receive quarterfinal byes. Series and home assignments will follow the approved SNL playoff rules. No teams are seeded yet.</div>${playoffSlots()}`;}
