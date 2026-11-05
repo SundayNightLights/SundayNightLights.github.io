@@ -1,0 +1,120 @@
+/* SNL MATCHUP CARDS — APPROVED REFERENCE GEOMETRY (NOV 5 2026)
+   Restores the exact measured artwork rectangles used in approved previews.
+   No logo replacements or changes to page layout outside matchup cards.
+*/
+.match,.split .match,.large-matches .match{
+  height:110px;position:relative;isolation:isolate;overflow:hidden;
+  border-radius:18px;border:1px solid #66829c;background:#06182b;
+}
+.match .half,.match .half.away,.match .half.home{
+  position:absolute;inset:0;width:100%;height:100%;overflow:hidden;z-index:1;
+}
+.match .half.away{clip-path:polygon(0 0,58% 0,42% 100%,0 100%)}
+.match .half.home{clip-path:polygon(58% 0,100% 0,100% 100%,42% 100%)}
+.match .half--buffaloes.away{background:#eed8a2}
+.match .half--buffaloes.home{background:#1757ac}
+.match .half--iht.away{background:#f5f2eb}
+.match .half--iht.home{background:#e8781d}
+.match .half--morsl.away{background:#1a75bd}
+.match .half--morsl.home{background:#38b649}
+.match .half--outcasts.away{background:#dbe1e8}
+.match .half--outcasts.home{background:#070b0d}
+.match .half--maul.away{background:#414d5b}
+.match .half--maul.home{background:#12161b}
+.match .half--raccoons.away{background:#687e7c}
+.match .half--raccoons.home{background:#006a3d}
+/* Artwork is a measured, image-sized rectangle on either team side.
+   Team zoom is independent of card width; rotation is uniformly +3 degrees. */
+.match .half .teamart{
+  position:absolute;inset:auto;width:auto;max-width:none;
+  height:var(--logo-h);aspect-ratio:var(--logo-ratio);
+  background-image:var(--logo-url);background-size:100% 100%;
+  background-repeat:no-repeat;background-position:center;
+  transform:translate(-50%,-50%) rotate(3deg);
+  transform-origin:center center;opacity:1;filter:none;pointer-events:none;
+  top:var(--logo-y,50%);
+}
+.match .half.away .teamart{left:var(--away-x,25%)}
+.match .half.home .teamart{left:var(--home-x,75%)}
+.match .half--buffaloes{
+  --logo-h:176%;--logo-ratio:1400 / 577;
+  --logo-url:url('../assets/matchup-buffaloes.webp');--logo-y:55%;
+  --away-x:242px;--home-x:calc(42% + 235px);
+}
+.match .half--iht{
+  --logo-h:264%;--logo-ratio:1400 / 1037;
+  --logo-url:url('../assets/matchup-iht.webp');--logo-y:52%;
+  --away-x:24%;--home-x:76%;
+}
+/* MORSL rightward correction, preserving original alligator, M and baseball. */
+.match .half--morsl{
+  --logo-h:148%;--logo-ratio:1116 / 648;
+  --logo-url:url('../assets/matchup-morsl.webp');--logo-y:72%;
+  --away-x:156px;--home-x:calc(42% + 156px);
+}
+.match .half--outcasts{
+  --logo-h:226%;--logo-ratio:675 / 1124;
+  --logo-url:url('../assets/matchup-outcasts.webp');--logo-y:58%;
+  --away-x:25%;--home-x:75%;
+}
+/* Pacific Maul: approved 10% increase from 396 to 435.6%. */
+.match .half--maul{
+  --logo-h:435.6%;--logo-ratio:1400 / 1365;
+  --logo-url:url('../assets/matchup-maul.webp');--logo-y:50%;
+  --away-x:22%;--home-x:78%;
+}
+/* Toronto Raccoons: approved 10% increase from 258 to 283.8%,
+   with eyes and muzzle brought lower in the frame. */
+.match .half--raccoons{
+  --logo-h:283.8%;--logo-ratio:1121 / 992;
+  --logo-url:url('../assets/matchup-raccoons.webp');--logo-y:86%;
+  --away-x:calc(20% - 46px);--home-x:calc(73% - 62px);
+}
+.match .slash{
+  position:absolute;inset:0;width:100%;height:100%;z-index:4;
+  transform:none;background:#ffde19;
+  clip-path:polygon(calc(58% - 2px) 0,calc(58% + 2px) 0,calc(42% + 2px) 100%,calc(42% - 2px) 100%);
+  pointer-events:none;
+}
+.match .half .half-label,.large-matches .match .half .half-label{
+  position:absolute;bottom:9px;top:auto;z-index:6;
+  font:900 16px/1 'DejaVu Sans Condensed','Arial Narrow',Arial,sans-serif;
+  color:white;letter-spacing:-.35px;white-space:nowrap;
+  -webkit-text-stroke:.75px #071527;
+  text-shadow:1px 1px 1px #071527,-1px -1px 1px #071527,0 2px 3px #000;
+}
+.match .half.away .half-label,.large-matches .match .half.away .half-label{left:10px;right:auto}
+.match .half.home .half-label,.large-matches .match .half.home .half-label{right:10px;left:auto;text-align:right}
+.match .half .position-label,.large-matches .match .half .position-label{
+  position:absolute;top:9px;bottom:auto;font-size:9px;font-weight:900;z-index:6;
+  color:#fff;letter-spacing:.8px;text-shadow:0 1px 3px #000,0 0 2px #000;
+}
+.match .half.away .position-label{left:10px;right:auto}
+.match .half.home .position-label{right:10px}
+.match .matchtime,.large-matches .match .matchtime{
+  position:absolute;left:50%;top:48%;transform:translate(-50%,-50%);z-index:8;
+  background:#06182b;border:1.5px solid #ffde19;border-radius:999px;
+  text-align:center;min-width:129px;padding:6px 10px;box-shadow:0 2px 6px #0008;
+}
+.match .matchtime b,.large-matches .match .matchtime b{
+  display:block;font-size:17px;line-height:1.08;white-space:nowrap;color:#fff;
+}
+.match .matchtime small,.large-matches .match .matchtime small{
+  display:block;font-size:9px;line-height:1.05;font-weight:900;
+  color:#ffde19;letter-spacing:0;white-space:nowrap;
+  border-top:none;margin-top:2px;padding:0;
+}
+@media(max-width:480px){
+  .match,.split .match,.large-matches .match{height:124px;border-radius:17px}
+  .match .half--morsl{--away-x:148px;--home-x:calc(42% + 148px)}
+  .match .half--raccoons{--logo-y:101%;--away-x:calc(20% - 119px);--home-x:calc(73% - 84px)}
+  .match .half .half-label,.large-matches .match .half .half-label{
+    font-size:14px;bottom:7px;letter-spacing:-.5px;
+  }
+  .match .half.away .half-label,.large-matches .match .half.away .half-label{left:7px}
+  .match .half.home .half-label,.large-matches .match .half.home .half-label{right:7px}
+  .match .half .position-label,.large-matches .match .half .position-label{font-size:8px;top:7px}
+  .match .matchtime,.large-matches .match .matchtime{min-width:112px;padding:5px 7px}
+  .match .matchtime b,.large-matches .match .matchtime b{font-size:15px}
+  .match .matchtime small,.large-matches .match .matchtime small{font-size:8px}
+}
