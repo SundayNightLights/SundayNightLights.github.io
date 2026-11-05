@@ -392,3 +392,19 @@ main{padding-bottom:30px}.hero{border:1px solid #43617a;background:#102f4d;margi
 @media(min-width:801px){.stories-viewport .stories .story{flex:0 0 30%}}
 @media(max-width:800px),(hover:none),(pointer:coarse){.score-viewport .ticker-arrow,.stories-viewport .story-arrow{display:none!important}}
 @media(prefers-reduced-motion:reduce){.stories-viewport .story-arrow{transition:none}.stories-viewport .stories{scroll-behavior:auto}}
+
+/* First-party SNL framing for the official embedded GameChanger league scoreboard. */
+.snl-live-section{margin:0 0 38px}
+.snl-live-section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin:0 0 17px}
+.snl-live-kicker{display:inline-flex;align-items:center;gap:8px;color:#ffde19;font-size:11px;letter-spacing:1.2px;font-weight:900}
+.snl-live-section-head h2{font-size:clamp(22px,3vw,35px);font-weight:900;letter-spacing:-.5px;font-style:italic;margin:9px 0}
+.snl-live-section-head p{font-size:13px;line-height:1.5;color:#bfd0df;margin:0}
+.snl-live-provider{border:1px solid #53718a;border-radius:6px;color:#c4d6e8;font-size:10px;font-weight:900;letter-spacing:.8px;white-space:nowrap;padding:9px 11px}
+.snl-live-widget-panel{border:1px solid #54748e;border-radius:14px;background:#fff;min-height:365px;padding:14px;overflow:hidden}
+.snl-live-widget-panel #gc-scoreboard-widget-snl{max-width:100%;width:100%;min-height:275px}
+.snl-live-widget-panel iframe{max-width:100%}
+.snl-live-status{color:#193b55;font-weight:700;font-size:14px;line-height:1.5;padding:10px 8px}
+.snl-live-status[hidden]{display:none}
+.snl-live-note{font-size:12px;color:#b9cbdc;line-height:1.65;margin:15px 0}
+.snl-live-note a{color:#ffde19;text-decoration:underline;text-underline-offset:3px}
+@media(max-width:800px){.snl-live-section-head{align-items:start;flex-direction:column;gap:12px}.snl-live-widget-panel{padding:7px;min-height:310px}.snl-live-provider{font-size:9px}}
