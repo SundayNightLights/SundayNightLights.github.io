@@ -7,7 +7,7 @@
   'use strict';
 
   // Every page has the scoreboard. Only these pages display season-specific body content.
-  const seasonPages = new Set(['home','schedule','standings','teams','team','playoffs','stats']);
+  const seasonPages = new Set(['home','schedule','live','standings','teams','team','playoffs','stats']);
   const page = document.body?.dataset.page || 'home';
 
   const seasons = [
