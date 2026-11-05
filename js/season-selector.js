@@ -116,7 +116,7 @@
 
     const text = head.querySelector('.right-text');
     if (text) text.textContent = selected.label.toUpperCase() + ' · COMING SOON';
-    head.querySelectorAll('[data-score-step]').forEach(btn => {
+    head.closest('.scoreboard')?.querySelectorAll('[data-score-step]').forEach(btn => {
       btn.hidden = true;
       btn.disabled = true;
     });
