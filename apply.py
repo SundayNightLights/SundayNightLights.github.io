@@ -1,0 +1,32 @@
+#!/usr/bin/env python3
+"""Apply SNL matching UI patch to repository checkout. Changes only JS card labels,
+CSS card styles, and six dedicated matchup image assets. Does not modify data files."""
+from pathlib import Path
+import re, shutil, sys
+site=Path.cwd()
+kit=Path(__file__).resolve().parent
+css=site/'css'/'style.css'; js=site/'js'/'main.js'
+assert css.is_file() and js.is_file(), 'Expected main site CSS and JS under css/ and js/'
+styles=css.read_text(encoding='utf-8')
+start='/* SNL MATCHUP CARDS – APPROVED NOV 4 2026 (V2)'
+if start in styles:
+  styles=styles[:styles.index(start)].rstrip()+'\n'
+styles += '\n'+(kit/'snl_matchups_v2.css').read_text(encoding='utf-8')
+css.write_text(styles,encoding='utf-8')
+source=js.read_text(encoding='utf-8')
+# Change only gameCard's diamond label; leave result-table diamondCode untouched.
+p1=r"d:diamondCode\(g\),field:"
+p2="d:`DIAMOND ${g.diamond} · ${g.diamond===1?'NEAR':'FAR'}`,field:"
+if not re.search(p1,source) and p2 not in source:
+  raise RuntimeError('Could not locate gameCard diamond line. Site may have changed; stop safely.')
+source,n=re.subn(p1,lambda m:p2,source,count=1)
+# Only matchup card labels show full team names, without affecting ticker or standings.
+old='${t.short}</span></div>`;}'
+new='${t.name}</span></div>`;}'
+if old not in source and new not in source:
+  raise RuntimeError('Could not locate teamHalf label. Site may have changed; stop safely.')
+source=source.replace(old,new,1)
+js.write_text(source,encoding='utf-8')
+for f in sorted((kit/'assets').glob('matchup-*.webp')):
+  dest=site/'assets'/f.name;dest.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(f,dest)
+print('SNL matchup cards patched: 6 approved logos + solid backgrounds + same team zoom + tilt + 16px/14px labels.')

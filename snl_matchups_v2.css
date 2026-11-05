@@ -1,0 +1,119 @@
+/* SNL MATCHUP CARDS – APPROVED NOV 4 2026 (V2)
+   Original team artwork only. Equal home/away zoom per team; positioning may differ.
+   All art is clipped by the identical geometric yellow diagonal boundary.
+*/
+.match{
+  --snl-line:#ffde19;
+  height:110px;
+  overflow:hidden;
+  border-radius:18px;
+  border:1px solid #66829c;
+  position:relative;
+  isolation:isolate;
+  background:#06182b;
+}
+.split .match{height:110px}
+.large-matches .match{height:126px}
+.match .half,.match .half.away,.match .half.home{
+  position:absolute;inset:0;width:100%;height:100%;overflow:hidden;
+  z-index:1;
+}
+.match .half.away{
+  clip-path:polygon(0 0,58% 0,42% 100%,0 100%);
+}
+.match .half.home{
+  clip-path:polygon(58% 0,100% 0,100% 100%,42% 100%);
+}
+/* Team colours: solid without overlays, gradients, blur or fading. */
+.match .half--buffaloes.away{background:#eed8a2}
+.match .half--buffaloes.home{background:#1757ac}
+.match .half--iht.away{background:#f5f2eb}
+.match .half--iht.home{background:#e8781d}
+.match .half--morsl.away{background:#1a75bd}
+.match .half--morsl.home{background:#38b649}
+.match .half--outcasts.away{background:#dbe1e8}
+.match .half--outcasts.home{background:#070b0d}
+.match .half--maul.away{background:#414d5b}
+.match .half--maul.home{background:#12161b}
+.match .half--raccoons.away{background:#687e7c}
+.match .half--raccoons.home{background:#006a3d}
+/* Place image on a full-card canvas before clipping: same physical scale on both sides.
+   A single clockwise 3-degree tilt for every team. No logo is modified by rotation. */
+.match .teamart{
+  position:absolute;inset:0;max-width:none;
+  transform:rotate(3deg);transform-origin:center center;
+  background-color:transparent;
+  background-repeat:no-repeat;
+  opacity:1;filter:none;
+  pointer-events:none;
+}
+/* Buffaloes: oversized B leads; home begins near bottom-left diagonal anchor. */
+.match .half--buffaloes .teamart{background-image:url('../assets/matchup-buffaloes.webp');background-size:auto 185%}
+.match .half--buffaloes.away .teamart{background-position:left -12px center}
+.match .half--buffaloes.home .teamart{background-position:left calc(42% + 7px) center}
+/* IHT: identical tight skull size on both sides, with partial crossed bats. */
+.match .half--iht .teamart{background-image:url('../assets/matchup-iht.webp');background-size:auto 248%}
+.match .half--iht.away .teamart{background-position:left 1% center}
+.match .half--iht.home .teamart{background-position:right 1% center}
+/* MORSL: original complete emblem, cap & yellow M, border, and partial baseball. */
+.match .half--morsl .teamart{background-image:url('../assets/matchup-morsl.webp');background-size:auto 143%}
+.match .half--morsl.away .teamart{background-position:left -8px center}
+.match .half--morsl.home .teamart{background-position:left calc(42% + 3px) center}
+/* Outcasts: keep faceplate and bottom-right C visible. */
+.match .half--outcasts .teamart{background-image:url('../assets/matchup-outcasts.webp');background-size:auto 225%}
+.match .half--outcasts.away .teamart{background-position:left 9% 53%}
+.match .half--outcasts.home .teamart{background-position:right 9% 53%}
+/* Pacific Maul: slightly tighter facial crop. */
+.match .half--maul .teamart{background-image:url('../assets/matchup-maul.webp');background-size:auto 247%}
+.match .half--maul.away .teamart{background-position:left -3% 48%}
+.match .half--maul.home .teamart{background-position:right -3% 48%}
+/* Raccoons: face-forward, eyes and muzzle prioritized. */
+.match .half--raccoons .teamart{background-image:url('../assets/matchup-raccoons.webp');background-size:auto 232%}
+.match .half--raccoons.away .teamart{background-position:left -2% 44%}
+.match .half--raccoons.home .teamart{background-position:right -2% 44%}
+/* Exact same diagonal edge as the clipping polygons. */
+.match .slash{
+  position:absolute;inset:0;width:100%;height:100%;z-index:4;
+  transform:none;background:var(--snl-line);
+  clip-path:polygon(calc(58% - 2px) 0,calc(58% + 2px) 0,calc(42% + 2px) 100%,calc(42% - 2px) 100%);
+  pointer-events:none;
+}
+.match .half .half-label,.large-matches .match .half .half-label{
+  position:absolute;bottom:9px;z-index:6;
+  font:900 16px/1 'Arial Narrow','Roboto Condensed',Impact,Arial,sans-serif;
+  color:white;letter-spacing:0;white-space:nowrap;
+  -webkit-text-stroke:.45px #071527;
+  text-shadow:1px 1px 0 #071527,-1px -1px 0 #071527,0 2px 3px #000;
+}
+.match .half.away .half-label,.large-matches .match .half.away .half-label{left:10px;right:auto}
+.match .half.home .half-label,.large-matches .match .half.home .half-label{right:10px;left:auto;text-align:right}
+.match .half .position-label,.large-matches .match .half .position-label{
+  top:9px;font-size:9px;font-weight:900;z-index:6;letter-spacing:.8px;
+  color:#fff;text-shadow:0 1px 3px #000,0 0 2px #000;
+}
+.match .half.away .position-label{left:10px}
+.match .half.home .position-label{right:10px}
+.match .matchtime,.large-matches .match .matchtime{
+  position:absolute;left:50%;top:48%;transform:translate(-50%,-50%);z-index:8;
+  background:#06182b;border:1.5px solid var(--snl-line);border-radius:999px;
+  text-align:center;min-width:129px;padding:6px 10px;
+  box-shadow:0 2px 6px #0008;
+}
+.match .matchtime b,.large-matches .match .matchtime b{
+  display:block;font-size:17px;line-height:1.08;white-space:nowrap;color:white;
+}
+.match .matchtime small,.large-matches .match .matchtime small{
+  display:block;font-size:9px;line-height:1.05;font-weight:900;
+  color:var(--snl-line);letter-spacing:0;white-space:nowrap;
+  border-top:none;margin-top:2px;padding:0;
+}
+@media(max-width:480px){
+  .match,.split .match,.large-matches .match{height:110px;border-radius:17px}
+  .match .half .half-label,.large-matches .match .half .half-label{font-size:14px;bottom:7px}
+  .match .half.away .half-label,.large-matches .match .half.away .half-label{left:7px}
+  .match .half.home .half-label,.large-matches .match .half.home .half-label{right:7px}
+  .match .half .position-label,.large-matches .match .half .position-label{font-size:8px;top:7px}
+  .match .matchtime,.large-matches .match .matchtime{min-width:112px;padding:5px 7px}
+  .match .matchtime b,.large-matches .match .matchtime b{font-size:15px}
+  .match .matchtime small,.large-matches .match .matchtime small{font-size:8px}
+}
