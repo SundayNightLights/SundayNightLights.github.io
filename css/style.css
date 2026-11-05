@@ -518,3 +518,26 @@ main{padding-bottom:30px}.hero{border:1px solid #43617a;background:#102f4d;margi
 @media(max-width:800px){
   .utility-in>.socials{margin-left:auto;gap:5px}
 }
+
+/* SNL league navigation: main destinations, accessible More dropdown and Join CTA. */
+.nav-more{position:relative;align-self:stretch;display:flex;align-items:center}
+.nav-more>summary{list-style:none;cursor:pointer;white-space:nowrap;font-size:12px;font-weight:900;color:#bfd0e1;padding:33px 0;user-select:none}
+.nav-more>summary::-webkit-details-marker{display:none}
+.nav-more>summary span{font-size:11px;color:#f3d54b}
+.nav-more>summary:hover,.nav-more[open]>summary,.nav-more.active>summary{color:var(--yellow)}
+.nav-more>summary:focus-visible{outline:2px solid var(--yellow);outline-offset:4px}
+.nav-more-menu{position:absolute;z-index:90;top:calc(100% - 5px);right:-10px;min-width:225px;display:flex;flex-direction:column;gap:0;padding:7px;background:#081d33;border:1px solid #53728b;border-radius:9px;box-shadow:0 14px 26px #0009}
+.nav-more:not([open]) .nav-more-menu{display:none}
+.nav-more-menu a,.nav-more-menu a.active{display:block;padding:11px 12px!important;font-size:12px!important;border-radius:5px;line-height:1.3}
+.nav-more-menu a:hover{background:#193e59}
+.nav-more-menu a.active:after{display:none}
+.nav a.nav-join,.nav a.nav-join.active{background:var(--yellow);color:#06192b;border-radius:7px;font-size:12px;font-weight:900;padding:11px 14px;line-height:1.1;text-align:center}
+.nav a.nav-join:hover{background:#ffe86a;color:#06192b}
+.nav a.nav-join.active:after{display:none}
+@media(max-width:1120px){
+ .nav-more{display:block;align-self:auto}
+ .nav-more>summary{padding:11px 8px;font-size:14px}
+ .nav-more-menu{position:static;min-width:0;box-shadow:none;border:0;border-left:2px solid #476985;border-radius:0;margin:0 0 3px 8px;padding:1px 0 1px 10px}
+ .nav-more-menu a,.nav-more-menu a.active{font-size:14px!important;padding:10px 9px!important}
+ .nav a.nav-join,.nav a.nav-join.active{align-self:stretch;padding:12px!important;margin-top:5px}
+}
