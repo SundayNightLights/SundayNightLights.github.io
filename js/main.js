@@ -11,8 +11,8 @@
  const fmtDate=date=>date?new Intl.DateTimeFormat('en-US',{timeZone:'America/Toronto',weekday:'long',month:'long',day:'numeric',year:'numeric'}).format(new Date(date+'T12:00:00Z')):'Date pending';
  const dateLabel=date=>fmtDate(date).toUpperCase();
  const gameStart=g=>g.startLabel||g.time?.split(/[–—-]/)[0]?.trim()||'Slot '+g.slot;
- const diamondCode=g=>`D${g.diamond} · ${g.diamond===1?'NEAR':'FAR'}`;
- const gameCard=g=>({a:g.away,h:g.home,time:gameStart(g),d:`DIAMOND ${g.diamond} · ${g.diamond===1?'NEAR':'FAR'}`,field:`Diamond ${g.diamond} (${g.diamond===1?'Near':'Far'} Field)`});
+ const diamondCode=g=>`Diamond ${g.diamond}`;
+ const gameCard=g=>({a:g.away,h:g.home,time:gameStart(g),d:`DIAMOND ${g.diamond}`,field:`Diamond ${g.diamond} (${g.diamond===1?'Near':'Far'} Field)`});
  const latestResultsWeek=()=>[...new Set(regular().filter(g=>g.status==='Final').map(g=>g.week))].sort((a,b)=>b-a)[0]||null;
  function torontoToday(){const parts=new Intl.DateTimeFormat('en-US',{timeZone:'America/Toronto',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());const p=Object.fromEntries(parts.map(x=>[x.type,x.value]));return `${p.year}-${p.month}-${p.day}`;}
  function upcomingWeek(){if(!feed)return 2;const today=torontoToday();const g=regular().filter(g=>g.status!=='Final'&&g.date>=today).sort((a,b)=>a.date.localeCompare(b.date)||a.slot-b.slot)[0];return g?.week||regular().filter(g=>g.status!=='Final').sort((a,b)=>a.week-b.week)[0]?.week||10;}
