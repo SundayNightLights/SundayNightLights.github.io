@@ -101,35 +101,18 @@
  function playoffSlots(){if(!feed)return feedNotice();const rounds=['Quarterfinals','Semifinals','Finals'];return `<div class="flat-card"><h2>PLAYOFF GAME SLOTS</h2><p class="section-note">Matchups remain placeholders until official seeding. Game 3 is played only if necessary.</p><div style="overflow-x:auto"><table class="game-table"><thead><tr><th>ROUND</th><th>DATE</th><th>TIME</th><th>DIAMOND</th><th>AWAY</th><th>HOME</th><th>STATUS</th></tr></thead><tbody>${feed.playoffs.map(g=>`<tr><td>${escapeHtml(g.round)}</td><td>${escapeHtml(g.date)}</td><td>${escapeHtml(gameStart(g))}</td><td>${diamondCode(g)}</td><td>${escapeHtml(teamMap[g.away]?.name||g.away)}</td><td>${escapeHtml(teamMap[g.home]?.name||g.home)}</td><td>${g.status==='Not Necessary'?'Not necessary':g.status==='Final'?`${g.awayScore} – ${g.homeScore}`:g.ifNecessary?'If necessary':'Scheduled'}</td></tr>`).join('')}</tbody></table></div></div>`;}
  function teamsPage(){return `${pageHero('SNL','TEAMS','Six clubs. One league. Explore each team’s official logo and future roster.')}<div class="team-grid">${D.teams.map(t=>`<a class="team-card" href="team.html?team=${t.id}">${im(t.id,'',t.name)}<h3>${t.name}</h3><span>VIEW TEAM ›</span></a>`).join('')}</div>`;}
 
- function opponentBreakdown(teamId){
-  const teamGames=regular().filter(g=>g.away===teamId||g.home===teamId);
-  if(!teamGames.length)return '<div class="flat-card snl-opponent-breakdown"><h2>Opponent Breakdown</h2><p class="section-note">The regular-season opponent breakdown is temporarily unavailable.</p></div>';
-  const opponents=D.teams.filter(t=>t.id!==teamId).sort((a,b)=>a.name.localeCompare(b.name));
-  const rows=opponents.map(opponent=>{
-   const meetings=teamGames.filter(g=>g.away===opponent.id||g.home===opponent.id);
-   const weeks=[...new Set(meetings.map(g=>g.week))].sort((a,b)=>a-b);
-   const home=meetings.filter(g=>g.home===teamId).length;
-   const away=meetings.filter(g=>g.away===teamId).length;
-   return '<tr><td><a class="snl-opponent-name" href="team.html?team='+encodeURIComponent(opponent.id)+'">'+
-    im(opponent.id,'',opponent.name)+'<span>'+escapeHtml(opponent.name)+'</span></a></td>'+
-    '<td class="snl-opponent-weeks">'+weeks.map(w=>'<a href="schedule.html?week='+w+'" aria-label="View Week '+w+' schedule">W'+w+'</a>').join('<span aria-hidden="true"> · </span>')+'</td>'+
-    '<td>'+meetings.length+'</td><td>'+home+'</td><td>'+away+'</td></tr>';
-  }).join('');
-  const homes=teamGames.filter(g=>g.home===teamId).length;
-  const aways=teamGames.filter(g=>g.away===teamId).length;
-  return '<div class="flat-card snl-opponent-breakdown"><h2>Opponent Breakdown</h2>'+
-   '<p class="section-note">Regular-season matchups · Home and away counts are from this team’s perspective.</p>'+
-   '<div class="snl-opponent-table-wrap"><table class="game-table snl-opponent-table" aria-label="Opponent breakdown">'+
-   '<thead><tr><th>OPPONENT</th><th>MEETING WEEKS</th><th>GAMES</th><th>HOME</th><th>AWAY</th></tr></thead>'+
-   '<tbody>'+rows+'</tbody>'+
-   '<tfoot><tr><td>TOTAL</td><td>—</td><td>'+teamGames.length+'</td><td>'+homes+'</td><td>'+aways+'</td></tr></tfoot>'+
-   '</table></div></div>';
- }
  function teamPage(){
   const id=new URLSearchParams(location.search).get('team')||'buffaloes',t=teamMap[id]||teamMap.buffaloes;
   const standing=feed?.standings.find(r=>r.team===t.id);
   const matches=regular().filter(g=>g.away===t.id||g.home===t.id);
-  return `${pageHero('TEAM',t.name.toUpperCase(),'Roster, results and season schedule') }<div class="flat-card team-detail">${im(t.id,'',t.name)}<div><h2>${t.name}</h2><p class="section-note">${standing?`${standing.wins}W–${standing.losses}L–${standing.ties}T · ${standing.points} points · Provisional rank ${standing.rank}`:'Live team record is temporarily unavailable.'}</p><a class="neutral-link" href="teams.html">← ALL TEAMS</a></div></div><div class="flat-card"><h2>2026-27 Fall Roster</h2><p class="section-note">Roster pending. No player names or personal information have been published.</p></div><div class="flat-card"><h2>Team Schedule & Results</h2>${matches.length?`<div style="overflow-x:auto"><table class="game-table"><thead><tr><th>WEEK</th><th>DATE</th><th>TIME</th><th>DIAMOND</th><th>MATCHUP</th><th>RESULT</th></tr></thead><tbody>${matches.map(g=>`<tr><td><a href="schedule.html?week=${g.week}">W${g.week}</a></td><td>${escapeHtml(g.date)}</td><td>${escapeHtml(gameStart(g))}</td><td>${diamondCode(g)}</td><td>${escapeHtml(teamMap[g.away].short)} @ ${escapeHtml(teamMap[g.home].short)}</td><td>${g.status==='Final'?`${g.awayScore}–${g.homeScore}`:'—'}</td></tr>`).join('')}</tbody></table></div>`:'<p class="section-note">Live team schedule temporarily unavailable.</p>'}<a class="feature-link" href="schedule.html">VIEW FULL SNL SCHEDULE ›</a></div>${opponentBreakdown(t.id)}`;
+  return `${pageHero('TEAM',t.name.toUpperCase(),'Roster, results and season schedule') }<div class="flat-card team-detail">${im(t.id,'',t.name)}<div><h2>${t.name}</h2><p class="section-note">${standing?`${standing.wins}W–${standing.losses}L–${standing.ties}T · ${standing.points} points · Provisional rank ${standing.rank}`:'Live team record is temporarily unavailable.'}</p><a class="neutral-link" href="teams.html">← ALL TEAMS</a></div></div><div class="flat-card"><h2>2026-27 Fall Roster</h2><p class="section-note">Roster pending. No player names or personal information have been published.</p></div><div class="flat-card"><h2>Team Schedule & Results</h2>${matches.length?`<div class="snl-matchups-filter">
+<label for="snlOpponentSelect">Opponent</label>
+<select id="snlOpponentSelect" aria-label="Filter team matchups by opponent">
+<option value="all">All Opponents</option>
+${D.teams.filter(op=>op.id!==t.id).sort((a,b)=>a.name.localeCompare(b.name)).map(op=>`<option value="${escapeHtml(op.id)}">${escapeHtml(op.name)}</option>`).join('')}
+</select>
+<span id="snlMatchupsCount" role="status" aria-live="polite"></span>
+</div>` : ''}${matches.length?`<div style="overflow-x:auto"><table class="game-table"><thead><tr><th>WEEK</th><th>DATE</th><th>TIME</th><th>DIAMOND</th><th>MATCHUP</th><th>RESULT</th></tr></thead><tbody id="snlTeamMatchupRows">${matches.map(g=>`<tr data-opponent="${g.away===t.id?g.home:g.away}" data-week="${g.week}" data-home="${g.home===t.id?1:0}"><td><a href="schedule.html?week=${g.week}">W${g.week}</a></td><td>${escapeHtml(g.date)}</td><td>${escapeHtml(gameStart(g))}</td><td>${diamondCode(g)}</td><td>${escapeHtml(teamMap[g.away].short)} @ ${escapeHtml(teamMap[g.home].short)}</td><td>${g.status==='Final'?`${g.awayScore}–${g.homeScore}`:'—'}</td></tr>`).join('')}</tbody></table></div>`:'<p class="section-note">Live team schedule temporarily unavailable.</p>'}<a class="feature-link" href="schedule.html">VIEW FULL SNL SCHEDULE ›</a></div>`;
  }
 
   function statsPage(){return `${pageHero('LEAGUE','STATS','Team performance and individual player leaderboards')}<div class="stat-summary"><div class="stat-box"><b>6</b><small>TEAMS</small></div><div class="stat-box"><b>10</b><small>PLAYING WEEKS</small></div><div class="stat-box"><b>60</b><small>REGULAR-SEASON GAMES</small></div><div class="stat-box"><b>2</b><small>DIAMONDS</small></div></div><section class="section">${sectionHead('TEAM','STATISTICS')}<div style="overflow:auto">${standingsTable(false)}</div></section><section class="section leaders-full">${sectionHead('LEAGUE','LEADERS')}${leaders()}</section><div class="notice">Player statistics will be shown after GameChanger data is connected and verified. No statistics, leaders, or player identities have been invented.</div>`;}
@@ -243,6 +226,27 @@ function joinPage(){return `${pageHero('JOIN','SNL','Interested in playing Sunda
      updateArrows();
    });
    document.querySelectorAll('[data-week]').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('[data-week]').forEach(b=>b.classList.toggle('active',b===btn));document.getElementById('scheduleArea').innerHTML=btn.dataset.week==='all'?allWeeksPanel(true):gamesPanel(true,Number(btn.dataset.week))}));
+   const opponentSelect=document.getElementById('snlOpponentSelect');
+   if(opponentSelect){
+     const rows=[...document.querySelectorAll('#snlTeamMatchupRows tr')];
+     const count=document.getElementById('snlMatchupsCount');
+     const applyOpponentFilter=()=>{
+       const selected=opponentSelect.value;
+       const visible=rows.filter(row=>{
+         const show=selected==='all'||row.dataset.opponent===selected;
+         row.hidden=!show;
+         return show;
+       });
+       const home=visible.filter(row=>row.dataset.home==='1').length;
+       const away=visible.length-home;
+       const weeks=[...new Set(visible.map(row=>Number(row.dataset.week)))].sort((a,b)=>a-b);
+       if(count)count.textContent=visible.length+' games · '+home+' home · '+away+' away'+
+         (selected==='all'?'':' · Weeks '+weeks.join(', '));
+     };
+     opponentSelect.addEventListener('change',applyOpponentFilter);
+     applyOpponentFilter();
+   }
+
  }
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
