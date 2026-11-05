@@ -239,7 +239,7 @@ main{padding-bottom:30px}.hero{border:1px solid #43617a;background:#102f4d;margi
 @media(max-width:800px){.stories .story,.story-archive .story{height:auto!important}}
 @media(max-width:480px){.stories .story,.story-archive .story{height:auto!important}}
 
-/* SNL MATCHUP CARDS – APPROVED NOV 4 2026 (V2)
+/* SNL MATCHUP CARDS – APPROVED NOV 5 2026 (V3: 10% closer PM/Raccoons; MORSL right)
    Original team artwork only. Equal home/away zoom per team; positioning may differ.
    All art is clipped by the identical geometric yellow diagonal boundary.
 */
@@ -298,18 +298,18 @@ main{padding-bottom:30px}.hero{border:1px solid #43617a;background:#102f4d;margi
 .match .half--iht.home .teamart{background-position:right 1% center}
 /* MORSL: original complete emblem, cap & yellow M, border, and partial baseball. */
 .match .half--morsl .teamart{background-image:url('../assets/matchup-morsl.webp');background-size:auto 143%}
-.match .half--morsl.away .teamart{background-position:left -8px center}
-.match .half--morsl.home .teamart{background-position:left calc(42% + 3px) center}
+.match .half--morsl.away .teamart{background-position:left 8px center}
+.match .half--morsl.home .teamart{background-position:left calc(42% + 19px) center}
 /* Outcasts: keep faceplate and bottom-right C visible. */
 .match .half--outcasts .teamart{background-image:url('../assets/matchup-outcasts.webp');background-size:auto 225%}
 .match .half--outcasts.away .teamart{background-position:left 9% 53%}
 .match .half--outcasts.home .teamart{background-position:right 9% 53%}
 /* Pacific Maul: slightly tighter facial crop. */
-.match .half--maul .teamart{background-image:url('../assets/matchup-maul.webp');background-size:auto 247%}
+.match .half--maul .teamart{background-image:url('../assets/matchup-maul.webp');background-size:auto 271.7%}
 .match .half--maul.away .teamart{background-position:left -3% 48%}
 .match .half--maul.home .teamart{background-position:right -3% 48%}
 /* Raccoons: face-forward, eyes and muzzle prioritized. */
-.match .half--raccoons .teamart{background-image:url('../assets/matchup-raccoons.webp');background-size:auto 232%}
+.match .half--raccoons .teamart{background-image:url('../assets/matchup-raccoons.webp');background-size:auto 255.2%}
 .match .half--raccoons.away .teamart{background-position:left -2% 44%}
 .match .half--raccoons.home .teamart{background-position:right -2% 44%}
 /* Exact same diagonal edge as the clipping polygons. */
