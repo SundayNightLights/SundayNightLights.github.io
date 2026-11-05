@@ -509,3 +509,12 @@ main{padding-bottom:30px}.hero{border:1px solid #43617a;background:#102f4d;margi
 }
 /* Let longer full diamond labels wrap cleanly on compact scorecards. */
 .snl-overview-scorecard .scoremeta{flex-wrap:wrap;gap:3px 8px}
+
+
+/* Top utility bar: keep SNL identity left and the social/subscribe actions right. */
+.utility-in>.venue{margin-left:0}
+.utility-in>.socials{margin-left:auto;display:flex;justify-content:flex-end;align-items:center;flex:0 0 auto}
+.utility-in>.presence{flex:0 0 auto}
+@media(max-width:800px){
+  .utility-in>.socials{margin-left:auto;gap:5px}
+}
