@@ -1,2 +1,432 @@
+
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#06192b"><meta name="description" content="Sunday Night Lights softball league — schedule, standings, teams, highlights and player statistics."><title>Sunday Night Lights</title><link rel="stylesheet" href="css/style.css?v=snl-content-20261104"><link rel="icon" href="assets/favicon.svg" type="image/svg+xml"></head><body data-page="home"><div id="siteHeader"></div><main id="app"></main><script src="js/data.js?v=snl-content-20261104"></script><script src="js/main.js?v=snl-content-20261104"></script></body></html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#06192b">
+  <meta name="description" content="Sunday Night Lights softball league — schedule, standings, teams, highlights and player statistics.">
+  <title>Sunday Night Lights</title>
+  <link rel="stylesheet" href="css/style.css?v=snl-content-20261104">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+</head>
+
+<body data-page="home">
+  <div id="siteHeader"></div>
+  <main id="app"></main>
+
+  <script src="js/data.js?v=snl-content-20261104"></script>
+  <script src="js/main.js?v=snl-content-20261104"></script>
+
+  <script>
+  (() => {
+    'use strict';
+
+    const STATS_URL =
+      'https://sundaynightlights.github.io/SNL-Stats-Hub/stats-data.json';
+
+    const SCHEDULE_URL =
+      'https://sundaynightlights.github.io/SNL-Calendar-Hub/site-data.json';
+
+    const CATEGORIES = [
+      'AVG',
+      'HR',
+      'RBI',
+      'H'
+    ];
+
+    async function fetchJSON(url) {
+      const response = await fetch(url, {
+        cache: 'no-store'
+      });
+
+      if (!response.ok) {
+        throw new Error(
+          'HTTP ' + response.status
+        );
+      }
+
+      return response.json();
+    }
+
+    function stat(player, key) {
+      const raw = player?.stats?.[key];
+
+      if (
+        raw === null ||
+        raw === undefined ||
+        raw === ''
+      ) {
+        return null;
+      }
+
+      const number = Number(raw);
+
+      return Number.isFinite(number)
+        ? number
+        : null;
+    }
+
+    function torontoDate() {
+      const parts = new Intl.DateTimeFormat(
+        'en-US',
+        {
+          timeZone: 'America/Toronto',
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit'
+        }
+      ).formatToParts(new Date());
+
+      const p = Object.fromEntries(
+        parts.map(x => [
+          x.type,
+          x.value
+        ])
+      );
+
+      return (
+        p.year + '-' +
+        p.month + '-' +
+        p.day
+      );
+    }
+
+    function scheduleForSeason(
+      season,
+      schedule
+    ) {
+      const games =
+        schedule?.regularSeason;
+
+      if (
+        !Array.isArray(games) ||
+        !games.length
+      ) {
+        return null;
+      }
+
+      const firstDate = games
+        .map(g => g.date)
+        .filter(d =>
+          typeof d === 'string' &&
+          /^\d{4}-\d{2}-\d{2}$/.test(d)
+        )
+        .sort()[0];
+
+      const code = /^([FW])(\d{2})$/i.exec(
+        season.season_id || ''
+      );
+
+      if (!firstDate || !code) {
+        return null;
+      }
+
+      const year =
+        2000 + Number(code[2]);
+
+      const startYear =
+        Number(firstDate.slice(0, 4));
+
+      const startMonth =
+        Number(firstDate.slice(5, 7));
+
+      const matches =
+        startYear === year &&
+        (
+          code[1].toUpperCase() === 'F'
+            ? startMonth >= 8
+            : startMonth <= 6
+        );
+
+      return matches ? games : null;
+    }
+
+    function minimumGames(
+      season,
+      schedule
+    ) {
+      const games = scheduleForSeason(
+        season,
+        schedule
+      );
+
+      if (games) {
+        const today = torontoDate();
+
+        const weeks = new Set(
+          games
+            .filter(g => {
+              const week = Number(g.week);
+
+              return (
+                Number.isInteger(week) &&
+                week >= 1 &&
+                week <= 10 &&
+                typeof g.date === 'string' &&
+                g.date < today
+              );
+            })
+            .map(g => Number(g.week))
+        );
+
+        return Math.min(
+          10,
+          Math.max(1, weeks.size)
+        );
+      }
+
+      // Fallback if the selected season's
+      // schedule isn't available yet.
+
+      const maxGP = Math.max(
+        0,
+        ...season.players.map(
+          p => stat(p, 'GP') ?? 0
+        )
+      );
+
+      return Math.min(
+        10,
+        Math.max(
+          1,
+          Math.ceil(maxGP / 2)
+        )
+      );
+    }
+
+    function selectLeader(
+      players,
+      category,
+      minGP
+    ) {
+      const eligible = players.filter(
+        player => {
+          const value = stat(
+            player,
+            category
+          );
+
+          if (value === null) {
+            return false;
+          }
+
+          if (category === 'AVG') {
+            return (
+              (stat(player, 'GP') ?? 0)
+              >= minGP
+            );
+          }
+
+          return value > 0;
+        }
+      );
+
+      eligible.sort((a, b) =>
+        stat(b, category) -
+        stat(a, category) ||
+        String(a.name || '')
+          .localeCompare(
+            String(b.name || '')
+          )
+      );
+
+      return eligible[0] || null;
+    }
+
+    function updateCard(
+      card,
+      category,
+      player,
+      minGP
+    ) {
+      // Keep the existing SNL
+      // homepage leaderboard design.
+
+      const label =
+        card.querySelector('small');
+
+      const value =
+        card.querySelector('strong');
+
+      const playerText =
+        card.querySelector('span');
+
+      if (
+        !label ||
+        !value ||
+        !playerText
+      ) {
+        return;
+      }
+
+      label.textContent =
+        category === 'AVG'
+          ? `AVG · MIN ${minGP} GP`
+          : category;
+
+      if (!player) {
+        value.textContent = '—';
+
+        playerText.textContent =
+          category === 'AVG'
+            ? 'No qualified players yet'
+            : 'No recorded stats yet';
+
+        return;
+      }
+
+      const number = stat(
+        player,
+        category
+      );
+
+      value.textContent =
+        category === 'AVG'
+          ? number.toFixed(3)
+          : String(number);
+
+      playerText.textContent =
+        `${player.name} · ${player.team}`;
+    }
+
+    async function populateCards(cards) {
+      try {
+        const [
+          statsResult,
+          scheduleResult
+        ] = await Promise.allSettled([
+          fetchJSON(STATS_URL),
+          fetchJSON(SCHEDULE_URL)
+        ]);
+
+        if (
+          statsResult.status !== 'fulfilled'
+        ) {
+          throw statsResult.reason;
+        }
+
+        const data = statsResult.value;
+
+        const season =
+          data.seasons?.find(
+            s =>
+              s.season_id ===
+              data.current_season
+          ) ||
+          data.seasons?.[0];
+
+        if (
+          !season ||
+          !Array.isArray(
+            season.players
+          )
+        ) {
+          throw new Error(
+            'No player statistics available'
+          );
+        }
+
+        const schedule =
+          scheduleResult.status === 'fulfilled'
+            ? scheduleResult.value
+            : null;
+
+        const minGP = minimumGames(
+          season,
+          schedule
+        );
+
+        CATEGORIES.forEach(
+          (category, index) => {
+            updateCard(
+              cards[index],
+              category,
+              selectLeader(
+                season.players,
+                category,
+                minGP
+              ),
+              minGP
+            );
+          }
+        );
+
+      } catch (error) {
+        console.warn(
+          'SNL homepage leaders could not be loaded:',
+          error
+        );
+
+        // Preserve the original homepage
+        // placeholders if statistics fail.
+      }
+    }
+
+    function start() {
+      const app =
+        document.getElementById('app');
+
+      if (!app) {
+        return;
+      }
+
+      let initialized = false;
+      let observer;
+
+      function attachWhenReady() {
+        if (initialized) {
+          return;
+        }
+
+        const cards = Array.from(
+          app.querySelectorAll(
+            '.leader-cards .leader-card'
+          )
+        );
+
+        if (cards.length !== 4) {
+          return;
+        }
+
+        initialized = true;
+
+        if (observer) {
+          observer.disconnect();
+        }
+
+        populateCards(cards);
+      }
+
+      // main.js loads the homepage
+      // asynchronously. Wait for its
+      // original four leaderboard cards.
+
+      observer = new MutationObserver(
+        attachWhenReady
+      );
+
+      observer.observe(app, {
+        childList: true,
+        subtree: true
+      });
+
+      attachWhenReady();
+    }
+
+    if (
+      document.readyState === 'loading'
+    ) {
+      document.addEventListener(
+        'DOMContentLoaded',
+        start,
+        { once: true }
+      );
+    } else {
+      start();
+    }
+
+  })();
+  </script>
+</body>
+</html>
