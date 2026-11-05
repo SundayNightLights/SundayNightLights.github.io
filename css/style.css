@@ -456,3 +456,35 @@ main{padding-bottom:30px}.hero{border:1px solid #43617a;background:#102f4d;margi
 .snl-native-gamecenter{margin-bottom:16px}
 .snl-native-lede{padding-bottom:4px;border-bottom:0}
 .snl-native-lede p a{color:#ffde19;text-decoration:underline;text-underline-offset:3px}
+
+/* SNL All-Weeks view — reuse the existing previous-results scoreboard design. */
+.snl-screenreader{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.snl-week-control{position:relative;display:inline-flex;align-items:center;flex-shrink:0}
+.snl-week-control::after{content:"⌄";font-size:18px;font-weight:900;color:#ffde19;position:absolute;right:11px;top:50%;transform:translateY(-55%);pointer-events:none}
+.snl-week-control select{appearance:none;-webkit-appearance:none;border:1px solid #c7ab2e;border-radius:8px;background:#133653;color:#fff;padding:9px 29px 9px 13px;font-size:12px;font-weight:900;cursor:pointer;min-width:115px}
+.snl-week-control select option{background:#133653;color:#fff}
+.snl-week-control select:focus-visible{outline:3px solid #ffde19;outline-offset:3px}
+.snl-all-weeks{min-width:0}
+.snl-all-weeks-home{max-height:640px;overflow-y:auto;overscroll-behavior:contain;scrollbar-color:#6687a4 #09243c;scrollbar-width:thin;padding-right:4px}
+.snl-all-weeks-home:focus-visible{outline:2px solid #ffde19;outline-offset:2px;border-radius:8px}
+.snl-week-group{border:1px solid #6684a0;border-radius:12px;overflow:hidden;background:linear-gradient(150deg,#133956,#081e33);margin:0 0 12px}
+.snl-week-group .panel-h{font-size:11px;gap:8px}
+.snl-week-group .panel-h small{white-space:nowrap}
+.snl-week-scorecards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:9px}
+.snl-overview-scorecard{min-width:0;min-height:108px;padding:8px 10px;flex:initial}
+.snl-overview-scorecard .scoremeta{gap:6px;align-items:start;flex-wrap:wrap}
+.snl-overview-scorecard .scoremeta span:last-child{text-align:right;font-size:9px;color:#bbcede;letter-spacing:0}
+.snl-overview-scorecard .scoreteam{min-width:0}
+.snl-overview-scorecard.snl-scheduled{opacity:1}
+.snl-overview-scorecard.snl-scheduled .scoreteam{color:#d5e3ef}
+.snl-all-weeks-full .snl-week-scorecards{grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;padding:14px}
+.snl-all-weeks-full .snl-week-group{margin-bottom:16px}
+@media(max-width:600px){
+ .snl-all-weeks-full .snl-week-scorecards{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;padding:8px}
+ .snl-all-weeks .scoreteam{font-size:10px;gap:4px}
+ .snl-all-weeks .scoreteam img{width:21px;height:23px}
+ .snl-all-weeks .scoremeta{font-size:9px}
+ .snl-overview-scorecard{padding:7px;min-height:94px}
+ .snl-week-group .panel-h{padding:10px 9px;font-size:10px}
+}
+@media(max-width:360px){.snl-week-scorecards,.snl-all-weeks-full .snl-week-scorecards{grid-template-columns:1fr}}

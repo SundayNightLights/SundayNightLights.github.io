@@ -38,6 +38,44 @@
  const positions={buffaloes:'buffaloes',maul:'maul',raccoons:'raccoons',iht:'iht',morsl:'morsl',outcasts:'outcasts'};
  function teamHalf(id,side){const t=teamMap[id];return `<div class="half ${side} half--${id}"><div class="teamart" aria-hidden="true"></div><span class="position-label">${side.toUpperCase()}</span><span class="half-label">${t.name}</span></div>`;}
  function matchup(g){return `<div class="match" aria-label="${teamMap[g.a].short} away at ${teamMap[g.h].short}, ${g.time}, ${g.field}">${teamHalf(g.a,'away')}${teamHalf(g.h,'home')}<div class="slash"></div><div class="matchtime"><b>${g.time}</b><small>${g.d}</small></div></div>`;}
+
+ // Shared week selector: individual weeks keep the approved diagonal matchup cards.
+ function weekOptions(selected){
+   return '<option value="all">All</option>' +
+     Array.from({length:10},(_,i)=>i+1).map(week=>
+       '<option value="' + week + '"' + (week===selected?' selected':'') + '>Week ' + week + '</option>'
+     ).join('');
+ }
+
+ // "All" reuses the compact SNL previous-results scoreboard card design.
+ function overviewScorecard(g){
+   const finished=g.status==='Final';
+   const time=escapeHtml(gameStart(g));
+   const diamond=escapeHtml(diamondCode(g));
+   const away=teamMap[g.away], home=teamMap[g.home];
+   return '<article class="scorecard snl-overview-scorecard' + (finished?'':' snl-scheduled') +
+     '" aria-label="' + escapeHtml(away.name+' at '+home.name+', '+(finished?'final':'scheduled')+', '+gameStart(g)+', '+diamondCode(g)) + '">' +
+     '<div class="scoremeta"><span>' + (finished?'FINAL':'SCHEDULED') + '</span><span>' + time + ' · ' + diamond + '</span></div>' +
+     '<div class="scoreteam">' + im(g.away) + '<span>' + escapeHtml(away.short) + '</span>' +
+       (finished?'<b>'+escapeHtml(g.awayScore??'—')+'</b>':'') + '</div>' +
+     '<div class="scoreteam">' + im(g.home) + '<span>' + escapeHtml(home.short) + '</span>' +
+       (finished?'<b>'+escapeHtml(g.homeScore??'—')+'</b>':'') + '</div></article>';
+ }
+
+ function allWeeksPanel(full=false){
+   if(!regular().length) return '<div class="panel"><div class="panel-foot">Live schedule unavailable.</div></div>';
+   let html='<div class="snl-all-weeks ' + (full?'snl-all-weeks-full':'snl-all-weeks-home') +
+     '" aria-label="All regular-season weeks"' + (full?'':' tabindex="0"') + '>';
+   for(let week=1;week<=10;week++){
+     const games=weekGames(week);
+     if(!games.length) continue;
+     html+='<section class="snl-week-group"><div class="panel-h"><span>' +
+       dateLabel(games[0].date) + '</span><small>WEEK ' + week + '</small></div>' +
+       '<div class="snl-week-scorecards">' + games.map(overviewScorecard).join('') + '</div></section>';
+   }
+   return html+'</div>';
+ }
+
  function gamesPanel(all=false,week=upcomingWeek()){
   const games=weekGames(week);
   if(!games.length)return `<div class="panel"><div class="panel-h"><span>LEAGUE SCHEDULE</span></div><div class="panel-foot">Live schedule unavailable.</div></div>`;
@@ -52,9 +90,9 @@
   function leaders(){return `<div class="leader-cards">${[['Batting Average','AVG'],['Home Runs','HR'],['Runs Batted In','RBI'],['Hits','H']].map(([t,s])=>`<div class="leader-card"><b>${t.toUpperCase()}</b><small>${s}</small><strong>—</strong><span>Awaiting verified player statistics</span></div>`).join('')}</div>`;}
  function storyArt(s){if(s.id==='opener')return `${im('raccoons','one','')}${im('buffaloes','two','')}`;if(s.id==='expansion')return `${im('morsl','one','')}${im('iht','two','')}${im('maul','three','')}`;if(s.id==='trade')return `${im('maul','one','')}${im('iht','two','')}`;return ''}
  function stories(){return `<div class="stories-viewport"><button type="button" class="story-arrow story-arrow-prev" data-story-step="-1" aria-label="Previous featured stories"><span aria-hidden="true">‹</span></button><div class="stories" aria-label="Featured story carousel">${D.stories.map(s=>`<a class="story ${s.id}" href="article.html?id=${s.id}" aria-label="Read ${s.title}"><div class="story-illustration"><img class="story-poster" src="assets/story-${s.id}.webp" alt="" loading="lazy"></div><span class="story-tag">${s.tag}</span><div class="story-bottom"><h3>${s.title}</h3><small>SNL NEWS · FEATURE</small></div></a>`).join('')}</div><button type="button" class="story-arrow story-arrow-next" data-story-step="1" aria-label="Next featured stories"><span aria-hidden="true">›</span></button></div>`;}
- function home(){return `${hero()}<section class="section" id="featured">${sectionHead('FEATURED','STORIES','VIEW ALL STORIES ›','highlights.html')}${stories()}<div class="newsline"><b>LEAGUE NEWS</b><span class="news-updates"><span><strong>NOV 2</strong> Time slots changed for Weeks 2, 8 &amp; 9. <a class="news-inline-link" href="schedule.html">Check schedule ›</a></span></span><a href="highlights.html#league-news">VIEW ALL NEWS ›</a></div></section><section class="split"><div><div class="section-top"><div><h2>UPCOMING <em>GAMES</em></h2><div class="section-rule"></div></div><a href="schedule.html">VIEW FULL SCHEDULE ›</a></div>${gamesPanel(false)}</div><div><div class="section-top"><div><h2>LEAGUE <em>STANDINGS</em></h2><div class="section-rule"></div></div><a href="standings.html">FULL TABLE ›</a></div>${standingsTable(true)}</div></section><section class="section">${sectionHead('LEAGUE','LEADERS','VIEW ALL STATS ›','stats.html')}<p class="hint" style="margin:0 0 13px">Player batting leaders · GameChanger statistics</p>${leaders()}</section><section class="join-home-prompt"><div><strong>INTERESTED IN JOINING SNL?</strong><p>Bring a team or join as a free agent. Explore your options for future sessions.</p></div><a class="join-home-action" href="join.html">JOIN SNL ›</a></section><section class="flat-card" style="display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap"><div><b style="color:var(--yellow);font-size:13px">PLAYER REGISTRATION &amp; WAIVERS</b><p class="section-note" style="margin:6px 0 0">Roster registration and league waivers are being prepared.</p></div><a class="neutral-link" href="registration.html">HOW IT WILL WORK ›</a></section>`;}
+ function home(){return `${hero()}<section class="section" id="featured">${sectionHead('FEATURED','STORIES','VIEW ALL STORIES ›','highlights.html')}${stories()}<div class="newsline"><b>LEAGUE NEWS</b><span class="news-updates"><span><strong>NOV 2</strong> Time slots changed for Weeks 2, 8 &amp; 9. <a class="news-inline-link" href="schedule.html">Check schedule ›</a></span></span><a href="highlights.html#league-news">VIEW ALL NEWS ›</a></div></section><section class="split"><div><div class="section-top"><div><h2>UPCOMING <em>GAMES</em></h2><div class="section-rule"></div></div><label class="snl-week-control"><span class="snl-screenreader">View week</span><select id="homeWeekSelect" aria-label="Choose week for Upcoming Games">${weekOptions(upcomingWeek())}</select></label></div><div id="homeGamesArea">${gamesPanel(false)}</div></div><div><div class="section-top"><div><h2>LEAGUE <em>STANDINGS</em></h2><div class="section-rule"></div></div><a href="standings.html">FULL TABLE ›</a></div>${standingsTable(true)}</div></section><section class="section">${sectionHead('LEAGUE','LEADERS','VIEW ALL STATS ›','stats.html')}<p class="hint" style="margin:0 0 13px">Player batting leaders · GameChanger statistics</p>${leaders()}</section><section class="join-home-prompt"><div><strong>INTERESTED IN JOINING SNL?</strong><p>Bring a team or join as a free agent. Explore your options for future sessions.</p></div><a class="join-home-action" href="join.html">JOIN SNL ›</a></section><section class="flat-card" style="display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap"><div><b style="color:var(--yellow);font-size:13px">PLAYER REGISTRATION &amp; WAIVERS</b><p class="section-note" style="margin:6px 0 0">Roster registration and league waivers are being prepared.</p></div><a class="neutral-link" href="registration.html">HOW IT WILL WORK ›</a></section>`;}
  const pageHero=(a,b,sub='',action='')=>`<div class="page-hero"><div><h1>${a} <em>${b}</em></h1><p>${sub}</p></div>${action}</div>`;
- function schedule(){const active=requestedWeek();return `${pageHero('SNL','SCHEDULE','2026-27 Fall · Markham Sports Dome')}<div class="filters">${Array.from({length:10},(_,i)=>i+1).map(w=>`<button class="filterbtn ${w===active?'active':''}" data-week="${w}">Week ${w}</button>`).join('')}<span class="not-live">Schedules and scores from the SNL Master workbook</span></div><div id="scheduleArea">${gamesPanel(true,active)}</div>${feedNotice()}<div class="notice">Ten playing Sundays · Holiday break December 27, 2026. Times and diamonds may change; the website reflects the most recently published workbook export.</div>`;}
+ function schedule(){const active=requestedWeek();return `${pageHero('SNL','SCHEDULE','2026-27 Fall · Markham Sports Dome')}<div class="filters"><button class="filterbtn" data-week="all">All</button>${Array.from({length:10},(_,i)=>i+1).map(w=>`<button class="filterbtn ${w===active?'active':''}" data-week="${w}">Week ${w}</button>`).join('')}<span class="not-live">Schedules and scores from the SNL Master workbook</span></div><div id="scheduleArea">${gamesPanel(true,active)}</div>${feedNotice()}<div class="notice">Ten playing Sundays · Holiday break December 27, 2026. Times and diamonds may change; the website reflects the most recently published workbook export.</div>`;}
  function resultsTable(week){
   const games=weekGames(week);if(!games.length)return '<div class="panel">No data available</div>';
   return `<div class="panel"><div class="panel-h"><span>${dateLabel(games[0].date)}</span><small>WEEK ${week} · RESULTS & TIMES</small></div><div style="overflow-x:auto"><table class="game-table"><thead><tr><th>TIME</th><th>DIAMOND</th><th>AWAY</th><th>HOME</th><th>RESULT</th></tr></thead><tbody>${games.map(g=>`<tr><td>${escapeHtml(gameStart(g))}</td><td>${diamondCode(g)}</td><td><div class="result-row">${im(g.away)}<span>${teamMap[g.away].short}</span></div></td><td><div class="result-row">${im(g.home)}<span>${teamMap[g.home].short}</span></div></td><td>${g.status==='Final'?`<b>${g.awayScore} – ${g.homeScore}</b>`:'<span class="result-pending">Not played</span>'}</td></tr>`).join('')}</tbody></table></div></div>`;
@@ -181,7 +219,15 @@ function joinPage(){return `${pageHero('JOIN','SNL','Interested in playing Sunda
      window.addEventListener('resize',updateArrows,{passive:true});
      updateArrows();
    });
-   document.querySelectorAll('[data-week]').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('[data-week]').forEach(b=>b.classList.toggle('active',b===btn));document.getElementById('scheduleArea').innerHTML=gamesPanel(true,Number(btn.dataset.week))}));
+   document.querySelectorAll('[data-week]').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('[data-week]').forEach(b=>b.classList.toggle('active',b===btn));document.getElementById('scheduleArea').innerHTML=btn.dataset.week==='all'?allWeeksPanel(true):gamesPanel(true,Number(btn.dataset.week))}));
+   const homeWeekSelect=document.getElementById('homeWeekSelect');
+   homeWeekSelect?.addEventListener('change',()=>{
+     const area=document.getElementById('homeGamesArea');
+     if(!area)return;
+     area.innerHTML=homeWeekSelect.value==='all'
+       ?allWeeksPanel(false)
+       :gamesPanel(false,Number(homeWeekSelect.value));
+   });
  }
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
