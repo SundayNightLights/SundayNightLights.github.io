@@ -72,7 +72,10 @@
       details.scrollIntoView({behavior:'smooth',block:'start'});
       mountWidget();
     });
-    details.addEventListener('toggle',() => { if (details.open) mountWidget(); });
+    details.addEventListener('toggle',() => {
+      button?.setAttribute('aria-expanded',String(details.open));
+      if (details.open) mountWidget();
+    });
     if (location.hash === '#snlOfficialFeed') {
       details.open = true;
       mountWidget();
