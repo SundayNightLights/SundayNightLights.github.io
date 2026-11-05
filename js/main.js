@@ -22,15 +22,21 @@
  const im=(id,cl='',alt='')=>`<img src="${window.__ASSET_DATA?.[id+'.webp']||'assets/'+id+'.webp'}" class="${cl}" alt="${alt||teamMap[id]?.name||''}" loading="lazy">`;
  const primaryNav=[['home','Home','index.html'],['schedule','Schedule','schedule.html'],['standings','Standings','standings.html'],['teams','Teams','teams.html'],['live','Live','live.html'],['stats','Stats','stats.html'],['highlights','News','highlights.html']];
  const extraNav=[['playoffs','Playoffs','playoffs.html'],['tournaments','Tournaments','tournaments.html'],['rules','Rules','rules.html'],['about','About','about.html'],['registration','Registration & Waivers','registration.html']];
- const playoffStarted=()=>{
-   if(!Array.isArray(feed?.playoffs))return false;
-   const dates=feed.playoffs.map(g=>g.date).filter(date=>typeof date==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(date)).sort();
+ const playoffInNav=()=>{
+   // Promote Playoffs when the second-to-last playing week begins.
+   // Using playing weeks (rather than subtracting calendar days) handles holiday breaks.
+   const games=regular().filter(g=>Number.isInteger(g.week)&&
+     typeof g.date==='string'&&/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(g.date));
+   const weeks=[...new Set(games.map(g=>g.week))].sort((a,b)=>a-b);
+   if(weeks.length<2)return false;
+   const previewWeek=weeks[weeks.length-2];
+   const dates=games.filter(g=>g.week===previewWeek).map(g=>g.date).sort();
    return dates.length>0&&dates[0]<=torontoToday();
  };
  const navActive=k=>page===k||(page==='article'&&k==='highlights')||(page==='team'&&k==='teams');
  const navLinks=items=>items.map(([k,label,href])=>`<a href="${href}" class="${navActive(k)?'active':''}">${label}</a>`).join('');
  const navMarkup=()=>{
-   const postseason=playoffStarted();
+   const postseason=playoffInNav();
    const main=postseason?[...primaryNav.slice(0,3),extraNav[0],...primaryNav.slice(3)]:primaryNav;
    const more=postseason?extraNav.slice(1):extraNav;
    return navLinks(main)+
