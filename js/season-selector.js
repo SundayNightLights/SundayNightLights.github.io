@@ -103,9 +103,9 @@
 
   function install() {
     const header = document.getElementById('siteHeader');
-    const masthead = header?.querySelector('.masthead');
+    const ticker = header?.querySelector('.scoreboard');
     const wrap = document.querySelector('#app > .wrap');
-    if (!masthead || !wrap?.querySelector('.footer')) return false;
+    if (!ticker || !wrap?.querySelector('.footer')) return false;
     if (document.getElementById('snlSeason')) return true;
 
     const style = document.createElement('style');
@@ -134,7 +134,8 @@
     state.textContent = selected.status === 'current' ? 'CURRENT' : selected.status === 'upcoming' ? 'COMING SOON' : 'ARCHIVED';
     inner.append(label,select,state);
     bar.appendChild(inner);
-    masthead.insertAdjacentElement('afterend',bar);
+    // Keep the season control below the full scoreboard/ticker on every supported page.
+    ticker.insertAdjacentElement('afterend',bar);
 
     const footer = wrap.querySelector('.footer');
     if (footer?.lastElementChild) footer.lastElementChild.textContent = selected.label;
