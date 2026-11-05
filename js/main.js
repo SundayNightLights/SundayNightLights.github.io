@@ -82,8 +82,14 @@
  function gamesPanel(all=false,week=upcomingWeek()){
   const games=weekGames(week);
   if(!games.length)return `<div class="panel"><div class="panel-h"><span>LEAGUE SCHEDULE</span></div><div class="panel-foot">Live schedule unavailable.</div></div>`;
-  if(games.some(g=>g.status==='Final') || games[0].date < torontoToday())return allWeeksPanel(all,week);
-  return `<div class="panel"><div class="panel-h"><span>${dateLabel(games[0].date)}</span><small>WEEK ${week}</small></div><div class="matches ${all?'large-matches':''}">${games.map(g=>matchup(gameCard(g))).join('')}</div>${all?`<div class="panel-foot">All times local to Markham · ${D.venue} · Diamond 1 (Near) and Diamond 2 (Far)</div>`:''}</div>`;
+  // Score entry controls EACH game independently. Passing a date does not turn
+  // an unscored diagonal matchup into a final-results card.
+  const isFinal=g=>g.status==='Final' &&
+    Number.isInteger(g.awayScore) && Number.isInteger(g.homeScore);
+  if(games.every(isFinal))return allWeeksPanel(all,week);
+  const someFinal=games.some(isFinal);
+  const cards=games.map(g=>isFinal(g)?overviewScorecard(g):matchup(gameCard(g))).join('');
+  return `<div class="panel"><div class="panel-h"><span>${dateLabel(games[0].date)}</span><small>WEEK ${week}</small></div><div class="matches ${all?'large-matches':''} ${someFinal?'snl-mixed-games':''}">${cards}</div>${all?`<div class="panel-foot">All times local to Markham · ${D.venue} · Diamond 1 (Near) and Diamond 2 (Far)</div>`:''}</div>`;
  }
  function standingsTable(compact=true){
   const rows=feed?.standings||[];
