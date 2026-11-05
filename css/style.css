@@ -372,3 +372,23 @@ main{padding-bottom:30px}.hero{border:1px solid #43617a;background:#102f4d;margi
 .score-viewport .ticker-arrow[hidden]{display:none!important}
 @media(max-width:800px),(hover:none),(pointer:coarse){.score-viewport .ticker-arrow{display:none!important}}
 @media(prefers-reduced-motion:reduce){.score-viewport .ticker-arrow{transition:none}.score-viewport .scoretrack{scroll-behavior:auto}}
+
+/* Reveal both carousel controls when the mouse is anywhere over a carousel,
+   not only directly over the left/right hotspots. Edge visibility still tracks scroll. */
+.score-viewport .ticker-arrow.has-scroll{pointer-events:none}
+.scoreboard:hover .score-viewport .ticker-arrow.has-scroll,
+.scoreboard:focus-within .score-viewport .ticker-arrow.has-scroll{opacity:1;pointer-events:auto}
+
+/* SNL featured headlines use the same broadcast-style navigation as the scoreboard. */
+.stories-viewport{position:relative;min-width:0;isolation:isolate}
+.stories-viewport .story-arrow{position:absolute;z-index:7;top:0;bottom:0;width:58px;height:auto;margin:0;padding:0;border:0;border-radius:0;opacity:0;display:flex;align-items:center;justify-content:center;pointer-events:none;transition:opacity .16s ease;color:var(--yellow);cursor:pointer}
+.stories-viewport .story-arrow-prev{left:0;background:linear-gradient(90deg,rgba(5,21,38,.92),rgba(5,21,38,0))}
+.stories-viewport .story-arrow-next{right:0;background:linear-gradient(270deg,rgba(5,21,38,.92),rgba(5,21,38,0))}
+.stories-viewport .story-arrow span{display:grid;place-items:center;width:38px;height:38px;border:1px solid #c4ac28;border-radius:50%;background:#123653;color:var(--yellow);font-family:Arial,Helvetica,sans-serif;font-size:30px;font-weight:700;line-height:1;box-shadow:0 2px 12px #0007}
+.stories-viewport:hover .story-arrow.has-scroll,
+.stories-viewport:focus-within .story-arrow.has-scroll{opacity:1;pointer-events:auto}
+.stories-viewport .story-arrow:focus-visible{outline:2px solid var(--yellow);outline-offset:-2px}
+.stories-viewport .story-arrow:disabled{pointer-events:none}
+@media(min-width:801px){.stories-viewport .stories .story{flex:0 0 30%}}
+@media(max-width:800px),(hover:none),(pointer:coarse){.score-viewport .ticker-arrow,.stories-viewport .story-arrow{display:none!important}}
+@media(prefers-reduced-motion:reduce){.stories-viewport .story-arrow{transition:none}.stories-viewport .stories{scroll-behavior:auto}}

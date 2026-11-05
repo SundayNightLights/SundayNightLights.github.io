@@ -51,7 +51,7 @@
 
   function leaders(){return `<div class="leader-cards">${[['Batting Average','AVG'],['Home Runs','HR'],['Runs Batted In','RBI'],['Hits','H']].map(([t,s])=>`<div class="leader-card"><b>${t.toUpperCase()}</b><small>${s}</small><strong>—</strong><span>Awaiting verified player statistics</span></div>`).join('')}</div>`;}
  function storyArt(s){if(s.id==='opener')return `${im('raccoons','one','')}${im('buffaloes','two','')}`;if(s.id==='expansion')return `${im('morsl','one','')}${im('iht','two','')}${im('maul','three','')}`;if(s.id==='trade')return `${im('maul','one','')}${im('iht','two','')}`;return ''}
- function stories(){return `<div class="stories" aria-label="Featured story carousel">${D.stories.map(s=>`<a class="story ${s.id}" href="article.html?id=${s.id}" aria-label="Read ${s.title}"><div class="story-illustration"><img class="story-poster" src="assets/story-${s.id}.webp" alt="" loading="lazy"></div><span class="story-tag">${s.tag}</span><div class="story-bottom"><h3>${s.title}</h3><small>SNL NEWS · FEATURE</small></div></a>`).join('')}</div>`;}
+ function stories(){return `<div class="stories-viewport"><button type="button" class="story-arrow story-arrow-prev" data-story-step="-1" aria-label="Previous featured stories"><span aria-hidden="true">‹</span></button><div class="stories" aria-label="Featured story carousel">${D.stories.map(s=>`<a class="story ${s.id}" href="article.html?id=${s.id}" aria-label="Read ${s.title}"><div class="story-illustration"><img class="story-poster" src="assets/story-${s.id}.webp" alt="" loading="lazy"></div><span class="story-tag">${s.tag}</span><div class="story-bottom"><h3>${s.title}</h3><small>SNL NEWS · FEATURE</small></div></a>`).join('')}</div><button type="button" class="story-arrow story-arrow-next" data-story-step="1" aria-label="Next featured stories"><span aria-hidden="true">›</span></button></div>`;}
  function home(){return `${hero()}<section class="section" id="featured">${sectionHead('FEATURED','STORIES','VIEW ALL STORIES ›','highlights.html')}${stories()}<div class="newsline"><b>LEAGUE NEWS</b><span class="news-updates"><span><strong>NOV 2</strong> Time slots changed for Weeks 2, 8 &amp; 9. <a class="news-inline-link" href="schedule.html">Check schedule ›</a></span></span><a href="highlights.html#league-news">VIEW ALL NEWS ›</a></div></section><section class="split"><div><div class="section-top"><div><h2>UPCOMING <em>GAMES</em></h2><div class="section-rule"></div></div><a href="schedule.html">VIEW FULL SCHEDULE ›</a></div>${gamesPanel(false)}</div><div><div class="section-top"><div><h2>LEAGUE <em>STANDINGS</em></h2><div class="section-rule"></div></div><a href="standings.html">FULL TABLE ›</a></div>${standingsTable(true)}</div></section><section class="section">${sectionHead('LEAGUE','LEADERS','VIEW ALL STATS ›','stats.html')}<p class="hint" style="margin:0 0 13px">Player batting leaders · GameChanger statistics</p>${leaders()}</section><section class="join-home-prompt"><div><strong>INTERESTED IN JOINING SNL?</strong><p>Bring a team or join as a free agent. Explore your options for future sessions.</p></div><a class="join-home-action" href="join.html">JOIN SNL ›</a></section><section class="flat-card" style="display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap"><div><b style="color:var(--yellow);font-size:13px">PLAYER REGISTRATION &amp; WAIVERS</b><p class="section-note" style="margin:6px 0 0">Roster registration and league waivers are being prepared.</p></div><a class="neutral-link" href="registration.html">HOW IT WILL WORK ›</a></section>`;}
  const pageHero=(a,b,sub='',action='')=>`<div class="page-hero"><div><h1>${a} <em>${b}</em></h1><p>${sub}</p></div>${action}</div>`;
  function schedule(){const active=requestedWeek();return `${pageHero('SNL','SCHEDULE','2026-27 Fall · Markham Sports Dome')}<div class="filters">${Array.from({length:10},(_,i)=>i+1).map(w=>`<button class="filterbtn ${w===active?'active':''}" data-week="${w}">Week ${w}</button>`).join('')}<span class="not-live">Schedules and scores from the SNL Master workbook</span></div><div id="scheduleArea">${gamesPanel(true,active)}</div>${feedNotice()}<div class="notice">Ten playing Sundays · Holiday break December 27, 2026. Times and diamonds may change; the website reflects the most recently published workbook export.</div>`;}
@@ -132,6 +132,32 @@ function joinPage(){return `${pageHero('JOIN','SNL','Interested in playing Sunda
      window.addEventListener('resize',updateScoreArrows,{passive:true});
      updateScoreArrows();
    }
+   // FOX-style headline carousel. Hover anywhere over the headline cards to reveal
+   // only the arrows that can actually scroll more stories.
+   document.querySelectorAll('.stories-viewport').forEach(viewport=>{
+     const track=viewport.querySelector('.stories');
+     const buttons=[...viewport.querySelectorAll('[data-story-step]')];
+     if(!track)return;
+     const updateArrows=()=>{
+       const max=Math.max(0,track.scrollWidth-track.clientWidth);
+       buttons.forEach(btn=>{
+         const available=Number(btn.dataset.storyStep)<0?track.scrollLeft>2:track.scrollLeft<max-2;
+         const enabled=max>2&&available;
+         btn.disabled=!enabled;
+         btn.classList.toggle('has-scroll',enabled);
+       });
+     };
+     buttons.forEach(btn=>btn.addEventListener('click',()=>{
+       const first=track.querySelector('.story');
+       const gap=parseFloat(getComputedStyle(track).columnGap)||12;
+       const step=(first?.getBoundingClientRect().width||track.clientWidth*.75)+gap;
+       track.scrollBy({left:Number(btn.dataset.storyStep)*step,behavior:'smooth'});
+     }));
+     track.addEventListener('scroll',updateArrows,{passive:true});
+     if(typeof ResizeObserver==='function')new ResizeObserver(updateArrows).observe(track);
+     window.addEventListener('resize',updateArrows,{passive:true});
+     updateArrows();
+   });
    document.querySelectorAll('[data-week]').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('[data-week]').forEach(b=>b.classList.toggle('active',b===btn));document.getElementById('scheduleArea').innerHTML=gamesPanel(true,Number(btn.dataset.week))}));
  }
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
