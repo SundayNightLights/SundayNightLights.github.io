@@ -44,6 +44,8 @@
     '.page-hero .snl-seasonbar{align-self:flex-end;margin-bottom:2px;}',
     '.split > div:first-child > .section-top{flex-wrap:wrap;align-items:center;}',
     '.split > div:first-child > .section-top .snl-seasonbar{margin-left:auto;}',
+    '.split > div:first-child > .section-top .snl-seasonbar label{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}',
+    '.split > div:first-child > .section-top .snl-seasonbar select{max-width:190px;width:190px;}',
     '.snl-unpublished{border:1px solid #496d88;border-radius:14px;background:#0d2d49;color:#fff;padding:32px;margin:24px 0;}',
     '.snl-unpublished small{color:#ffde19;letter-spacing:.13em;font-weight:900;font-size:11px;}',
     '.snl-unpublished h2{font-size:clamp(22px,3vw,32px);margin:12px 0;}',
