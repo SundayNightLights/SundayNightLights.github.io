@@ -12,7 +12,7 @@
  const dateLabel=date=>fmtDate(date).toUpperCase();
  const gameStart=g=>g.startLabel||g.time?.split(/[–—-]/)[0]?.trim()||'Slot '+g.slot;
  const diamondCode=g=>`D${g.diamond} · ${g.diamond===1?'NEAR':'FAR'}`;
- const gameCard=g=>({a:g.away,h:g.home,time:gameStart(g),d:diamondCode(g),field:`Diamond ${g.diamond} (${g.diamond===1?'Near':'Far'} Field)`});
+ const gameCard=g=>({a:g.away,h:g.home,time:gameStart(g),d:`DIAMOND ${g.diamond} · ${g.diamond===1?'NEAR':'FAR'}`,field:`Diamond ${g.diamond} (${g.diamond===1?'Near':'Far'} Field)`});
  const latestResultsWeek=()=>[...new Set(regular().filter(g=>g.status==='Final').map(g=>g.week))].sort((a,b)=>b-a)[0]||null;
  function torontoToday(){const parts=new Intl.DateTimeFormat('en-US',{timeZone:'America/Toronto',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());const p=Object.fromEntries(parts.map(x=>[x.type,x.value]));return `${p.year}-${p.month}-${p.day}`;}
  function upcomingWeek(){if(!feed)return 2;const today=torontoToday();const g=regular().filter(g=>g.status!=='Final'&&g.date>=today).sort((a,b)=>a.date.localeCompare(b.date)||a.slot-b.slot)[0];return g?.week||regular().filter(g=>g.status!=='Final').sort((a,b)=>a.week-b.week)[0]?.week||10;}
@@ -36,7 +36,7 @@
  const ribbon=()=>`<div class="logo-ribbon" aria-label="SNL team logos">${['buffaloes','outcasts','morsl','iht','maul','raccoons'].map(id=>`<a class="logo-team ${id}" href="team.html?team=${id}" title="${teamMap[id].name}">${im(id,'',teamMap[id].name)}</a>`).join('')}</div>`;
  const hero=()=>`<section class="hero" aria-label="Sunday Night Lights dome banner and team logos"><div class="hero-banner"><img src="assets/snl-dome-banner.webp" alt="Sunday Night Lights logo over the Markham Sports Dome" fetchpriority="high"></div>${ribbon()}</section>`;
  const positions={buffaloes:'buffaloes',maul:'maul',raccoons:'raccoons',iht:'iht',morsl:'morsl',outcasts:'outcasts'};
- function teamHalf(id,side){const t=teamMap[id];return `<div class="half ${side} half--${id}"><div class="teamart" aria-hidden="true"></div><span class="position-label">${side.toUpperCase()}</span><span class="half-label">${t.short}</span></div>`;}
+ function teamHalf(id,side){const t=teamMap[id];return `<div class="half ${side} half--${id}"><div class="teamart" aria-hidden="true"></div><span class="position-label">${side.toUpperCase()}</span><span class="half-label">${t.name}</span></div>`;}
  function matchup(g){return `<div class="match" aria-label="${teamMap[g.a].short} away at ${teamMap[g.h].short}, ${g.time}, ${g.field}">${teamHalf(g.a,'away')}${teamHalf(g.h,'home')}<div class="slash"></div><div class="matchtime"><b>${g.time}</b><small>${g.d}</small></div></div>`;}
  function gamesPanel(all=false,week=upcomingWeek()){
   const games=weekGames(week);
