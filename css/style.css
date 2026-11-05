@@ -451,3 +451,8 @@ main{padding-bottom:30px}.hero{border:1px solid #43617a;background:#102f4d;margi
 .snl-live-intro{color:#cedde9;font-size:12px;line-height:1.6;margin:0 4px 13px}
 @media(max-width:1050px){.snl-live-fixture-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:700px){.snl-native-gamecenter{padding:15px}.snl-native-lede{flex-direction:column;align-items:stretch;gap:18px}.snl-live-action{width:100%}.snl-live-fixture-grid{grid-template-columns:1fr}.snl-live-match-head h3 small{display:block;margin:6px 0 0}.snl-official-feed summary{padding:17px 15px}.snl-official-body{padding:0 8px 9px}.snl-live-fixture{padding:13px 14px}}
+
+/* Live Game Centre focuses on official live coverage; upcoming games live on Home/Schedule. */
+.snl-native-gamecenter{margin-bottom:16px}
+.snl-native-lede{padding-bottom:4px;border-bottom:0}
+.snl-native-lede p a{color:#ffde19;text-decoration:underline;text-underline-offset:3px}
