@@ -52,9 +52,9 @@
    summary.setAttribute('aria-label','Team season snapshot');
    summary.setAttribute('aria-live','polite');
    summary.id='snlTeamSnapshot';
-   const categories=[['PTS','Standings Points'],['RF','Runs For'],['RA','Runs Against'],['RD ±7','Capped Run Differential']];
-   summary.innerHTML=categories.map(([label,title])=>
-     '<div class="snl-team-spotlight-metric"><span>'+label+'</span><strong>—</strong><small>'+title+'</small></div>').join('');
+   const categories=[['PTS','Standings Points','points'],['RF','Runs For','runs-for'],['RA','Runs Against','runs-against'],['TOP OPS','Leading qualified batter','top-ops']];
+   summary.innerHTML=categories.map(([label,title,key])=>
+     '<div class="snl-team-spotlight-metric" data-stat="'+key+'"><span>'+label+'</span><strong>—</strong><small>'+title+'</small></div>').join('');
    intro.append(summary);
 
    roster.id='team-roster';schedule.id='team-schedule';
@@ -84,13 +84,14 @@
    const panel=document.getElementById('snlTeamSnapshot');
    if(!panel)return;
    const standing=Array.isArray(data?.standings)?data.standings.find(r=>r.team===id):null;
-   const values=standing?[standing.points,standing.runsFor,standing.runsAgainst,standing.cappedRunDiff]:[];
-   const elements=[...panel.querySelectorAll('.snl-team-spotlight-metric strong')];
+   const values=standing?[standing.points,standing.runsFor,standing.runsAgainst]:[];
+   const elements=[...panel.querySelectorAll('.snl-team-spotlight-metric:not([data-stat="top-ops"]) strong')];
    for(let i=0;i<elements.length;i++){
      const n=values[i];
-     elements[i].textContent=typeof n==='number'&&Number.isFinite(n)?(i===3&&n>0?'+':'')+n:'—';
+     elements[i].textContent=typeof n==='number'&&Number.isFinite(n)?String(n):'—';
    }
  }
+ const formatOps=value=>typeof value==='number'&&Number.isFinite(value)?value.toFixed(3):'—';
  function renderBatting(data,siteData,id){
    const leaders=document.getElementById('snlTeamLeaders'),batting=document.getElementById('snlTeamBatting');
    const empty=message=>{
@@ -110,6 +111,15 @@
    const fmt=(p,k)=>value(p,k)===null?'—':rates.has(k)?value(p,k).toFixed(3):String(value(p,k));
    const pastWeeks=new Set((siteData?.regularSeason||[]).filter(g=>typeof g.date==='string'&&g.date<torontoToday()&&Number.isInteger(g.week)).map(g=>g.week)).size;
    const minGP=Math.max(1,Math.min(10,pastWeeks));
+   const qualifiedOps=players.filter(p=>value(p,'OPS')!==null&&(value(p,'GP')??0)>=minGP)
+     .sort((a,b)=>value(b,'OPS')-value(a,'OPS')||a.name.localeCompare(b.name));
+   const topOps=qualifiedOps[0];
+   const opsCard=document.querySelector('#snlTeamSnapshot [data-stat="top-ops"]');
+   if(opsCard){
+     opsCard.querySelector('strong').textContent=topOps?formatOps(topOps.stats.OPS):'—';
+     opsCard.querySelector('small').textContent=topOps?topOps.name:'No qualifying batter yet';
+     opsCard.title='Leading qualifying batter by OPS (minimum '+minGP+' games played)';
+   }
    leaders.innerHTML=[['AVG','Batting Average'],['HR','Home Runs'],['RBI','Runs Batted In'],['H','Hits']].map(([key,label])=>{
      const ranked=players.filter(p=>value(p,key)!==null&&(!rates.has(key)||(value(p,'GP')??0)>=minGP))
        .sort((a,b)=>value(b,key)-value(a,key)||a.name.localeCompare(b.name));
