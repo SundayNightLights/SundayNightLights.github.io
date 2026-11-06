@@ -66,7 +66,11 @@
 }
 @media(max-width:380px){.team-detail.snl-team-spotlight{padding:20px 16px}.snl-team-spotlight-kicker{font-size:9px;letter-spacing:1.5px}}
 
-/* Identify the individual batter behind TOP OPS; never imply this is a team aggregate. */
-.snl-team-spotlight-metric[data-stat="top-ops"] small{
+/* Compact batting-rate descriptions in the team spotlight. */
+.snl-team-spotlight-metric[data-stat="team-avg"] small,
+.snl-team-spotlight-metric[data-stat="team-ops"] small{
  color:#d5e6f4;font-size:11px;font-weight:800;overflow-wrap:anywhere;
+}
+.snl-team-snapshot-note{
+ margin:2px 0 0;font-size:10px;color:#adc6da;line-height:1.45;
 }
