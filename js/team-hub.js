@@ -52,10 +52,14 @@
    summary.setAttribute('aria-label','Team season snapshot');
    summary.setAttribute('aria-live','polite');
    summary.id='snlTeamSnapshot';
-   const categories=[['PTS','Standings Points','points'],['RF','Runs For','runs-for'],['RA','Runs Against','runs-against'],['TOP OPS','Leading qualified batter','top-ops']];
+   const categories=[['RF AVG','Runs scored per completed game','rf-avg'],['RA AVG','Runs allowed per completed game','ra-avg'],['AVG','Mean of reported players','team-avg'],['OPS','Mean of reported players','team-ops']];
    summary.innerHTML=categories.map(([label,title,key])=>
      '<div class="snl-team-spotlight-metric" data-stat="'+key+'"><span>'+label+'</span><strong>—</strong><small>'+title+'</small></div>').join('');
    intro.append(summary);
+   const note=document.createElement('p');
+   note.className='snl-team-snapshot-note';
+   note.textContent='Batting AVG and OPS are averages of reported players, not official team aggregate rates.';
+   intro.append(note);
 
    roster.id='team-roster';schedule.id='team-schedule';
    roster.classList.add('snl-team-hub-section');schedule.classList.add('snl-team-hub-section');
@@ -84,14 +88,14 @@
    const panel=document.getElementById('snlTeamSnapshot');
    if(!panel)return;
    const standing=Array.isArray(data?.standings)?data.standings.find(r=>r.team===id):null;
-   const values=standing?[standing.points,standing.runsFor,standing.runsAgainst]:[];
-   const elements=[...panel.querySelectorAll('.snl-team-spotlight-metric:not([data-stat="top-ops"]) strong')];
-   for(let i=0;i<elements.length;i++){
-     const n=values[i];
-     elements[i].textContent=typeof n==='number'&&Number.isFinite(n)?String(n):'—';
+   for(const [key,total] of [['rf-avg',standing?.runsFor],['ra-avg',standing?.runsAgainst]]){
+     const tile=panel.querySelector('[data-stat="'+key+'"]');
+     if(!tile)continue;
+     const gp=standing?.gp;
+     tile.querySelector('strong').textContent=
+       typeof total==='number'&&Number.isFinite(total)&&Number.isInteger(gp)&&gp>0?(total/gp).toFixed(2):'—';
    }
  }
- const formatOps=value=>typeof value==='number'&&Number.isFinite(value)?value.toFixed(3):'—';
  function renderBatting(data,siteData,id){
    const leaders=document.getElementById('snlTeamLeaders'),batting=document.getElementById('snlTeamBatting');
    const empty=message=>{
@@ -111,14 +115,19 @@
    const fmt=(p,k)=>value(p,k)===null?'—':rates.has(k)?value(p,k).toFixed(3):String(value(p,k));
    const pastWeeks=new Set((siteData?.regularSeason||[]).filter(g=>typeof g.date==='string'&&g.date<torontoToday()&&Number.isInteger(g.week)).map(g=>g.week)).size;
    const minGP=Math.max(1,Math.min(10,pastWeeks));
-   const qualifiedOps=players.filter(p=>value(p,'OPS')!==null&&(value(p,'GP')??0)>=minGP)
-     .sort((a,b)=>value(b,'OPS')-value(a,'OPS')||a.name.localeCompare(b.name));
-   const topOps=qualifiedOps[0];
-   const opsCard=document.querySelector('#snlTeamSnapshot [data-stat="top-ops"]');
-   if(opsCard){
-     opsCard.querySelector('strong').textContent=topOps?formatOps(topOps.stats.OPS):'—';
-     opsCard.querySelector('small').textContent=topOps?topOps.name:'No qualifying batter yet';
-     opsCard.title='Leading qualifying batter by OPS (minimum '+minGP+' games played)';
+   // Available GameChanger export contains player rates but not the raw
+   // team batting totals needed for official aggregate AVG / OPS.
+   // Display the arithmetic mean of players with reported plate appearances.
+   for(const key of ['AVG','OPS']){
+     const tile=document.querySelector('#snlTeamSnapshot [data-stat="team-'+key.toLowerCase()+'"]');
+     if(!tile)continue;
+     const samples=players.filter(p=>(value(p,'PA')??0)>0)
+       .map(p=>value(p,key)).filter(n=>n!==null);
+     const average=samples.length?samples.reduce((sum,n)=>sum+n,0)/samples.length:null;
+     tile.querySelector('strong').textContent=average===null?'—':average.toFixed(3);
+     tile.querySelector('small').textContent=samples.length?
+       'Avg. of '+samples.length+' reported batters':'No reported batting data';
+     tile.title='Arithmetic mean of reported player '+key+' values (not official aggregate team '+key+')';
    }
    leaders.innerHTML=[['AVG','Batting Average'],['HR','Home Runs'],['RBI','Runs Batted In'],['H','Hits']].map(([key,label])=>{
      const ranked=players.filter(p=>value(p,key)!==null&&(!rates.has(key)||(value(p,'GP')??0)>=minGP))
