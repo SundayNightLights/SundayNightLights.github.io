@@ -18,24 +18,11 @@
    if(intro.previousElementSibling?.classList.contains('page-hero')){
      intro.previousElementSibling.remove();
    }
-   const team=DATA.teams.find(t=>t.id===teamId);
    intro.classList.add('snl-team-spotlight');
-   intro.style.setProperty('--snl-team-accent',team?.secondary||'#63acd9');
-   const illustration=document.createElementNS('http://www.w3.org/2000/svg','svg');
-   illustration.setAttribute('class','snl-team-sweep');
-   illustration.setAttribute('viewBox','0 0 1200 490');
-   illustration.setAttribute('preserveAspectRatio','none');
-   illustration.setAttribute('aria-hidden','true');
-   illustration.innerHTML='<path d="M -30 133 C 260 198, 685 252, 1220 515" fill="none" stroke="#4d9ccb" stroke-width="2.5"/>';
-   intro.prepend(illustration);
-   const logo=intro.querySelector('img');
-   if(logo){
-     const medallion=document.createElement('div');
-     medallion.className='snl-team-spotlight-medallion';
-     logo.before(medallion);
-     medallion.append(logo);
-   }
-   const details=intro.querySelector(':scope > div:not(.snl-team-spotlight-medallion)');
+   // The original team artwork sits directly on the header, without a badge or backdrop.
+   const logo=intro.querySelector(':scope > img');
+   if(logo)logo.classList.add('snl-team-spotlight-logo');
+   const details=intro.querySelector(':scope > div');
    if(details){
      details.classList.add('snl-team-spotlight-title');
      const heading=details.querySelector('h2');

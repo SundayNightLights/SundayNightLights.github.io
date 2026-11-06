@@ -25,46 +25,83 @@
 @media(max-width:900px){.snl-team-leader-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.snl-team-performance-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(max-width:480px){.snl-team-hub-nav a{flex:1 1 42%;text-align:center;padding:10px 5px;font-size:11px}.snl-team-leader-grid{gap:8px}.snl-team-leader{padding:10px}.snl-team-leader strong{font-size:23px}.snl-team-performance-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 
-/* Team summary: circular crest, large club name and four essential numbers.
-   The restrained blue sweep echoes the provided MLB team-profile reference. */
+
+/* Clean SNL team header: original unframed logo and a solid navy sports profile. */
 .team-detail.snl-team-spotlight{
- position:relative;isolation:isolate;overflow:hidden;
- display:flex;flex-direction:column;align-items:flex-start;text-align:left;
- gap:15px;min-height:420px;padding:28px 32px 30px;margin-bottom:16px;
- border:1px solid #3e7599;border-radius:18px;
- background:linear-gradient(122deg,#07314f 0%,#032840 56%,#04263d 100%);
- box-shadow:0 16px 35px #00111d3b;
+ position:relative;overflow:hidden;isolation:isolate;
+ display:grid;grid-template-columns:185px minmax(0,1fr);
+ grid-template-areas:"logo title" "metrics metrics" "note note";
+ align-items:center;column-gap:28px;row-gap:16px;
+ min-height:0;padding:32px 36px 26px;margin-bottom:16px;
+ background:#08263f;border:1px solid #355975;border-radius:16px;
+ box-shadow:0 12px 28px #00111d2b;
+ text-align:left;
 }
-.snl-team-spotlight>*:not(.snl-team-sweep){position:relative;z-index:1}
-.snl-team-sweep{pointer-events:none;position:absolute;z-index:0;inset:0;width:100%;height:100%;opacity:.85}
-.snl-team-spotlight-medallion{display:flex;align-items:center;justify-content:center;width:125px;height:125px;
- background:#f8fafc;border:4px solid #f8fafc;border-radius:50%;box-shadow:0 6px 24px #00152466;flex-shrink:0}
-.team-detail.snl-team-spotlight .snl-team-spotlight-medallion img{display:block;width:100%;height:100%;object-fit:contain;padding:10px}
-.snl-team-spotlight-title{display:flex;flex-direction:column;align-items:flex-start;gap:4px}
+.team-detail.snl-team-spotlight > .snl-team-spotlight-logo{
+ grid-area:logo;display:block;width:185px;height:174px;max-width:100%;
+ object-fit:contain;object-position:center;
+ background:transparent;border:0;border-radius:0;padding:0;margin:0;
+}
+.snl-team-spotlight-title{
+ grid-area:title;display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-width:0;
+}
 .snl-team-spotlight-kicker{font-size:11px;font-weight:900;color:#ffde19;letter-spacing:2px}
-.snl-team-spotlight-name{margin:0!important;font-size:clamp(29px,3.5vw,46px);line-height:1.05;letter-spacing:.3px;
- color:#fff;font-weight:1000;font-style:italic;text-transform:uppercase}
-.snl-team-spotlight-title .section-note{margin:7px 0 0;color:#b8ccdb;font-size:14px;font-weight:750}
-.snl-team-spotlight-title .neutral-link{order:5;align-self:flex-start;font-size:10px;margin-top:8px;
- border-color:#557f9d;background:#062337;padding:7px 10px}
-.snl-team-spotlight-metrics{margin-top:auto;padding:6px 0 0;width:min(100%,940px);
- display:grid;grid-template-columns:repeat(4,minmax(0,1fr));align-items:start}
-.snl-team-spotlight-metric{display:flex;flex-direction:column;min-width:0;padding:0 19px;border-left:1px solid #5185a8}
+.snl-team-spotlight-name{
+ margin:0!important;font-size:clamp(29px,3.5vw,46px);line-height:1.08;
+ letter-spacing:.3px;color:#fff;font-weight:1000;font-style:italic;text-transform:uppercase;
+ overflow-wrap:anywhere;
+}
+.snl-team-spotlight-title .section-note{
+ margin:7px 0 0;color:#c2d2e0;font-size:14px;font-weight:750;
+}
+.snl-team-spotlight-title .neutral-link{
+ order:5;align-self:flex-start;font-size:10px;margin-top:9px;
+ border-color:#456782;background:#0a304c;padding:7px 10px;
+}
+.snl-team-spotlight-metrics{
+ grid-area:metrics;margin-top:3px;padding-top:21px;width:100%;
+ display:grid;grid-template-columns:repeat(4,minmax(0,1fr));align-items:start;
+ border-top:1px solid #34546e;
+}
+.snl-team-spotlight-metric{
+ display:flex;flex-direction:column;min-width:0;padding:0 19px;
+ border-left:1px solid #34546e;
+}
 .snl-team-spotlight-metric:first-child{padding-left:0;border-left:0}
-.snl-team-spotlight-metric span{font-size:13px;font-weight:900;letter-spacing:.65px;color:#bfd3e2}
-.snl-team-spotlight-metric strong{font-size:clamp(27px,3vw,40px);color:#fff;font-weight:1000;line-height:1.2;font-variant-numeric:tabular-nums}
+.snl-team-spotlight-metric span{
+ font-size:13px;font-weight:900;letter-spacing:.65px;color:#bfd3e2;
+}
+.snl-team-spotlight-metric strong{
+ font-size:clamp(27px,3vw,40px);color:#fff;font-weight:1000;
+ line-height:1.2;font-variant-numeric:tabular-nums;
+}
 .snl-team-spotlight-metric small{font-size:10px;color:#aec5d8;font-weight:700;line-height:1.3}
 @media(max-width:680px){
- .team-detail.snl-team-spotlight{min-height:0;padding:23px 22px 25px;gap:15px}
- .snl-team-spotlight-medallion{width:100px;height:100px}
- .snl-team-spotlight-metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 0;margin-top:13px}
+ .team-detail.snl-team-spotlight{
+  grid-template-columns:96px minmax(0,1fr);
+  column-gap:15px;row-gap:14px;padding:22px 20px 24px;
+  text-align:left;align-items:center;
+ }
+ .team-detail.snl-team-spotlight > .snl-team-spotlight-logo{
+  width:96px;height:112px;
+ }
+ .snl-team-spotlight-kicker{font-size:9px;letter-spacing:1.1px}
+ .snl-team-spotlight-name{font-size:clamp(24px,6vw,34px)}
+ .snl-team-spotlight-title .section-note{font-size:11px}
+ .snl-team-spotlight-metrics{
+  grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 0;margin-top:0;padding-top:17px;
+ }
  .snl-team-spotlight-metric{padding:0 12px}
  .snl-team-spotlight-metric:nth-child(odd){padding-left:0;border-left:0}
- .snl-team-spotlight-title .section-note{font-size:12px}
  .snl-team-spotlight-metric strong{font-size:28px}
  .snl-team-spotlight-metric small{font-size:9px}
 }
-@media(max-width:380px){.team-detail.snl-team-spotlight{padding:20px 16px}.snl-team-spotlight-kicker{font-size:9px;letter-spacing:1.5px}}
+@media(max-width:380px){
+ .team-detail.snl-team-spotlight{grid-template-columns:78px minmax(0,1fr);padding:20px 15px;column-gap:12px}
+ .team-detail.snl-team-spotlight > .snl-team-spotlight-logo{width:78px;height:98px}
+ .snl-team-spotlight-kicker{font-size:8px;letter-spacing:.7px}
+ .snl-team-spotlight-name{font-size:24px}
+}
 
 /* Compact batting-rate descriptions in the team spotlight. */
 .snl-team-spotlight-metric[data-stat="team-avg"] small,
