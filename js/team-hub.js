@@ -14,6 +14,49 @@
    const roster=intro.nextElementSibling, schedule=roster?.nextElementSibling;
    if(!roster||!schedule||!roster.classList.contains('flat-card')||!schedule.classList.contains('flat-card'))return false;
    intro.dataset.hubReady='1';
+   // Replace the duplicate page title with a single sports-style team overview.
+   if(intro.previousElementSibling?.classList.contains('page-hero')){
+     intro.previousElementSibling.remove();
+   }
+   const team=DATA.teams.find(t=>t.id===teamId);
+   intro.classList.add('snl-team-spotlight');
+   intro.style.setProperty('--snl-team-accent',team?.secondary||'#63acd9');
+   const illustration=document.createElementNS('http://www.w3.org/2000/svg','svg');
+   illustration.setAttribute('class','snl-team-sweep');
+   illustration.setAttribute('viewBox','0 0 1200 490');
+   illustration.setAttribute('preserveAspectRatio','none');
+   illustration.setAttribute('aria-hidden','true');
+   illustration.innerHTML='<path d="M -30 133 C 260 198, 685 252, 1220 515" fill="none" stroke="#4d9ccb" stroke-width="2.5"/>';
+   intro.prepend(illustration);
+   const logo=intro.querySelector('img');
+   if(logo){
+     const medallion=document.createElement('div');
+     medallion.className='snl-team-spotlight-medallion';
+     logo.before(medallion);
+     medallion.append(logo);
+   }
+   const details=intro.querySelector(':scope > div:not(.snl-team-spotlight-medallion)');
+   if(details){
+     details.classList.add('snl-team-spotlight-title');
+     const heading=details.querySelector('h2');
+     if(heading){
+       const title=document.createElement('h1');
+       title.className='snl-team-spotlight-name';
+       title.textContent=heading.textContent;
+       heading.replaceWith(title);
+       title.before(Object.assign(document.createElement('span'),{className:'snl-team-spotlight-kicker',textContent:'SUNDAY NIGHT LIGHTS · TEAM PROFILE'}));
+     }
+   }
+   const summary=document.createElement('div');
+   summary.className='snl-team-spotlight-metrics';
+   summary.setAttribute('aria-label','Team season snapshot');
+   summary.setAttribute('aria-live','polite');
+   summary.id='snlTeamSnapshot';
+   const categories=[['PTS','Standings Points'],['RF','Runs For'],['RA','Runs Against'],['RD ±7','Capped Run Differential']];
+   summary.innerHTML=categories.map(([label,title])=>
+     '<div class="snl-team-spotlight-metric"><span>'+label+'</span><strong>—</strong><small>'+title+'</small></div>').join('');
+   intro.append(summary);
+
    roster.id='team-roster';schedule.id='team-schedule';
    roster.classList.add('snl-team-hub-section');schedule.classList.add('snl-team-hub-section');
    roster.querySelector('h2').textContent='Roster';
@@ -35,6 +78,18 @@
    intro.after(nav,leaders,schedule,stats,roster);
    loadTeam(teamId);
    return true;
+ }
+
+ function renderTeamSnapshot(data,id){
+   const panel=document.getElementById('snlTeamSnapshot');
+   if(!panel)return;
+   const standing=Array.isArray(data?.standings)?data.standings.find(r=>r.team===id):null;
+   const values=standing?[standing.points,standing.runsFor,standing.runsAgainst,standing.cappedRunDiff]:[];
+   const elements=[...panel.querySelectorAll('.snl-team-spotlight-metric strong')];
+   for(let i=0;i<elements.length;i++){
+     const n=values[i];
+     elements[i].textContent=typeof n==='number'&&Number.isFinite(n)?(i===3&&n>0?'+':'')+n:'—';
+   }
  }
  function renderBatting(data,siteData,id){
    const leaders=document.getElementById('snlTeamLeaders'),batting=document.getElementById('snlTeamBatting');
@@ -75,6 +130,7 @@
      fetch(STAT_URL,{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('Stats HTTP '+r.status);return r.json();})
    ]);
    const scheduleData=schedule.status==='fulfilled'?schedule.value:null;
+   renderTeamSnapshot(scheduleData,id);
    if(batting.status==='fulfilled')renderBatting(batting.value,scheduleData,id);
    else{
      const msg='<p class="section-note">Published batting statistics are temporarily unavailable.</p>';
