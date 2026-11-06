@@ -571,3 +571,19 @@ main{padding-bottom:30px}.hero{border:1px solid #43617a;background:#102f4d;margi
  .snl-expanded-table .team-id{gap:5px;font-size:11px}
  .snl-expanded-table .team-id img{height:28px;width:27px}
 }
+
+/* Homepage mobile/tablet flow: matchups first, standings below.
+   Keep desktop's two-column presentation untouched. */
+@media(max-width:1024px){
+ body[data-page="home"] .split{
+  grid-template-columns:minmax(0,1fr);
+  gap:22px;
+ }
+ body[data-page="home"] .split>div{
+  min-width:0;
+  width:100%;
+ }
+ body[data-page="home"] .split .panel{
+  max-width:100%;
+ }
+}
