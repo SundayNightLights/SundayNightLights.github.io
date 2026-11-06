@@ -19,7 +19,7 @@
  const requestedWeek=()=>{const w=Number(new URLSearchParams(location.search).get('week'));return Number.isInteger(w)&&w>=1&&w<=10?w:upcomingWeek()};
  const feedNotice=()=>feed?'':'<div class="notice">Schedule and standings are temporarily unavailable. Please check back shortly.</div>';
  const validatedFeed=data=>data&&data.schemaVersion===1&&Array.isArray(data.regularSeason)&&data.regularSeason.length===60&&Array.isArray(data.standings)&&data.standings.length===6&&Array.isArray(data.playoffs)&&data.playoffs.length===15&&data.regularSeason.every(g=>teamMap[g.away]&&teamMap[g.home]&&Number.isInteger(g.week)&&g.week>=1&&g.week<=10);
- const im=(id,cl='',alt='')=>`<img src="${window.__ASSET_DATA?.[id+'.webp']||'assets/'+id+'.webp'}" class="${cl}" alt="${alt||teamMap[id]?.name||''}" loading="lazy">`;
+ const im=(id,cl='',alt='')=>`<img src="${id==='morsl'?'assets/morsl.webp?v=morsl-excel-20261105':(window.__ASSET_DATA?.[id+'.webp']||'assets/'+id+'.webp')}" class="${cl}" alt="${alt||teamMap[id]?.name||''}" loading="lazy">`;
  const primaryNav=[['home','Home','index.html'],['schedule','Schedule','schedule.html'],['standings','Standings','standings.html'],['teams','Teams','teams.html'],['live','Live','live.html'],['stats','Stats','stats.html'],['highlights','News','highlights.html']];
  const extraNav=[['playoffs','Playoffs','playoffs.html'],['tournaments','Tournaments','tournaments.html'],['rules','Rules','rules.html'],['about','About','about.html'],['registration','Registration & Waivers','registration.html']];
  const playoffInNav=()=>{

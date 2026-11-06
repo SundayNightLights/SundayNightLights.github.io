@@ -49,7 +49,7 @@
 /* MORSL rightward correction, preserving original alligator, M and baseball. */
 .match .half--morsl{
   --logo-h:148%;--logo-ratio:1116 / 648;
-  --logo-url:url('../assets/matchup-morsl.webp');--logo-y:72%;
+  --logo-url:url('../assets/matchup-morsl.webp?v=morsl-excel-20261105');--logo-y:72%;
   --away-x:156px;--home-x:calc(42% + 156px);
 }
 .match .half--outcasts{

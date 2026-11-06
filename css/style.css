@@ -49,7 +49,7 @@ main{padding-bottom:30px}.hero{border:1px solid #43617a;background:#102f4d;margi
 .match .half--raccoons .teamart{background-image:url('../assets/raccoons_feature.webp');background-size:auto 300%;background-position:51% 45%}
 .match .half--morsl.home{background:linear-gradient(130deg,#0a8a38,#087c3d 75%,#0755ba)}
 .match .half--morsl.away{background:linear-gradient(128deg,#0b5ab8,#f5f7fb 60%,#dc1228)}
-.match .half--morsl .teamart{background-image:url('../assets/morsl_feature.webp');background-size:auto 202%;background-position:49% 47%}
+.match .half--morsl .teamart{background-image:url('../assets/morsl_feature.webp?v=morsl-excel-20261105');background-size:auto 202%;background-position:49% 47%}
 .match .half--maul.home{background:linear-gradient(130deg,#08090d,#20232b 65%,#3a0e0e)}
 .match .half--maul.away{background:linear-gradient(120deg,#414d5b,#1b2028 65%,#0d1116)}
 .match .half--maul .teamart{background-image:url('../assets/maul_feature.webp');background-size:auto 240%;background-position:49% 44%}
@@ -297,7 +297,7 @@ main{padding-bottom:30px}.hero{border:1px solid #43617a;background:#102f4d;margi
 .match .half--iht.away .teamart{background-position:left 1% center}
 .match .half--iht.home .teamart{background-position:right 1% center}
 /* MORSL: original complete emblem, cap & yellow M, border, and partial baseball. */
-.match .half--morsl .teamart{background-image:url('../assets/matchup-morsl.webp');background-size:auto 143%}
+.match .half--morsl .teamart{background-image:url('../assets/matchup-morsl.webp?v=morsl-excel-20261105');background-size:auto 143%}
 .match .half--morsl.away .teamart{background-position:left 8px center}
 .match .half--morsl.home .teamart{background-position:left calc(42% + 19px) center}
 /* Outcasts: keep faceplate and bottom-right C visible. */
