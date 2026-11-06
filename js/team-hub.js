@@ -41,11 +41,11 @@
    summary.id='snlTeamSnapshot';
    const categories=[['RF AVG','Runs scored per completed game','rf-avg'],['RA AVG','Runs allowed per completed game','ra-avg'],['AVG','Mean of reported players','team-avg'],['OPS','Mean of reported players','team-ops']];
    summary.innerHTML=categories.map(([label,title,key])=>
-     '<div class="snl-team-spotlight-metric" data-stat="'+key+'"><span>'+label+'</span><strong>—</strong><small>'+title+'</small></div>').join('');
+     '<div class="snl-team-spotlight-metric" data-stat="'+key+'" title="'+title+'"><span>'+label+'</span><strong>—</strong></div>').join('');
    intro.append(summary);
    const note=document.createElement('p');
    note.className='snl-team-snapshot-note';
-   note.textContent='Batting AVG and OPS are averages of reported players, not official team aggregate rates.';
+   note.textContent='AVG and OPS are averages of reported player statistics, not official team aggregate rates.';
    intro.append(note);
 
    roster.id='team-roster';schedule.id='team-schedule';
@@ -112,8 +112,6 @@
        .map(p=>value(p,key)).filter(n=>n!==null);
      const average=samples.length?samples.reduce((sum,n)=>sum+n,0)/samples.length:null;
      tile.querySelector('strong').textContent=average===null?'—':average.toFixed(3);
-     tile.querySelector('small').textContent=samples.length?
-       'Avg. of '+samples.length+' reported batters':'No reported batting data';
      tile.title='Arithmetic mean of reported player '+key+' values (not official aggregate team '+key+')';
    }
    leaders.innerHTML=[['AVG','Batting Average'],['HR','Home Runs'],['RBI','Runs Batted In'],['H','Hits']].map(([key,label])=>{

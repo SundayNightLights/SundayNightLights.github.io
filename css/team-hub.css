@@ -103,11 +103,14 @@
  .snl-team-spotlight-name{font-size:24px}
 }
 
-/* Compact batting-rate descriptions in the team spotlight. */
-.snl-team-spotlight-metric[data-stat="team-avg"] small,
-.snl-team-spotlight-metric[data-stat="team-ops"] small{
- color:#d5e6f4;font-size:11px;font-weight:800;overflow-wrap:anywhere;
-}
+/* Quiet, full-width note underneath all four team snapshot statistics. */
+.snl-team-spotlight-metric{gap:6px}
 .snl-team-snapshot-note{
- margin:2px 0 0;font-size:10px;color:#adc6da;line-height:1.45;
+ grid-area:note;justify-self:stretch;align-self:end;
+ width:100%;max-width:none;box-sizing:border-box;
+ margin:0;padding:3px 0 0;text-align:center;
+ font-size:11px;color:#b7c9d9;line-height:1.5;
+}
+@media(max-width:680px){
+ .snl-team-snapshot-note{font-size:10px;padding:2px 2px 0}
 }
