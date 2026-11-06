@@ -4,8 +4,6 @@
  const STAT_URL='https://sundaynightlights.github.io/SNL-Stats-Hub/stats-data.json';
  const SCHEDULE_URL='/SNL-Calendar-Hub/site-data.json';
  const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- const number=n=>typeof n==='number'&&Number.isFinite(n)?String(n):'—';
- const signed=n=>typeof n==='number'&&Number.isFinite(n)?(n>0?'+':'')+n:'—';
  const torontoToday=()=>{
   const v=Object.fromEntries(new Intl.DateTimeFormat('en-US',{timeZone:'America/Toronto',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date()).map(p=>[p.type,p.value]));
   return v.year+'-'+v.month+'-'+v.day;
@@ -24,51 +22,19 @@
    schedule.querySelector('h2').textContent='Schedule & Results';
    const nav=document.createElement('nav');
    nav.className='snl-team-hub-nav';nav.setAttribute('aria-label','Team sections');
-   nav.innerHTML=[['team-leaders','Team Leaders'],['team-schedule','Schedule & Results'],['team-stats','Team Stats'],['team-roster','Roster']].map(([id,label])=>'<a href="#'+id+'">'+label+'</a>').join('');
+   nav.innerHTML=[['team-leaders','Team Leaders'],['team-schedule','Schedule & Results'],['team-stats','Batting Stats'],['team-roster','Roster']].map(([id,label])=>'<a href="#'+id+'">'+label+'</a>').join('');
    const leaders=document.createElement('section');
    leaders.className='flat-card snl-team-hub-section';leaders.id='team-leaders';
    leaders.innerHTML='<div class="snl-team-hub-heading"><h2>Team Leaders</h2><a href="stats.html">ALL LEAGUE STATS ›</a></div>'+
      '<p class="section-note">Current-season player batting leaders.</p><div class="snl-team-leader-grid" id="snlTeamLeaders" aria-live="polite"><p class="section-note">Loading batting leaders…</p></div>';
    const stats=document.createElement('section');
    stats.className='flat-card snl-team-hub-section';stats.id='team-stats';
-   stats.innerHTML='<div class="snl-team-hub-heading"><h2>Team Stats</h2><a href="standings.html">FULL STANDINGS ›</a></div>'+
-    '<h3 class="snl-team-hub-subheading">Regular Season Performance</h3><div id="snlTeamPerformance"><p class="section-note">Loading team performance…</p></div>'+
-    '<h3 class="snl-team-hub-subheading">Player Batting Statistics</h3><div id="snlTeamBatting" aria-live="polite"><p class="section-note">Loading published batting statistics…</p></div>';
+   stats.innerHTML='<div class="snl-team-hub-heading"><h2>Batting Stats</h2><a href="stats.html">ALL LEAGUE STATS ›</a></div>'+
+    '<p class="section-note">Published batting statistics for players on this team.</p>'+
+    '<div id="snlTeamBatting" aria-live="polite"><p class="section-note">Loading published batting statistics…</p></div>';
    intro.after(nav,leaders,schedule,stats,roster);
    loadTeam(teamId);
    return true;
- }
- function resultFor(g,id){
-   const own=g.home===id?g.homeScore:g.awayScore,other=g.home===id?g.awayScore:g.homeScore;
-   return own>other?'W':own<other?'L':'T';
- }
- function record(games,id){
-   const w=games.filter(g=>resultFor(g,id)==='W').length,l=games.filter(g=>resultFor(g,id)==='L').length;
-   return w+'-'+l+'-'+(games.length-w-l);
- }
- function renderPerformance(data,id){
-   const target=document.getElementById('snlTeamPerformance');
-   const row=data?.standings?.find(r=>r.team===id);
-   if(!row||!Array.isArray(data.regularSeason)){
-     target.innerHTML='<p class="section-note">Team performance is temporarily unavailable.</p>';return;
-   }
-   const done=data.regularSeason.filter(g=>(g.away===id||g.home===id)&&g.status==='Final'&&Number.isInteger(g.awayScore)&&Number.isInteger(g.homeScore))
-     .sort((a,b)=>a.date.localeCompare(b.date)||a.slot-b.slot||a.diamond-b.diamond);
-   let streak='—';
-   if(done.length){
-     const last=resultFor(done[done.length-1],id);let count=0;
-     for(let i=done.length-1;i>=0&&resultFor(done[i],id)===last;i--)count++;
-     streak=last+count;
-   }
-   const tiles=[
-     ['GP',number(row.gp)],['W',number(row.wins)],['L',number(row.losses)],['T',number(row.ties)],
-     ['PTS',number(row.points)],['PTS%',row.gp?(row.points/(2*row.gp)).toFixed(3):'—'],
-     ['RF',number(row.runsFor)],['RA',number(row.runsAgainst)],['RD',signed(row.runDiff)],['RD ±7',signed(row.cappedRunDiff)],
-     ['HOME',record(done.filter(g=>g.home===id),id)],['AWAY',record(done.filter(g=>g.away===id),id)],
-     ['L10',record(done.slice(-10),id)],['STREAK',streak]
-   ];
-   target.innerHTML='<div class="snl-team-performance-grid">'+tiles.map(([label,value])=>'<div class="snl-team-performance-tile"><span>'+esc(label)+'</span><strong>'+esc(value)+'</strong></div>').join('')+'</div>'+
-     '<p class="section-note">Regular-season results only. Official playoff seeding may require additional tie-breakers.</p>';
  }
  function renderBatting(data,siteData,id){
    const leaders=document.getElementById('snlTeamLeaders'),batting=document.getElementById('snlTeamBatting');
@@ -109,7 +75,6 @@
      fetch(STAT_URL,{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('Stats HTTP '+r.status);return r.json();})
    ]);
    const scheduleData=schedule.status==='fulfilled'?schedule.value:null;
-   renderPerformance(scheduleData,id);
    if(batting.status==='fulfilled')renderBatting(batting.value,scheduleData,id);
    else{
      const msg='<p class="section-note">Published batting statistics are temporarily unavailable.</p>';
