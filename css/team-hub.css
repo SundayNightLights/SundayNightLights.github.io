@@ -65,3 +65,8 @@
  .snl-team-spotlight-metric small{font-size:9px}
 }
 @media(max-width:380px){.team-detail.snl-team-spotlight{padding:20px 16px}.snl-team-spotlight-kicker{font-size:9px;letter-spacing:1.5px}}
+
+/* Identify the individual batter behind TOP OPS; never imply this is a team aggregate. */
+.snl-team-spotlight-metric[data-stat="top-ops"] small{
+ color:#d5e6f4;font-size:11px;font-weight:800;overflow-wrap:anywhere;
+}
