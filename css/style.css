@@ -541,3 +541,33 @@ main{padding-bottom:30px}.hero{border:1px solid #43617a;background:#102f4d;margi
  .nav-more-menu a,.nav-more-menu a.active{font-size:14px!important;padding:10px 9px!important}
  .nav a.nav-join,.nav a.nav-join.active{align-self:stretch;padding:12px!important;margin-top:5px}
 }
+
+
+/* Full standings: the 16 approved Master fields; homepage remains compact. */
+.snl-expanded-standings{overflow:hidden}
+.snl-standings-page{min-width:0;margin:12px 0 18px}
+.snl-expanded-scroll{width:100%;max-width:100%;overflow-x:auto;overscroll-behavior-inline:contain;scrollbar-color:#597d97 #092238}
+.snl-expanded-scroll:focus-visible{outline:2px solid var(--yellow);outline-offset:-2px}
+.snl-expanded-table{min-width:1320px;width:100%;table-layout:auto;border-collapse:separate;border-spacing:0}
+.snl-expanded-table th,.snl-expanded-table td{text-align:center!important;white-space:nowrap;font-variant-numeric:tabular-nums}
+.snl-expanded-table th{padding:13px 11px;font-size:11px;letter-spacing:.25px;font-weight:900;background:#0a2439}
+.snl-expanded-table td{padding:12px 11px;font-size:12px;border-top:1px solid #3a5872}
+.snl-expanded-table th:nth-child(12),.snl-expanded-table td:nth-child(12){min-width:76px}
+.snl-expanded-table .snl-standings-points{color:#ffde19;font-weight:950}
+.snl-expanded-table th:nth-child(1),.snl-expanded-table td:nth-child(1){position:sticky;left:0;z-index:2;min-width:49px;width:49px;background:#0d2b44}
+.snl-expanded-table th:nth-child(2),.snl-expanded-table td:nth-child(2){position:sticky;left:49px;z-index:2;text-align:left!important;min-width:207px;width:207px;background:#0d2b44;box-shadow:1px 0 #4e6b83}
+.snl-expanded-table th:nth-child(-n+2){z-index:3;background:#0a2439}
+.snl-expanded-table tbody tr:hover td{background:#163a56}
+.snl-expanded-table .team-id{gap:9px;width:max-content;max-width:100%;font-size:12px}
+.snl-expanded-table .team-id span{white-space:nowrap}
+.snl-expanded-table .team-id img{width:32px;height:31px}
+.snl-standings-scroll-hint{display:none;text-align:right;padding:7px 13px;color:#b4cade;font-size:11px;background:#0b2942}
+@media(max-width:1400px){.snl-standings-scroll-hint{display:block}}
+@media(max-width:600px){
+ .snl-expanded-table{min-width:1190px}
+ .snl-expanded-table th,.snl-expanded-table td{padding:11px 8px;font-size:11px}
+ .snl-expanded-table th:nth-child(1),.snl-expanded-table td:nth-child(1){min-width:36px;width:36px}
+ .snl-expanded-table th:nth-child(2),.snl-expanded-table td:nth-child(2){left:36px;min-width:171px;width:171px}
+ .snl-expanded-table .team-id{gap:5px;font-size:11px}
+ .snl-expanded-table .team-id img{height:28px;width:27px}
+}
