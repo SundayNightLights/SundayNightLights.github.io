@@ -123,6 +123,16 @@
  function playoffSlots(){if(!feed)return feedNotice();const rounds=['Quarterfinals','Semifinals','Finals'];return `<div class="flat-card"><h2>PLAYOFF GAME SLOTS</h2><p class="section-note">Matchups remain placeholders until official seeding. Game 3 is played only if necessary.</p><div style="overflow-x:auto"><table class="game-table"><thead><tr><th>ROUND</th><th>DATE</th><th>TIME</th><th>DIAMOND</th><th>AWAY</th><th>HOME</th><th>STATUS</th></tr></thead><tbody>${feed.playoffs.map(g=>`<tr><td>${escapeHtml(g.round)}</td><td>${escapeHtml(g.date)}</td><td>${escapeHtml(gameStart(g))}</td><td>${diamondCode(g)}</td><td>${escapeHtml(teamMap[g.away]?.name||g.away)}</td><td>${escapeHtml(teamMap[g.home]?.name||g.home)}</td><td>${g.status==='Not Necessary'?'Not necessary':g.status==='Final'?`${g.awayScore} – ${g.homeScore}`:g.ifNecessary?'If necessary':'Scheduled'}</td></tr>`).join('')}</tbody></table></div></div>`;}
  function teamsPage(){return `${pageHero('SNL','TEAMS','Six clubs. One league. Explore each team’s official logo and future roster.')}<div class="team-grid">${D.teams.map(t=>`<a class="team-card" href="team.html?team=${t.id}">${im(t.id,'',t.name)}<h3>${t.name}</h3><span>VIEW TEAM ›</span></a>`).join('')}</div>`;}
 
+ function teamResultCell(g,teamId){
+   if(g.status!=='Final'||!Number.isInteger(g.awayScore)||!Number.isInteger(g.homeScore))return '—';
+   const teamScore=g.away===teamId?g.awayScore:g.homeScore;
+   const opponentScore=g.away===teamId?g.homeScore:g.awayScore;
+   const outcome=teamScore>opponentScore?'W':teamScore<opponentScore?'L':'T';
+   const outcomeLabel=outcome==='W'?'Win':outcome==='L'?'Loss':'Tie';
+   return '<span class="snl-team-result"><span class="snl-team-result-score">'+
+     escapeHtml(g.awayScore+'–'+g.homeScore)+'</span><span class="snl-team-result-badge snl-team-result-'+
+     outcome.toLowerCase()+'" aria-label="'+outcomeLabel+'" title="'+outcomeLabel+'">'+outcome+'</span></span>';
+ }
  function teamPage(){
   const id=new URLSearchParams(location.search).get('team')||'buffaloes',t=teamMap[id]||teamMap.buffaloes;
   const standing=feed?.standings.find(r=>r.team===t.id);
@@ -134,7 +144,7 @@
 ${D.teams.filter(op=>op.id!==t.id).sort((a,b)=>a.name.localeCompare(b.name)).map(op=>`<option value="${escapeHtml(op.id)}">${escapeHtml(op.name)}</option>`).join('')}
 </select>
 <span id="snlMatchupsCount" role="status" aria-live="polite"></span>
-</div>` : ''}${matches.length?`<div style="overflow-x:auto"><table class="game-table"><thead><tr><th>WEEK</th><th>DATE</th><th>TIME</th><th>DIAMOND</th><th>MATCHUP</th><th>RESULT</th></tr></thead><tbody id="snlTeamMatchupRows">${matches.map(g=>`<tr data-opponent="${g.away===t.id?g.home:g.away}" data-week="${g.week}" data-home="${g.home===t.id?1:0}"><td><a href="schedule.html?week=${g.week}">W${g.week}</a></td><td>${escapeHtml(g.date)}</td><td>${escapeHtml(gameStart(g))}</td><td>${diamondCode(g)}</td><td>${escapeHtml(teamMap[g.away].short)} @ ${escapeHtml(teamMap[g.home].short)}</td><td>${g.status==='Final'?`${g.awayScore}–${g.homeScore}`:'—'}</td></tr>`).join('')}</tbody></table></div>`:'<p class="section-note">Live team schedule temporarily unavailable.</p>'}<a class="feature-link" href="schedule.html">VIEW FULL SNL SCHEDULE ›</a></div>`;
+</div>` : ''}${matches.length?`<div style="overflow-x:auto"><table class="game-table"><thead><tr><th>WEEK</th><th>DATE</th><th>TIME</th><th>DIAMOND</th><th>MATCHUP</th><th>RESULT</th></tr></thead><tbody id="snlTeamMatchupRows">${matches.map(g=>`<tr data-opponent="${g.away===t.id?g.home:g.away}" data-week="${g.week}" data-home="${g.home===t.id?1:0}"><td><a href="schedule.html?week=${g.week}">W${g.week}</a></td><td>${escapeHtml(g.date)}</td><td>${escapeHtml(gameStart(g))}</td><td>${diamondCode(g)}</td><td>${escapeHtml(teamMap[g.away].short)} @ ${escapeHtml(teamMap[g.home].short)}</td><td>${teamResultCell(g,t.id)}</td></tr>`).join('')}</tbody></table></div>`:'<p class="section-note">Live team schedule temporarily unavailable.</p>'}<a class="feature-link" href="schedule.html">VIEW FULL SNL SCHEDULE ›</a></div>`;
  }
 
   function statsPage(){return `${pageHero('LEAGUE','STATS','Team performance and individual player leaderboards')}<div class="stat-summary"><div class="stat-box"><b>6</b><small>TEAMS</small></div><div class="stat-box"><b>10</b><small>PLAYING WEEKS</small></div><div class="stat-box"><b>60</b><small>REGULAR-SEASON GAMES</small></div><div class="stat-box"><b>2</b><small>DIAMONDS</small></div></div><section class="section">${sectionHead('TEAM','STATISTICS')}<div style="overflow:auto">${standingsTable(false)}</div></section><section class="section leaders-full">${sectionHead('LEAGUE','LEADERS')}${leaders()}</section><div class="notice">Player statistics will be shown after GameChanger data is connected and verified. No statistics, leaders, or player identities have been invented.</div>`;}
