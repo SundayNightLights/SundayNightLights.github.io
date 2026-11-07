@@ -80,6 +80,10 @@ def crop(name, opts):
     start=h*opts["fade_start"]
     end=h*opts["fade_end"]
     fade=np.clip((end-ys)/(end-start),0,1)
+    if name=="derek":
+        # Preserve the raised finger and hand left of the shirt lettering.
+        left_fade=np.clip((h*.96-ys)/(h*.96-h*.82),0,1)
+        fade=np.where(xx<w*.23,left_fade,fade)
     alpha=(alpha.astype(float)*fade).astype(np.uint8)
     rgba[:,:,3]=alpha
     output=ASSETS/f"trade-{name}-cutout.png"
