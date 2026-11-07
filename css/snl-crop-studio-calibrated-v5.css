@@ -1,0 +1,74 @@
+/* SNL calibrated matchup crops — 2026-11-07
+   Mathematically translated from the approved Crop Studio Card (1062x372)
+   and Wide (2370x336) presets. Source artwork is the same transparency-trimmed
+   team logo already used by snl-matchups-approved-v4.css.
+   All text (time, team names, diamond) remains live HTML; no baked-in scores.
+   IMPORTANT: this stylesheet must load AFTER snl-matchups-approved-v4.css.
+*/
+.match,.split .match,.large-matches .match {
+  border:2.5px solid #c2cad5;
+  box-sizing:border-box;
+  overflow:hidden;
+}
+.match .half.away {clip-path:polygon(0 0,57% 0,43% 100%,0 100%);}
+.match .half.home {clip-path:polygon(57% 0,100% 0,100% 100%,43% 100%);}
+.match .slash {
+  clip-path:polygon(calc(57% - 2px) 0,calc(57% + 2px) 0,calc(43% + 2px) 100%,calc(43% - 2px) 100%);
+}
+.match .half .teamart {
+  inset:auto!important;
+  top:var(--crop-y,50%)!important;
+  left:var(--crop-x,50%)!important;
+  height:var(--crop-h,200%)!important;
+  width:auto!important;
+  max-width:none!important;
+  aspect-ratio:var(--logo-ratio)!important;
+  background-size:100% 100%!important;
+  background-position:center!important;
+  background-repeat:no-repeat!important;
+  opacity:1!important;
+  filter:none!important;
+  transform:translate(-50%,-50%) rotate(var(--crop-angle,3deg))!important;
+  transform-origin:center center!important;
+}
+
+/* Buffaloes: away / home palettes and independent logo crop coordinates. */
+.match .half--buffaloes.away{background:linear-gradient(135deg,#f9d675,#f7e5ac);--crop-x:48.08%;--crop-y:70.12%;--crop-h:126.44%;--crop-angle:3.015deg;}
+.match .half--buffaloes.home{background:linear-gradient(135deg,#000c30,#000c24);--crop-x:97.07%;--crop-y:70.15%;--crop-h:126.40%;--crop-angle:3.063deg;}
+
+/* IHT: away / home palettes and independent logo crop coordinates. */
+.match .half--iht.away{background:linear-gradient(135deg,#ed7c1d,#c85f0a);--crop-x:24.08%;--crop-y:58.02%;--crop-h:165.97%;--crop-angle:3.004deg;}
+.match .half--iht.home{background:linear-gradient(135deg,#c85f0a,#f68a2c);--crop-x:75.90%;--crop-y:58.01%;--crop-h:165.95%;--crop-angle:3.002deg;}
+
+/* MORSL: away / home palettes and independent logo crop coordinates. */
+.match .half--morsl.away{background:linear-gradient(135deg,#fcfcfc,#f0f0f0);--crop-x:25.50%;--crop-y:70.13%;--crop-h:132.28%;--crop-angle:3.035deg;}
+.match .half--morsl.home{background:linear-gradient(135deg,#24c03c,#24b43c);--crop-x:80.14%;--crop-y:70.18%;--crop-h:132.36%;--crop-angle:3.052deg;}
+
+/* Outcasts: away / home palettes and independent logo crop coordinates. */
+.match .half--outcasts.away{background:linear-gradient(135deg,#fcfcfc,#f0f0f0);--crop-x:22.64%;--crop-y:33.84%;--crop-h:165.79%;--crop-angle:2.937deg;}
+.match .half--outcasts.home{background:linear-gradient(135deg,#000000,#181818);--crop-x:77.26%;--crop-y:33.83%;--crop-h:165.83%;--crop-angle:2.702deg;}
+
+/* Pacific Maul: away / home palettes and independent logo crop coordinates. */
+.match .half--maul.away{background:linear-gradient(135deg,#fcfcfc,#f0f0f0);--crop-x:22.67%;--crop-y:58.03%;--crop-h:249.07%;--crop-angle:3.010deg;}
+.match .half--maul.home{background:linear-gradient(135deg,#000000,#30303c);--crop-x:74.49%;--crop-y:58.04%;--crop-h:249.16%;--crop-angle:2.992deg;}
+
+/* Toronto Raccoons: away / home palettes and independent logo crop coordinates. */
+.match .half--raccoons.away{background:linear-gradient(135deg,#848484,#787878);--crop-x:4.32%;--crop-y:110.51%;--crop-h:249.06%;--crop-angle:2.985deg;}
+.match .half--raccoons.home{background:linear-gradient(135deg,#006c30,#004824);--crop-x:57.57%;--crop-y:110.51%;--crop-h:248.98%;--crop-angle:2.979deg;}
+
+/* Wide Crop Studio reference is intended for larger, full-width schedule cards.
+   Phones use Card geometry so crops remain legible at narrow widths. */
+@media (min-width:700px) {
+.large-matches .match .half--buffaloes.away{--crop-x:29.67%;--crop-y:81.24%;--crop-h:186.41%;--crop-angle:3.026deg;}
+.large-matches .match .half--buffaloes.home{--crop-x:82.09%;--crop-y:81.27%;--crop-h:186.45%;--crop-angle:3.037deg;}
+.large-matches .match .half--iht.away{--crop-x:25.50%;--crop-y:58.88%;--crop-h:228.21%;--crop-angle:3.008deg;}
+.large-matches .match .half--iht.home{--crop-x:74.50%;--crop-y:58.88%;--crop-h:228.18%;--crop-angle:3.019deg;}
+.large-matches .match .half--morsl.away{--crop-x:25.50%;--crop-y:72.33%;--crop-h:145.37%;--crop-angle:3.020deg;}
+.large-matches .match .half--morsl.home{--crop-x:74.50%;--crop-y:72.31%;--crop-h:145.39%;--crop-angle:3.023deg;}
+.large-matches .match .half--outcasts.away{--crop-x:25.50%;--crop-y:32.08%;--crop-h:186.73%;--crop-angle:2.985deg;}
+.large-matches .match .half--outcasts.home{--crop-x:75.76%;--crop-y:32.11%;--crop-h:186.13%;--crop-angle:2.882deg;}
+.large-matches .match .half--maul.away{--crop-x:25.49%;--crop-y:50.04%;--crop-h:415.32%;--crop-angle:2.977deg;}
+.large-matches .match .half--maul.home{--crop-x:74.50%;--crop-y:49.99%;--crop-h:415.13%;--crop-angle:3.018deg;}
+.large-matches .match .half--raccoons.away{--crop-x:22.33%;--crop-y:117.02%;--crop-h:332.28%;--crop-angle:3.006deg;}
+.large-matches .match .half--raccoons.home{--crop-x:71.34%;--crop-y:117.02%;--crop-h:332.28%;--crop-angle:2.992deg;}
+}
