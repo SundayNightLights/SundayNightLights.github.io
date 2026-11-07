@@ -840,3 +840,29 @@ main{padding-bottom:30px}.hero{border:1px solid #43617a;background:#102f4d;margi
  .snl-footer-bottom{margin-top:9px;padding-top:7px}
 }
 @media(max-width:380px){.snl-footer-wordmark{font-size:12px}}
+
+
+/* Trade story player graphics: conceal baked-in former-team labels in the top corners.
+   Only the photos are covered; player names and new-team captions below remain visible. */
+.snl-article .trade-spotlight .spotlight-player{position:relative}
+.snl-article .trade-spotlight .spotlight-player::before{
+  content:"";position:absolute;z-index:1;top:0;height:74px;
+  pointer-events:none;
+}
+.snl-article .trade-spotlight .spotlight-player:first-child::before{
+  right:0;width:52%;
+  background:linear-gradient(90deg,rgba(7,65,158,.76) 0%,#0757ad 44%,#034a9e 100%);
+  -webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 70%,transparent 100%);
+  mask-image:linear-gradient(to bottom,#000 0%,#000 70%,transparent 100%);
+}
+.snl-article .trade-spotlight .spotlight-player:last-child::before{
+  left:0;width:37%;
+  background:linear-gradient(90deg,#ec610a 0%,#f16a09 70%,rgba(244,102,9,.25) 100%);
+  -webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 72%,transparent 100%);
+  mask-image:linear-gradient(to bottom,#000 0%,#000 72%,transparent 100%);
+}
+@media(max-width:480px){
+  .snl-article .trade-spotlight .spotlight-player::before{height:46px}
+  .snl-article .trade-spotlight .spotlight-player:first-child::before{width:57%}
+  .snl-article .trade-spotlight .spotlight-player:last-child::before{width:42%}
+}
