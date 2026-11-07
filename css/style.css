@@ -929,3 +929,15 @@ main{padding-bottom:30px}.hero{border:1px solid #43617a;background:#102f4d;margi
  .snl-tiebreak-content{padding:13px 17px 17px}
 }
 @media(prefers-reduced-motion:reduce){.snl-tiebreak-chevron{transition:none}}
+
+
+/* True RGBA trade-player cutouts: old CSS poster polygons are no longer needed.
+   PNG pixels are preserved; only the official team logo remains behind each cutout. */
+.snl-article .trade-spotlight .spotlight-visual > img.spotlight-player-photo{
+  width:100%;height:100%;object-fit:contain;object-position:center bottom;
+  clip-path:none;-webkit-mask-image:none;mask-image:none;
+}
+.snl-article .trade-spotlight .spotlight-visual > img.spotlight-derek,
+.snl-article .trade-spotlight .spotlight-visual > img.spotlight-alfred{
+  clip-path:none;-webkit-mask-image:none;mask-image:none;
+}
