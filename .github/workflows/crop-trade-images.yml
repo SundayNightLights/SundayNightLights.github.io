@@ -7,6 +7,10 @@ on:
       - scripts/crop-trade-images.py
       - .github/workflows/crop-trade-images.yml
 
+concurrency:
+  group: snl-trade-cutouts
+  cancel-in-progress: false
+
 permissions:
   contents: write
 
@@ -33,5 +37,7 @@ jobs:
             echo "No image changes."
           else
             git commit -m "Generate transparent original-player preview cutouts"
-            git push
+            git fetch origin main
+            git rebase origin/main
+            git push origin HEAD:main
           fi
