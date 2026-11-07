@@ -635,3 +635,31 @@ main{padding-bottom:30px}.hero{border:1px solid #43617a;background:#102f4d;margi
   width:31px;height:28px;justify-content:center;padding:3px;
  }
 }
+
+/* Approved Instagram follow call-to-action, responsive and consistent with SNL branding. */
+.utility-in .socials a.social-pill.instagram-follow{
+ height:33px;min-width:0;gap:8px;padding:4px 11px;
+ border:2px solid var(--yellow);border-radius:9px;
+ background:#0b2035;color:var(--yellow);
+ box-shadow:inset 0 0 0 1px #ffde1915;
+ font-size:11px;font-weight:900;letter-spacing:.1px;
+ transition:border-color .15s ease,background-color .15s ease,box-shadow .15s ease;
+}
+.utility-in .socials a.social-pill.instagram-follow svg{
+ width:23px;height:23px;flex:0 0 23px;
+ box-sizing:border-box;padding:3px;border-radius:6px;
+ color:#fff;background:linear-gradient(42deg,#feda75 0%,#fa7e1e 22%,#d62976 49%,#962fbf 72%,#4f5bd5 100%);
+}
+.utility-in .socials a.social-pill.instagram-follow:hover,
+.utility-in .socials a.social-pill.instagram-follow:focus-visible{
+ background:#203750;border-color:#ffec67;box-shadow:0 0 0 1px #ffde1938;
+}
+@media(max-width:800px){
+ .utility-in .socials a.social-pill.instagram-follow{
+  width:32px;min-width:32px;height:29px;padding:2px;justify-content:center;border-radius:7px;
+ }
+ .utility-in .socials a.social-pill.instagram-follow .instagram-follow-text{display:none}
+ .utility-in .socials a.social-pill.instagram-follow svg{
+  width:23px;height:23px;flex:0 0 23px;padding:3px;
+ }
+}
