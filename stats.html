@@ -170,9 +170,7 @@
       card.setAttribute('aria-label','Sort batting statistics by '+label);
       card.appendChild(create('span',label,'gc-cat'));
 
-      if(rateStats.has(key)) {
-        card.appendChild(create('span',`MIN ${minimum} GP`,'gc-qualifier'));
-      }
+      // The minimum-GP rule is shown once above the leader cards.
 
       const first = display[0];
       card.appendChild(create('strong',first ? fmt(first,key) : '—','gc-top-value'));
