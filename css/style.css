@@ -728,3 +728,13 @@ main{padding-bottom:30px}.hero{border:1px solid #43617a;background:#102f4d;margi
 @media(prefers-reduced-motion:reduce){
  .scoreboard-live-dot,.live-card-status-dot{animation:none}
 }
+
+/* Broadcast-inspired scorecard contrast: scores first, names second. */
+.scoretrack .scorecard{
+ background:#102c46;border-color:#466780;
+ box-shadow:inset 0 1px 0 #ffffff0b;
+}
+.scoretrack .scorecard .scoreteam span{color:#becddd;font-weight:750}
+.scoretrack .scorecard .scoreteam b{color:#fff;font-size:19px;font-weight:950;font-variant-numeric:tabular-nums}
+.scoretrack .scorecard .scoremeta{color:var(--yellow)}
+.scoretrack .scorecard .scoremeta span{color:#a9bdcf}
