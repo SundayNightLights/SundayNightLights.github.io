@@ -182,8 +182,7 @@
     // One compact selector beside SNL SCOREBOARD on every page.
     target.appendChild(bar);
 
-    const footer = wrap.querySelector('.footer');
-    if (footer?.lastElementChild) footer.lastElementChild.textContent = selected.label;
+    // Season is already displayed in the global selector. The footer stays season-neutral.
     syncTicker();
     hideUnpublishedSeasonData();
     syncStats();

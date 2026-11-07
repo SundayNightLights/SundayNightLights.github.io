@@ -129,7 +129,23 @@
  <div class="masthead"><div class="wrap masthead-in"><a href="index.html" class="brand" aria-label="Sunday Night Lights home"><span class="brand-mark">S<i>N</i>L</span><span class="brand-divider"></span><span class="brand-txt"><b>SUNDAY NIGHT<br>LIGHTS</b><small>OFFICIAL LEAGUE HUB</small></span></a><button class="menu-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="siteNav">☰</button><nav class="nav" id="siteNav" aria-label="Main navigation">${navMarkup()}</nav></div></div>
  <div class="scoreboard"><div class="wrap"><div class="scorehead"><h2>${tickerGameTimeAlert()?`<span class="scoreboard-live-dot" aria-hidden="true"></span>`:''}<span class="brand-mark scoreboard-label-snl">S<i>N</i>L</span> <span class="scoreboard-label-score">SCOREBOARD</span></h2><span class="right-text">${latestResultsWeek()?`WEEK ${latestResultsWeek()} · ${dateLabel(weekGames(latestResultsWeek())[0].date)} · RESULTS`:'SCHEDULE & RESULTS'}</span></div><div class="score-viewport"><button type="button" class="scorebtn ticker-arrow ticker-arrow-prev" data-score-step="-1" aria-label="Scroll scoreboard left" aria-controls="scoreTrack"><span aria-hidden="true">‹</span></button><div class="scoretrack" id="scoreTrack">${liveCentreCard()}${latestResultsWeek()?weekGames(latestResultsWeek()).map(g=>`<div class="scorecard ${g.status==='Final'?'':'pending'}"><div class="scoremeta">${g.status==='Final'?'FINAL':'PENDING'}<span>WEEK ${g.week}</span></div><div class="scoreteam">${im(g.away)}<span>${teamMap[g.away].short}</span><b>${g.awayScore??'—'}</b></div><div class="scoreteam">${im(g.home)}<span>${teamMap[g.home].short}</span><b>${g.homeScore??'—'}</b></div></div>`).join(''):'<div class="scorecard pending"><div class="scoremeta">LIVE DATA</div><div class="scoreteam">No verified results available</div></div>'}</div><button type="button" class="scorebtn ticker-arrow ticker-arrow-next" data-score-step="1" aria-label="Scroll scoreboard right" aria-controls="scoreTrack"><span aria-hidden="true">›</span></button></div></div></div>
  </header>`;}
- function footer(){return `<footer class="footer"><span><strong>SUNDAY NIGHT <em>LIGHTS</em></strong></span><span><a href="rules.html">Rules</a> · <a href="tournaments.html">Tournaments</a> · <a href="live.html">Live Game Centre</a> · <a href="about.html">About</a> · <a href="join.html">Join SNL</a> · <a href="registration.html">Registration</a> · <a href="${cal}" target="_blank" rel="noopener">Subscribe to Calendar</a></span><span>2026-27 Fall</span></footer>`;}
+ function footer(){return `<footer class="footer snl-footer" aria-label="SNL footer">
+   <div class="snl-footer-main">
+     <div class="snl-footer-identity">
+       <strong class="snl-footer-wordmark">SUNDAY <em>NIGHT</em> LIGHTS</strong>
+       <span class="snl-footer-venue">Markham Sports Dome · Markham, Ontario</span>
+     </div>
+     <nav class="snl-footer-links" aria-label="Footer navigation">
+       <a href="about.html">About</a>
+       <a href="rules.html">Rules</a>
+       <a href="tournaments.html">Tournaments</a>
+       <a href="join.html">Join SNL</a>
+       <a href="${cal}" target="_blank" rel="noopener noreferrer">Subscribe to Calendar</a>
+     </nav>
+     <a class="snl-footer-instagram" href="https://www.instagram.com/snl_416/" target="_blank" rel="noopener noreferrer" aria-label="Follow SNL on Instagram @snl_416">${insta}<span>Follow @snl_416</span></a>
+   </div>
+   <div class="snl-footer-bottom">© ${new Date().getFullYear()} Sunday Night Lights</div>
+ </footer>`;}
  const ribbon=()=>`<div class="logo-ribbon" aria-label="SNL team logos">${['buffaloes','outcasts','morsl','iht','maul','raccoons'].map(id=>`<a class="logo-team ${id}" href="team.html?team=${id}" title="${teamMap[id].name}">${im(id,'',teamMap[id].name)}</a>`).join('')}</div>`;
  const hero=()=>`<section class="hero" aria-label="Sunday Night Lights dome banner and team logos"><div class="hero-banner"><img src="assets/snl-dome-banner.webp" alt="Sunday Night Lights logo over the Markham Sports Dome" fetchpriority="high"></div>${ribbon()}</section>`;
  const positions={buffaloes:'buffaloes',maul:'maul',raccoons:'raccoons',iht:'iht',morsl:'morsl',outcasts:'outcasts'};
@@ -419,4 +435,4 @@ function joinPage(){return `${pageHero('JOIN','SNL','Interested in playing Sunda
 })();
 
 // Loads the shared selector for the scoreboard ticker and season-specific pages; source feeds remain unchanged.
-document.head.appendChild(Object.assign(document.createElement('script'), {src:'js/season-selector.js?v=20261105h'}));
+document.head.appendChild(Object.assign(document.createElement('script'), {src:'js/season-selector.js?v=snl-footer-20261107'}));

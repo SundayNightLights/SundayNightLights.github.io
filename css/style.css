@@ -789,4 +789,55 @@ main{padding-bottom:30px}.hero{border:1px solid #43617a;background:#102f4d;margi
   padding-right:3px;
  }
 }
+/* SNL global footer: Sunday white, Night yellow, Lights white. */
+.footer.snl-footer{
+ display:block;text-align:left;
+ margin-top:30px;padding:21px 0 13px;
+ border-top:1px solid #345a75;
+ color:#a4bcd0;
+}
+.snl-footer-main{
+ display:grid;
+ grid-template-columns:minmax(200px,1.15fr) minmax(250px,1.5fr) auto;
+ column-gap:24px;row-gap:14px;align-items:center;
+}
+.snl-footer-identity{display:flex;flex-direction:column;gap:6px;min-width:0}
+.snl-footer-wordmark{
+ display:block;color:#fff;
+ font-size:17px;font-weight:900;font-style:italic;
+ letter-spacing:-.35px;white-space:nowrap;
+}
+.snl-footer-wordmark em{color:#ffde19;font-style:inherit}
+.snl-footer-venue{font-size:11px;color:#a9bfd2;line-height:1.4}
+.snl-footer-links{
+ display:flex;flex-wrap:wrap;gap:8px 14px;
+ align-items:center;justify-content:center;
+}
+.snl-footer-links a{font-size:11px;font-weight:750;color:#d2dce7;white-space:nowrap}
+.snl-footer-links a:hover,.snl-footer-links a:focus-visible{color:#ffde19}
+.snl-footer-instagram{
+ display:inline-flex;align-items:center;justify-content:center;
+ gap:8px;padding:8px 10px;
+ border:1px solid #aa9328;border-radius:8px;
+ color:#fff;font-size:11px;font-weight:850;white-space:nowrap;
+ transition:background-color .15s,border-color .15s;
+}
+.snl-footer-instagram svg{width:17px;height:17px;flex:0 0 17px;color:#ffde19}
+.snl-footer-instagram:hover,.snl-footer-instagram:focus-visible{background:#1d3d58;border-color:#ffde19}
+.snl-footer-bottom{
+ margin-top:17px;padding-top:11px;border-top:1px solid #27425a;
+ text-align:center;font-size:10px;color:#8fa9be;
+}
+@media(max-width:1000px){
+ .snl-footer-main{grid-template-columns:minmax(180px,1fr) minmax(200px,1.35fr);gap:15px}
+ .snl-footer-instagram{grid-column:1/-1;justify-self:center}
+}
+@media(max-width:640px){
+ .footer.snl-footer{padding-top:17px;margin-top:22px}
+ .snl-footer-main{display:flex;flex-direction:column;gap:14px;text-align:center}
+ .snl-footer-wordmark{font-size:16px}
+ .snl-footer-links{gap:8px 13px}
+ .snl-footer-instagram{padding:8px 12px}
+ .snl-footer-bottom{margin-top:14px}
+}
 
