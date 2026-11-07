@@ -74,8 +74,26 @@ def crop(name, opts):
         unwanted=whites&(xx<w*.145)&(yy>h*.59)&(yy<h*.72)
         alpha[unwanted]=0
         alpha[(yy<h*.05)&(xx<w*.245)]=0
+    # Hand-refine the likely poster fragments without altering either face.
+    if name=="derek":
+        # Loose ink near the cap and the pointing finger, plus white paper
+        # accidentally selected beside the right cheek.
+        alpha[(yy<h*.045)&(xx<w*.255)]=0
+        fragment=(xx<w*.132)&(yy>h*.615)&(yy<h*.74)
+        # Keep the raised hand's warm skin, discard dark, detached splatter.
+        warm_skin=(hsv[:,:,0]>=4)&(hsv[:,:,0]<=24)&(hsv[:,:,1]>42)&(hsv[:,:,2]>78)
+        alpha[fragment&(~warm_skin)]=0
+        white_paper=(hsv[:,:,1]<36)&(hsv[:,:,2]>194)
+        alpha[white_paper&(xx>w*.575)&(yy>h*.255)&(yy<h*.56)]=0
+    else:
+        # Any leftover saturated orange from the old IHT poster must go.
+        orange=(hsv[:,:,0]>=3)&(hsv[:,:,0]<=24)&(hsv[:,:,1]>133)&(hsv[:,:,2]>117)
+        alpha[orange&(yy<h*.57)]=0
+
+    # One-pixel erosion minimizes source-poster fringing on dark backgrounds.
+    alpha=cv2.erode(alpha,np.ones((3,3),np.uint8),iterations=1)
     alpha=cv2.medianBlur(alpha,3)
-    alpha=cv2.GaussianBlur(alpha,(3,3),.7)
+    alpha=cv2.GaussianBlur(alpha,(3,3),.65)
     ys=np.arange(h,dtype=np.float32)[:,None]
     start=h*opts["fade_start"]
     end=h*opts["fade_end"]
@@ -90,9 +108,28 @@ def crop(name, opts):
     output=ASSETS/f"trade-{name}-cutout.png"
     Image.fromarray(rgba,"RGBA").save(output,optimize=True)
     print(f"{name} alpha: min={alpha.min()}, max={alpha.max()}, opaque={(alpha==255).mean():.1%}, clear={(alpha==0).mean():.1%}, top_right={alpha[10,-10]}, top_left={alpha[10,10]}",flush=True)
+    cutout=Image.fromarray(rgba,"RGBA")
     debug=Image.new("RGBA",original.size,(86,226,140,255))
-    debug.alpha_composite(Image.fromarray(rgba,"RGBA"))
-    debug.convert("RGB").save(ASSETS/f"trade-{name}-cutout-preview.jpg",quality=88)
+    debug.alpha_composite(cutout)
+    debug.convert("RGB").save(ASSETS/f"trade-{name}-cutout-preview.jpg",quality=90)
+
+    # Article-style visual proof using the team's *real* logo asset.
+    # The cutout itself stays an independent RGBA PNG.
+    SIZE=600
+    team="iht" if name=="derek" else "maul"
+    base=(232,120,29,255) if team=="iht" else (17,20,25,255)
+    canvas=Image.new("RGBA",(SIZE,SIZE),base)
+    logo=Image.open(ASSETS/f"{team}.webp").convert("RGBA")
+    logo.thumbnail((int(SIZE*1.48),int(SIZE*1.48)),Image.Resampling.LANCZOS)
+    # Upscale the official mark beyond frame edges.
+    scale=(SIZE*1.48)/max(logo.size)
+    logo=logo.resize((int(logo.width*scale),int(logo.height*scale)),Image.Resampling.LANCZOS)
+    logo_alpha=logo.getchannel("A").point(lambda v:int(v*.58))
+    logo.putalpha(logo_alpha)
+    canvas.alpha_composite(logo,((SIZE-logo.width)//2,(SIZE-logo.height)//2))
+    person=cutout.resize((SIZE,SIZE),Image.Resampling.LANCZOS)
+    canvas.alpha_composite(person)
+    canvas.convert("RGB").save(ASSETS/f"trade-{name}-layout-preview.jpg",quality=92)
     print(f"Wrote {output}: {w}x{h}, with transparent background",flush=True)
 
 for person,options in SUBJECTS.items():
