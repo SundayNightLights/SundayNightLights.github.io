@@ -941,3 +941,33 @@ main{padding-bottom:30px}.hero{border:1px solid #43617a;background:#102f4d;margi
 .snl-article .trade-spotlight .spotlight-visual > img.spotlight-alfred{
   clip-path:none;-webkit-mask-image:none;mask-image:none;
 }
+
+
+/* Approved SNL trade direction: real player PNGs, understated backgrounds,
+   exact team marks as faint watermarks rather than oversized mascot posters. */
+.snl-article .trade-spotlight .spotlight-visual{
+  isolation:isolate;
+  background:#121923;
+}
+.snl-article .trade-spotlight .spotlight-iht .spotlight-visual{
+  background:linear-gradient(145deg,#ee8b30 0%,#e8781d 48%,#b95616 100%);
+}
+.snl-article .trade-spotlight .spotlight-maul .spotlight-visual{
+  background:linear-gradient(145deg,#31343b 0%,#202228 46%,#0d0e11 100%);
+}
+.snl-article .trade-spotlight .spotlight-visual > img.spotlight-team-mark{
+  z-index:0;top:34%;left:74%;width:87%;height:87%;
+  transform:translate(-50%,-50%);opacity:.10;filter:none;
+}
+.snl-article .trade-spotlight .spotlight-maul .spotlight-visual > img.spotlight-team-mark{
+  top:33%;left:73%;width:86%;height:86%;
+  transform:translate(-50%,-50%);opacity:.13;filter:none;
+}
+.snl-article .trade-spotlight .spotlight-visual > img.spotlight-player-photo{
+  z-index:2;object-fit:contain;object-position:center bottom;
+  width:100%;height:100%;clip-path:none;-webkit-mask-image:none;mask-image:none;
+}
+.snl-article .trade-spotlight .spotlight-visual:after{
+  content:"";position:absolute;inset:auto 0 0;height:3px;
+  background:rgba(255,255,255,.18);pointer-events:none;z-index:3;
+}
