@@ -83,7 +83,8 @@ def crop(name, opts):
     if name=="derek":
         # Preserve the raised finger and hand left of the shirt lettering.
         left_fade=np.clip((h*.96-ys)/(h*.96-h*.82),0,1)
-        fade=np.where(xx<w*.23,left_fade,fade)
+        hand_weight=np.clip((w*.37-xx)/(w*.37-w*.15),0,1)
+        fade=left_fade*hand_weight+fade*(1-hand_weight)
     alpha=(alpha.astype(float)*fade).astype(np.uint8)
     rgba[:,:,3]=alpha
     output=ASSETS/f"trade-{name}-cutout.png"
