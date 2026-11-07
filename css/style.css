@@ -904,3 +904,28 @@ main{padding-bottom:30px}.hero{border:1px solid #43617a;background:#102f4d;margi
   -webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 62%,transparent 85%);
   mask-image:linear-gradient(to bottom,#000 0%,#000 62%,transparent 85%);
 }
+
+/* Official standings and tiebreaker disclosure */
+.snl-tiebreak-panel{margin:17px 0 25px;border:1px solid #486b86;border-left:4px solid var(--yellow);border-radius:9px;background:linear-gradient(130deg,#103653,#081c30);overflow:hidden}
+.snl-tiebreak-panel summary{display:flex;gap:12px;align-items:center;flex-wrap:wrap;cursor:pointer;padding:17px 20px;list-style:none}
+.snl-tiebreak-panel summary::-webkit-details-marker{display:none}
+.snl-tiebreak-title{color:var(--yellow);font-size:15px;line-height:1.2;font-weight:900;letter-spacing:.5px}
+.snl-tiebreak-subtitle{font-size:12px;color:#b4c7d9;font-weight:650}
+.snl-tiebreak-chevron{margin-left:auto;color:var(--yellow);font-size:23px;line-height:1;transition:transform .2s}
+.snl-tiebreak-panel[open] .snl-tiebreak-chevron{transform:rotate(180deg)}
+.snl-tiebreak-panel summary:focus-visible{outline:3px solid var(--yellow);outline-offset:-4px}
+.snl-tiebreak-content{border-top:1px solid #315875;padding:16px 24px 20px;color:#d5e3ef;font-size:13px;line-height:1.7}
+.snl-tiebreak-content p{margin:0 0 11px}
+.snl-tiebreak-content strong{color:#fff}
+.snl-tiebreak-content ol{margin:6px 0 16px;padding-left:26px}
+.snl-tiebreak-content li{padding:3px 0 3px 6px}
+.snl-tiebreak-content li::marker{color:var(--yellow);font-weight:900}
+.snl-tiebreak-content .snl-tiebreak-note{margin:12px 0 0;border-top:1px solid #335672;padding-top:12px;color:#adcadf;font-size:12px}
+@media(max-width:640px){
+ .snl-tiebreak-panel summary{padding:14px 15px;gap:5px 8px}
+ .snl-tiebreak-title{font-size:12px;letter-spacing:.25px}
+ .snl-tiebreak-subtitle{width:calc(100% - 25px);font-size:11px}
+ .snl-tiebreak-chevron{margin-left:auto;order:1;align-self:flex-start}
+ .snl-tiebreak-content{padding:13px 17px 17px}
+}
+@media(prefers-reduced-motion:reduce){.snl-tiebreak-chevron{transition:none}}
