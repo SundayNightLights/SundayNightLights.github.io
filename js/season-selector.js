@@ -7,7 +7,7 @@
   'use strict';
 
   // Every page has the scoreboard. Only these pages display season-specific body content.
-  const seasonPages = new Set(['home','schedule','live','standings','teams','team','playoffs','stats']);
+  const seasonPages = new Set(['home','schedule','live','standings','teams','team','playoffs','stats','rules']);
   const page = document.body?.dataset.page || 'home';
 
   const seasons = [
@@ -66,11 +66,11 @@
     const panel = document.createElement('section');
     panel.className = 'snl-unpublished';
     const kicker = document.createElement('small');
-    kicker.textContent = 'SUNDAY NIGHT LIGHTS · SEASON SCHEDULE';
+    kicker.textContent = page === 'rules' ? 'SUNDAY NIGHT LIGHTS · LEAGUE RULES' : 'SUNDAY NIGHT LIGHTS · SEASON SCHEDULE';
     const title = document.createElement('h2');
-    title.textContent = selected.label + ' · Coming Soon';
+    title.textContent = selected.label + (page === 'rules' ? ' · Rules Coming Soon' : ' · Coming Soon');
     const detail = document.createElement('p');
-    detail.textContent = 'This season has not been published yet. Once the league releases its schedule and results, they will appear here. The current Fall season remains available.';
+    detail.textContent = page === 'rules' ? 'Rules and competition format for this season have not been published. Select Fall to see its playing rules, standings procedures and playoff format.' : 'This season has not been published yet. Once the league releases its schedule and results, they will appear here. The current Fall season remains available.';
     const button = document.createElement('button');
     button.type = 'button';
     button.textContent = 'VIEW ' + current.label.toUpperCase();
