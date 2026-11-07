@@ -78,7 +78,7 @@ def crop(name, opts):
     if name=="derek":
         # Loose ink near the cap and the pointing finger, plus white paper
         # accidentally selected beside the right cheek.
-        alpha[(yy<h*.045)&(xx<w*.255)]=0
+        alpha[(yy<h*.072)&(xx<w*.278)]=0
         fragment=(xx<w*.132)&(yy>h*.615)&(yy<h*.74)
         # Keep the raised hand's warm skin, discard dark, detached splatter.
         warm_skin=(hsv[:,:,0]>=4)&(hsv[:,:,0]<=24)&(hsv[:,:,1]>42)&(hsv[:,:,2]>78)
