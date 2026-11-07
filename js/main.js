@@ -223,7 +223,7 @@
      const outcomes=played.map(g=>outcome(g,r.team));
      const home=played.filter(g=>g.home===r.team).map(g=>outcome(g,r.team));
      const away=played.filter(g=>g.away===r.team).map(g=>outcome(g,r.team));
-     const last10=outcomes.slice(-10);
+     const last5=outcomes.slice(-5);
      let streak='—';
      if(outcomes.length){
        const last=outcomes[outcomes.length-1];let count=0;
@@ -237,7 +237,7 @@
      const pct=r.gp>0?(r.points/(2*r.gp)*100).toFixed(1)+'%':'—';
      const values=[
        r.gp,r.wins,r.losses,r.ties,r.points,pct,r.runsFor,r.runsAgainst,
-       signed(r.runDiff??r.runsFor-r.runsAgainst),signed(capped),record(home),record(away),record(last10),streak
+       signed(r.runDiff??r.runsFor-r.runsAgainst),signed(capped),record(home),record(away),record(last5),streak
      ];
      return '<tr><td class="snl-standings-rank">'+escapeHtml(r.rank??'—')+'</td>'+
        '<td class="snl-standings-team"><a href="team.html?team='+team.id+'" class="team-id">'+im(team.id)+'<span>'+escapeHtml(team.name)+'</span></a></td>'+
@@ -248,14 +248,14 @@
      ['L','Losses'],['T','Ties'],['PTS','Standings Points'],['PTS%','Points Percentage'],
      ['RF','Runs For'],['RA','Runs Against'],['RD','Uncapped Run Differential'],
      ['RD ±7','Run Differential capped at seven per game'],['HOME','Home W-L-T record'],
-     ['AWAY','Away W-L-T record'],['L10','Last ten W-L-T record'],['STREAK','Current results streak']
+     ['AWAY','Away W-L-T record'],['L5','Last five W-L-T record'],['STREAK','Current results streak']
    ];
    return '<div class="panel snl-expanded-standings"><div class="panel-h"><span>REGULAR SEASON</span><small>2 PTS WIN · 1 PT TIE</small></div>'+
      '<div class="snl-standings-scroll-hint">Scroll horizontally for all statistics <span aria-hidden="true">↔</span></div>'+
      '<div class="snl-expanded-scroll" role="region" tabindex="0" aria-label="Full standings, horizontally scrollable">'+
      '<table class="standings snl-expanded-table"><thead><tr>'+headings.map(([label,title])=>'<th scope="col" title="'+title+'">'+label+'</th>').join('')+'</tr></thead>'+
      '<tbody>'+(rows.map(rowHtml).join('')||'<tr><td colspan="16">Live standings unavailable.</td></tr>')+'</tbody></table></div>'+
-     '<div class="panel-foot">'+(feed?'Provisional standings from entered scores. RD ±7 is capped per game; HOME, AWAY and L10 show W-L-T. Final seeding may require a draw.':'Live standings are temporarily unavailable.')+'</div></div>';
+     '<div class="panel-foot">'+(feed?'Provisional standings from entered scores. RD ±7 is capped per game; HOME, AWAY and L5 show W-L-T. Final seeding may require a draw.':'Live standings are temporarily unavailable.')+'</div></div>';
  }
 
   function leaders(){return `<div class="leader-cards">${[['Batting Average','AVG'],['Home Runs','HR'],['Runs Batted In','RBI'],['Hits','H']].map(([t,s])=>`<div class="leader-card"><b>${t.toUpperCase()}</b><small>${s}</small><strong>—</strong><span>Awaiting verified player statistics</span></div>`).join('')}</div>`;}
@@ -265,7 +265,18 @@
  const pageHero=(a,b,sub='',action='')=>`<div class="page-hero"><div><h1>${a} <em>${b}</em></h1><p>${sub}</p></div>${action}</div>`;
  function schedule(){const active=requestedWeek();return `${pageHero('SNL','SCHEDULE','2026-27 Fall · Markham Sports Dome')}<div class="filters"><button class="filterbtn" data-week="all">All</button>${Array.from({length:10},(_,i)=>i+1).map(w=>`<button class="filterbtn ${w===active?'active':''}" data-week="${w}">Week ${w}</button>`).join('')}</div><div id="scheduleArea">${gamesPanel(true,active)}</div>${feedNotice()}<div class="notice">Ten playing Sundays · Holiday break December 27, 2026. Times and diamonds may change. Check back for the latest schedule.</div>`;}
 
- function standingsPage(){return `${pageHero('LEAGUE','STANDINGS','Full regular-season standings and team records.')}<section class="snl-standings-page" aria-label="Expanded league standings">${expandedStandingsTable()}</section>${feedNotice()}<div class="notice">Points: 2 per win, 1 per tie. Official tie-breakers: points, wins, head-to-head points, season capped run differential, fewest runs allowed, most runs scored, then a draw if required.</div>`;}
+ function standingsRulesPanel(){return '<details class="snl-tiebreak-panel" id="standings-tiebreakers">'+
+ '<summary><span class="snl-tiebreak-title">STANDINGS &amp; TIEBREAKER RULES</span><span class="snl-tiebreak-subtitle">How SNL rankings are determined</span><span class="snl-tiebreak-chevron" aria-hidden="true">⌄</span></summary>'+
+ '<div class="snl-tiebreak-content"><p><strong>Standings points:</strong> 2 for a win, 1 for a tie, and 0 for a loss. Teams are ranked by total standings points.</p>'+
+ '<p>If teams are tied on points, the following criteria apply in order:</p>'+
+ '<ol><li><strong>Most wins</strong></li><li><strong>Head-to-head points</strong> earned in games between the tied teams</li>'+
+ '<li><strong>Season run differential (RD ±7)</strong>, with each game capped at +7 or −7 runs</li>'+
+ '<li><strong>Fewest runs allowed (RA)</strong> over the regular season</li>'+
+ '<li><strong>Most runs scored (RF)</strong> over the regular season</li>'+
+ '<li><strong>Draw required</strong> if all preceding criteria are still tied</li></ol>'+
+ '<p class="snl-tiebreak-note">RD is the uncapped run differential shown for reference; RD ±7 is the capped figure used for tiebreakers. Final playoff seeding follows the official league standings.</p></div></details>';}
+
+ function standingsPage(){return `${pageHero('LEAGUE','STANDINGS','Full regular-season standings and team records.')}<section class="snl-standings-page" aria-label="Expanded league standings">${expandedStandingsTable()}</section>${feedNotice()}${standingsRulesPanel()}`;}
 
   function playoffsPage(){return `${pageHero('SNL','PLAYOFFS','Seeds and series will be determined after the regular season.')}<div class="playoff-grid"><div class="round-card"><h3>QUARTERFINALS</h3><div class="series">#3 vs #6<small>Best of 3 · Higher seed home</small></div><div class="series">#4 vs #5<small>Best of 3 · Higher seed home</small></div></div><div class="round-card"><h3>SEMIFINALS</h3><div class="series">#1 vs lowest remaining seed<small>Best of 3</small></div><div class="series">#2 vs other remaining seed<small>Best of 3</small></div></div><div class="round-card"><h3>FINALS</h3><div class="series">Semifinal Winner vs Winner<small>Best of 3 · Championship</small></div></div></div><div class="notice">The top two regular-season seeds receive quarterfinal byes. Series and home assignments will follow the approved SNL playoff rules. No teams are seeded yet.</div>${playoffSlots()}`;}
  function playoffSlots(){if(!feed)return feedNotice();const rounds=['Quarterfinals','Semifinals','Finals'];return `<div class="flat-card"><h2>PLAYOFF GAME SLOTS</h2><p class="section-note">Matchups remain placeholders until official seeding. Game 3 is played only if necessary.</p><div style="overflow-x:auto"><table class="game-table"><thead><tr><th>ROUND</th><th>DATE</th><th>TIME</th><th>DIAMOND</th><th>AWAY</th><th>HOME</th><th>STATUS</th></tr></thead><tbody>${feed.playoffs.map(g=>`<tr><td>${escapeHtml(g.round)}</td><td>${escapeHtml(g.date)}</td><td>${escapeHtml(gameStart(g))}</td><td>${diamondCode(g)}</td><td>${escapeHtml(teamMap[g.away]?.name||g.away)}</td><td>${escapeHtml(teamMap[g.home]?.name||g.home)}</td><td>${g.status==='Not Necessary'?'Not necessary':g.status==='Final'?`${g.awayScore} – ${g.homeScore}`:g.ifNecessary?'If necessary':'Scheduled'}</td></tr>`).join('')}</tbody></table></div></div>`;}
