@@ -866,3 +866,41 @@ main{padding-bottom:30px}.hero{border:1px solid #43617a;background:#102f4d;margi
   .snl-article .trade-spotlight .spotlight-player:first-child::before{width:57%}
   .snl-article .trade-spotlight .spotlight-player:last-child::before{width:42%}
 }
+
+
+/* Trade spotlight v2 — authentic original player art over exact SNL team logo assets.
+   Existing portraits are masked to hide baked-in former-team titles. */
+.snl-article .trade-spotlight .spotlight-player::before{content:none}
+.snl-article .trade-spotlight .spotlight-player{position:relative}
+.snl-article .trade-spotlight .spotlight-visual{
+  position:relative;isolation:isolate;aspect-ratio:1/1;overflow:hidden;
+}
+.snl-article .trade-spotlight .spotlight-iht .spotlight-visual{
+  background:radial-gradient(circle at 42% 28%,#ff9d41,#e8781d 67%,#bd4e09);
+}
+.snl-article .trade-spotlight .spotlight-maul .spotlight-visual{
+  background:radial-gradient(circle at 50% 25%,#33383e,#16191e 69%,#090a0e);
+}
+.snl-article .trade-spotlight .spotlight-visual > img.spotlight-team-mark{
+  position:absolute;z-index:0;top:49%;left:50%;width:164%;height:164%;max-width:none;
+  transform:translate(-50%,-50%) rotate(-8deg);
+  object-fit:contain;object-position:center;opacity:.58;
+  filter:drop-shadow(0 3px 12px #0009);
+}
+.snl-article .trade-spotlight .spotlight-maul .spotlight-visual > img.spotlight-team-mark{
+  width:151%;height:151%;opacity:.62;transform:translate(-50%,-48%) rotate(8deg);
+}
+.snl-article .trade-spotlight .spotlight-visual > img.spotlight-player-photo{
+  position:absolute;inset:0;z-index:1;width:100%;height:100%;
+  object-fit:cover;object-position:center;max-width:none;
+}
+.snl-article .trade-spotlight .spotlight-visual > img.spotlight-derek{
+  clip-path:polygon(21% 0,54% 0,61% 5%,64% 13%,63% 23%,61% 29%,64% 37%,66% 42%,76% 45%,88% 50%,100% 60%,100% 100%,0 100%,0 62%,8% 54%,12% 49%,14% 45%,13% 30%,15% 21%,14% 17%,16% 11%);
+  -webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 55%,transparent 76%);
+  mask-image:linear-gradient(to bottom,#000 0%,#000 55%,transparent 76%);
+}
+.snl-article .trade-spotlight .spotlight-visual > img.spotlight-alfred{
+  clip-path:polygon(29% 0,63% 0,70% 9%,69% 20%,70% 28%,69% 41%,77% 45%,92% 56%,100% 68%,100% 100%,0 100%,0 70%,10% 56%,22% 47%,30% 42%,31% 24%,27% 15%);
+  -webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 62%,transparent 85%);
+  mask-image:linear-gradient(to bottom,#000 0%,#000 62%,transparent 85%);
+}
