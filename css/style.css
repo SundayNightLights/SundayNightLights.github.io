@@ -738,3 +738,8 @@ main{padding-bottom:30px}.hero{border:1px solid #43617a;background:#102f4d;margi
 .scoretrack .scorecard .scoreteam b{color:#fff;font-size:19px;font-weight:950;font-variant-numeric:tabular-nums}
 .scoretrack .scorecard .scoremeta{color:var(--yellow)}
 .scoretrack .scorecard .scoremeta span{color:#a9bdcf}
+/* Schedule-window red state; GAME TIME is not confirmation of a live score. */
+.scoretrack .gamecenter.live-status-card.is-game-time{border-color:#fa5555}
+.live-status-card.is-game-time .live-card-kicker{color:#ff6666}
+.scoretrack .gamecenter.live-status-card.is-game-time:hover{border-color:#ff6666}
+

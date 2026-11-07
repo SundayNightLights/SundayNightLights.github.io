@@ -31,6 +31,26 @@
    const p=Object.fromEntries(parts.map(part=>[part.type,part.value]));
    return `${p.year}-${p.month}-${p.day}T${p.hour}:${p.minute}`;
  };
+ const selectedFall=()=>{
+   let id=new URLSearchParams(location.search).get('season');
+   if(!id){try{id=localStorage.getItem('snl-selected-season-v1');}catch(_){}}
+   return !id||id==='F26';
+ };
+ const scheduledGamesActive=()=>{
+   if(!selectedFall())return false;
+   const now=torontoNowMinute();
+   return allScheduledGames().some(g=>{
+     if(g.status==='Final'||g.status==='Not Necessary')return false;
+     if(typeof g.date!=='string'||g.date.length!==10||
+        typeof g.timeStart!=='string'||g.timeStart.length!==5||
+        typeof g.timeEnd!=='string'||g.timeEnd.length!==5)return false;
+     const endDate=g.timeEnd<g.timeStart
+       ?new Date(Date.parse(g.date+'T12:00:00Z')+86400000).toISOString().slice(0,10)
+       :g.date;
+     return now>=g.date+'T'+g.timeStart && now<endDate+'T'+g.timeEnd;
+   });
+ };
+ const tickerGameTimeAlert=()=>selectedFall()&&(hasConfirmedLiveScoring()||scheduledGamesActive());
  const nextScheduledGame=()=>{
    const now=torontoNowMinute();
    return allScheduledGames().filter(g=>
@@ -41,13 +61,36 @@
    ).sort((a,b)=>`${a.date}T${a.timeStart}`.localeCompare(`${b.date}T${b.timeStart}`))[0]||null;
  };
  const liveCentreCard=()=>{
+   if(!selectedFall())return '';
    if(hasConfirmedLiveScoring())return `<a href="live.html#snlOfficialFeed" class="gamecenter live-status-card is-live" aria-label="View confirmed live SNL games"><span class="live-card-kicker"><span class="live-card-status-dot" aria-hidden="true"></span>LIVE NOW</span><strong>LIVE GAME CENTRE</strong><span class="live-card-detail">GAMES IN PROGRESS</span><small>View live coverage</small></a>`;
+   if(scheduledGamesActive())return `<a href="live.html#snlOfficialFeed" class="gamecenter live-status-card is-game-time" aria-label="Games are scheduled now; GameChanger live scoring may not be available"><span class="live-card-kicker"><span class="live-card-status-dot" aria-hidden="true"></span>GAME TIME</span><strong>LIVE GAME CENTRE</strong><span class="live-card-detail">SCHEDULED GAMES NOW</span><small>Live scoring not guaranteed</small></a>`;
    const next=nextScheduledGame();
    if(!next)return '';
    const date=new Intl.DateTimeFormat('en-US',{timeZone:'America/Toronto',weekday:'short',month:'short',day:'numeric'}).format(new Date(next.date+'T12:00:00Z')).toUpperCase().replace(',', ' ·');
    const time=next.startLabel||gameStart(next);
    return `<a href="live.html" class="gamecenter live-status-card is-upcoming" aria-label="Next SNL games start ${escapeHtml(date)} at ${escapeHtml(time)} Eastern Time"><span class="live-card-kicker">UPCOMING</span><strong>LIVE GAME CENTRE</strong><span class="live-card-detail">${escapeHtml(date)} · ${escapeHtml(time)}</span><small>Games start at · ET</small></a>`;
  };
+ function syncScoreboardGameWindow(){
+   if(!selectedFall())return;
+   const title=document.querySelector('#siteHeader .scorehead h2');
+   const track=document.getElementById('scoreTrack');
+   if(!title||!track)return;
+   let dot=title.querySelector('.scoreboard-live-dot');
+   if(tickerGameTimeAlert()){
+     if(!dot){
+       dot=document.createElement('span');
+       dot.className='scoreboard-live-dot';
+       dot.setAttribute('aria-hidden','true');
+       title.insertBefore(dot,title.firstChild);
+     }
+     dot.title=hasConfirmedLiveScoring()?'Confirmed live scoring':'Scheduled game time; live scoring not confirmed';
+   }else if(dot){dot.remove();}
+   const markup=liveCentreCard();
+   if(track.dataset.snlLiveCard===markup)return;
+   track.querySelector('.live-status-card')?.remove();
+   if(markup)track.insertAdjacentHTML('afterbegin',markup);
+   track.dataset.snlLiveCard=markup;
+ }
  function torontoToday(){const parts=new Intl.DateTimeFormat('en-US',{timeZone:'America/Toronto',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());const p=Object.fromEntries(parts.map(x=>[x.type,x.value]));return `${p.year}-${p.month}-${p.day}`;}
  function upcomingWeek(){if(!feed)return 2;const today=torontoToday();const g=regular().filter(g=>g.status!=='Final'&&g.date>=today).sort((a,b)=>a.date.localeCompare(b.date)||a.slot-b.slot)[0];return g?.week||regular().filter(g=>g.status!=='Final').sort((a,b)=>a.week-b.week)[0]?.week||10;}
  const requestedWeek=()=>{const w=Number(new URLSearchParams(location.search).get('week'));return Number.isInteger(w)&&w>=1&&w<=10?w:upcomingWeek()};
@@ -84,7 +127,7 @@
  function header(){return `<header id="top">
   <div class="utility"><div class="wrap utility-in"><nav class="utility-links" aria-label="League participation"><a class="utility-link${navActive('registration')?' active':''}" href="registration.html"${page==='registration'?' aria-current="page"':''}>Register</a><a class="utility-link utility-link-join${navActive('join')?' active':''}" href="join.html"${page==='join'?' aria-current="page"':''}>Join SNL</a></nav><span class="venue">MARKHAM SPORTS DOME · ONTARIO</span><div class="socials"><a class="social-pill instagram-follow" href="https://www.instagram.com/snl_416/" target="_blank" rel="noopener noreferrer" aria-label="Follow @snl_416 on Instagram" title="Follow @snl_416 on Instagram">${insta}<span class="instagram-follow-text">Follow<span class="instagram-follow-handle"> @snl_416</span></span></a><span class="utility-divider"></span><a class="calendar-pill" href="${cal}" target="_blank" rel="noopener noreferrer">${calendarIcon}<span>Subscribe to Calendar</span></a></div></div></div>
  <div class="masthead"><div class="wrap masthead-in"><a href="index.html" class="brand" aria-label="Sunday Night Lights home"><span class="brand-mark">S<i>N</i>L</span><span class="brand-divider"></span><span class="brand-txt"><b>SUNDAY NIGHT<br>LIGHTS</b><small>OFFICIAL LEAGUE HUB</small></span></a><button class="menu-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="siteNav">☰</button><nav class="nav" id="siteNav" aria-label="Main navigation">${navMarkup()}</nav></div></div>
- <div class="scoreboard"><div class="wrap"><div class="scorehead"><h2>${hasConfirmedLiveScoring()?`<span class="scoreboard-live-dot" aria-hidden="true"></span>`:''}<span class="scoreboard-label-snl">SNL</span> <span class="scoreboard-label-score">SCOREBOARD</span></h2><span class="right-text">${latestResultsWeek()?`WEEK ${latestResultsWeek()} · ${dateLabel(weekGames(latestResultsWeek())[0].date)} · RESULTS`:'SCHEDULE & RESULTS'}</span></div><div class="score-viewport"><button type="button" class="scorebtn ticker-arrow ticker-arrow-prev" data-score-step="-1" aria-label="Scroll scoreboard left" aria-controls="scoreTrack"><span aria-hidden="true">‹</span></button><div class="scoretrack" id="scoreTrack">${liveCentreCard()}${latestResultsWeek()?weekGames(latestResultsWeek()).map(g=>`<div class="scorecard ${g.status==='Final'?'':'pending'}"><div class="scoremeta">${g.status==='Final'?'FINAL':'PENDING'}<span>WEEK ${g.week}</span></div><div class="scoreteam">${im(g.away)}<span>${teamMap[g.away].short}</span><b>${g.awayScore??'—'}</b></div><div class="scoreteam">${im(g.home)}<span>${teamMap[g.home].short}</span><b>${g.homeScore??'—'}</b></div></div>`).join(''):'<div class="scorecard pending"><div class="scoremeta">LIVE DATA</div><div class="scoreteam">No verified results available</div></div>'}</div><button type="button" class="scorebtn ticker-arrow ticker-arrow-next" data-score-step="1" aria-label="Scroll scoreboard right" aria-controls="scoreTrack"><span aria-hidden="true">›</span></button></div></div></div>
+ <div class="scoreboard"><div class="wrap"><div class="scorehead"><h2>${tickerGameTimeAlert()?`<span class="scoreboard-live-dot" aria-hidden="true"></span>`:''}<span class="scoreboard-label-snl">SNL</span> <span class="scoreboard-label-score">SCOREBOARD</span></h2><span class="right-text">${latestResultsWeek()?`WEEK ${latestResultsWeek()} · ${dateLabel(weekGames(latestResultsWeek())[0].date)} · RESULTS`:'SCHEDULE & RESULTS'}</span></div><div class="score-viewport"><button type="button" class="scorebtn ticker-arrow ticker-arrow-prev" data-score-step="-1" aria-label="Scroll scoreboard left" aria-controls="scoreTrack"><span aria-hidden="true">‹</span></button><div class="scoretrack" id="scoreTrack">${liveCentreCard()}${latestResultsWeek()?weekGames(latestResultsWeek()).map(g=>`<div class="scorecard ${g.status==='Final'?'':'pending'}"><div class="scoremeta">${g.status==='Final'?'FINAL':'PENDING'}<span>WEEK ${g.week}</span></div><div class="scoreteam">${im(g.away)}<span>${teamMap[g.away].short}</span><b>${g.awayScore??'—'}</b></div><div class="scoreteam">${im(g.home)}<span>${teamMap[g.home].short}</span><b>${g.homeScore??'—'}</b></div></div>`).join(''):'<div class="scorecard pending"><div class="scoremeta">LIVE DATA</div><div class="scoreteam">No verified results available</div></div>'}</div><button type="button" class="scorebtn ticker-arrow ticker-arrow-next" data-score-step="1" aria-label="Scroll scoreboard right" aria-controls="scoreTrack"><span aria-hidden="true">›</span></button></div></div></div>
  </header>`;}
  function footer(){return `<footer class="footer"><span><strong>SUNDAY NIGHT <em>LIGHTS</em></strong></span><span><a href="rules.html">Rules</a> · <a href="tournaments.html">Tournaments</a> · <a href="live.html">Live Game Centre</a> · <a href="about.html">About</a> · <a href="join.html">Join SNL</a> · <a href="registration.html">Registration</a> · <a href="${cal}" target="_blank" rel="noopener">Subscribe to Calendar</a></span><span>2026-27 Fall</span></footer>`;}
  const ribbon=()=>`<div class="logo-ribbon" aria-label="SNL team logos">${['buffaloes','outcasts','morsl','iht','maul','raccoons'].map(id=>`<a class="logo-team ${id}" href="team.html?team=${id}" title="${teamMap[id].name}">${im(id,'',teamMap[id].name)}</a>`).join('')}</div>`;
@@ -291,6 +334,8 @@ function joinPage(){return `${pageHero('JOIN','SNL','Interested in playing Sunda
      feed=data;
    }catch(error){feedFailed=true;console.warn('SNL live feed unavailable',error);}
    document.getElementById('siteHeader').innerHTML=header();
+   syncScoreboardGameWindow();
+   window.setInterval(syncScoreboardGameWindow,30000);
    const body={home, schedule,live:livePage,standings:standingsPage,playoffs:playoffsPage,teams:teamsPage,team:teamPage,stats:statsPage,highlights:highlightsPage,article:articlePage,rules:rulesPage,tournaments:tournamentsPage,about:aboutPage,join:joinPage,registration:registrationPage}[page]||home;
    document.getElementById('app').innerHTML=`<div class="wrap">${body()}${footer()}</div>`;
    if (location.hash === '#league-news') requestAnimationFrame(() => document.getElementById('league-news')?.scrollIntoView());
