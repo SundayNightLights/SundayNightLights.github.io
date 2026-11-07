@@ -33,7 +33,6 @@
 #gc-stats .gc-filter-grid label select,#gc-stats .gc-filter-grid label input {display:block;margin-top:7px;}
 #gc-stats .gc-leader-note {display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 15px;color:#b9ccdd;font-size:12px;line-height:1.4;}
 #gc-stats .gc-leader-note .gc-min-badge {padding:5px 9px;font-size:11px;}
-#gc-stats .gc-stats-source {margin-top:16px;}
 #gc-stats .gc-min-badge {flex-shrink:0;background:#ffde19;color:#06192b;border-radius:7px;padding:8px 12px;font-weight:900;font-size:12px;white-space:nowrap;}
 #gc-stats .gc-table-wrap {overflow-x:auto;border:1px solid #486580;border-radius:11px;background:#0b2943;}
 #gc-stats .gc-table {width:100%;min-width:880px;border-collapse:collapse;white-space:nowrap;font-size:13px;}
@@ -380,8 +379,8 @@
           </div>
 
           <div class="gc-leader-note"
-               aria-label="Rate-stat leaderboard qualification">
-            <span>Rate-stat leaders must play 50% of games to date.</span>
+               aria-label="GameChanger statistics coverage and leaderboard qualification">
+            <span>Only players with stats recorded in GameChanger appear. Rate-stat leaders must play 50% of games to date.</span>
             <span id="gcQualification"
                   class="gc-min-badge"
                   aria-live="polite">MIN 1 GP</span>
@@ -461,7 +460,6 @@
           </div>
           <div id="gcReporting" class="gc-team-list"></div>
           <p class="gc-faint" id="gcUpdated"></p>
-          <p class="gc-faint gc-stats-source">Only players with stats recorded in GameChanger appear.</p>
         </section>
       </div>`;
 
