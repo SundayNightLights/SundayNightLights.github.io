@@ -86,9 +86,10 @@ def crop(name, opts):
         white_paper=(hsv[:,:,1]<36)&(hsv[:,:,2]>194)
         alpha[white_paper&(xx>w*.575)&(yy>h*.255)&(yy<h*.56)]=0
     else:
-        # Any leftover saturated orange from the old IHT poster must go.
+        # Keep all natural skin tones intact. The old poster is only
+        # allowed to be rejected in the far-left margin outside the face.
         orange=(hsv[:,:,0]>=3)&(hsv[:,:,0]<=24)&(hsv[:,:,1]>133)&(hsv[:,:,2]>117)
-        alpha[orange&(yy<h*.57)]=0
+        alpha[orange&(xx<w*.34)&(yy<h*.45)]=0
 
     # One-pixel erosion minimizes source-poster fringing on dark backgrounds.
     alpha=cv2.erode(alpha,np.ones((3,3),np.uint8),iterations=1)
