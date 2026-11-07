@@ -743,3 +743,24 @@ main{padding-bottom:30px}.hero{border:1px solid #43617a;background:#102f4d;margi
 .live-status-card.is-game-time .live-card-kicker{color:#ff6666}
 .scoretrack .gamecenter.live-status-card.is-game-time:hover{border-color:#ff6666}
 
+
+/* SNL scoreboard compact-height layout (Nov 2026) */
+.scoreboard{padding:9px 0 10px}
+.scoreboard .scorehead{gap:9px;margin-bottom:7px}
+.scoreboard .scoretrack{gap:8px;padding:0 1px 1px}
+.scoreboard .scoretrack>.scorecard{min-height:94px;padding:7px 10px}
+.scoreboard .scoretrack>.scorecard .scoremeta{margin-bottom:4px}
+.scoreboard .scoretrack>.scorecard .scoreteam{margin:2px 0;gap:6px}
+.scoreboard .scoretrack>.gamecenter.live-status-card{
+ min-height:94px;padding:8px 12px;gap:3px;
+}
+@media(max-width:800px){
+ .scoreboard{padding:8px 0}
+ .scoreboard .scorehead{margin-bottom:7px}
+ .scoreboard .scoretrack>.scorecard{min-height:90px;padding:6px 9px}
+ .scoreboard .scoretrack>.gamecenter.live-status-card{min-height:90px;padding:7px 10px}
+}
+@media(max-width:480px){
+ .scoreboard .scoretrack>.scorecard{min-height:88px}
+ .scoreboard .scoretrack>.gamecenter.live-status-card{min-height:88px}
+}
