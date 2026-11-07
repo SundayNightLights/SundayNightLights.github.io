@@ -1,0 +1,60 @@
+/* SNL Crop Studio — approved mobile + desktop matchup reference transfer, 2026-11-07.
+   Screenshots: Card 1062×372, Wide 2370×336. Crop centers normalized to width/height;
+   visible artwork scales with its card so desktop and mobile crops are reproducible.
+   Loaded after snl-matchups-approved-v4.css. Does not affect score entry or schedule data. */
+.match,.split .match,.large-matches .match {
+  box-sizing:border-box; display:block; position:relative; isolation:isolate;
+  width:100%; height:auto; aspect-ratio:2370 / 336; min-height:0;
+  border:2.5px solid #c2cad5; border-radius:clamp(8px,0.9vw,18px);
+  overflow:hidden;
+}
+.match .half.away{clip-path:polygon(0 0,57% 0,43% 100%,0 100%);}
+.match .half.home{clip-path:polygon(57% 0,100% 0,100% 100%,43% 100%);}
+.match .slash{
+  clip-path:polygon(calc(57% - 2px) 0,calc(57% + 2px) 0,calc(43% + 2px) 100%,calc(43% - 2px) 100%);
+}
+.match .half .teamart {
+  position:absolute!important; inset:auto!important;
+  top:var(--crop-y,50%)!important; left:var(--crop-x,50%)!important;
+  height:var(--crop-h,200%)!important; width:auto!important;
+  max-width:none!important; aspect-ratio:var(--logo-ratio)!important;
+  background-image:var(--logo-url)!important; background-size:100% 100%!important;
+  background-position:center!important; background-repeat:no-repeat!important;
+  opacity:1!important; filter:none!important; pointer-events:none!important;
+  transform:translate(-50%,-50%) rotate(var(--crop-angle,3deg))!important;
+  transform-origin:center center!important;
+}
+.match .matchtime,.large-matches .match .matchtime{
+  width:clamp(112px,13.8%,185px);min-width:0;
+  padding:5px 7px;
+}
+.match .half--buffaloes.away{background:linear-gradient(135deg,#f9d675,#f7e5ac);--crop-x:29.67%;--crop-y:81.18%;--crop-h:186.39%;--crop-angle:3.020deg;}
+.match .half--buffaloes.home{background:linear-gradient(135deg,#000c30,#000c24);--crop-x:82.09%;--crop-y:81.22%;--crop-h:186.46%;--crop-angle:3.037deg;}
+.match .half--iht.away{background:linear-gradient(135deg,#ed7c1d,#c85f0a);--crop-x:25.49%;--crop-y:58.83%;--crop-h:228.21%;--crop-angle:3.001deg;}
+.match .half--iht.home{background:linear-gradient(135deg,#c85f0a,#f68a2c);--crop-x:74.49%;--crop-y:58.82%;--crop-h:228.16%;--crop-angle:3.024deg;}
+.match .half--morsl.away{background:linear-gradient(135deg,#fcfcfc,#f0f0f0);--crop-x:25.50%;--crop-y:72.35%;--crop-h:145.43%;--crop-angle:3.035deg;}
+.match .half--morsl.home{background:linear-gradient(135deg,#24c03c,#24b43c);--crop-x:74.50%;--crop-y:72.29%;--crop-h:145.43%;--crop-angle:3.020deg;}
+.match .half--outcasts.away{background:linear-gradient(135deg,#fcfcfc,#f0f0f0);--crop-x:25.50%;--crop-y:32.04%;--crop-h:186.57%;--crop-angle:2.903deg;}
+.match .half--outcasts.home{background:linear-gradient(135deg,#000000,#181818);--crop-x:75.72%;--crop-y:32.14%;--crop-h:185.59%;--crop-angle:2.606deg;}
+.match .half--maul.away{background:linear-gradient(135deg,#fcfcfc,#f0f0f0);--crop-x:25.49%;--crop-y:50.04%;--crop-h:415.36%;--crop-angle:2.976deg;}
+.match .half--maul.home{background:linear-gradient(135deg,#000000,#30303c);--crop-x:74.50%;--crop-y:49.99%;--crop-h:415.15%;--crop-angle:3.020deg;}
+.match .half--raccoons.away{background:linear-gradient(135deg,#848484,#787878);--crop-x:22.33%;--crop-y:117.05%;--crop-h:332.37%;--crop-angle:3.008deg;}
+.match .half--raccoons.home{background:linear-gradient(135deg,#006c30,#004824);--crop-x:71.33%;--crop-y:117.03%;--crop-h:332.29%;--crop-angle:2.990deg;}
+
+/* Narrow layouts use the separately approved mobile crop and diagonal card ratio. */
+@media(max-width:699px){
+  .match,.split .match,.large-matches .match{aspect-ratio:1062 / 372;}
+  .match .matchtime,.large-matches .match .matchtime{width:auto;min-width:112px;}
+  .match .half--buffaloes.away{--crop-x:48.08%;--crop-y:70.12%;--crop-h:126.44%;--crop-angle:3.015deg;}
+  .match .half--buffaloes.home{--crop-x:97.07%;--crop-y:70.15%;--crop-h:126.40%;--crop-angle:3.063deg;}
+  .match .half--iht.away{--crop-x:24.08%;--crop-y:58.02%;--crop-h:165.97%;--crop-angle:3.004deg;}
+  .match .half--iht.home{--crop-x:75.90%;--crop-y:58.01%;--crop-h:165.95%;--crop-angle:3.002deg;}
+  .match .half--morsl.away{--crop-x:25.50%;--crop-y:70.13%;--crop-h:132.28%;--crop-angle:3.035deg;}
+  .match .half--morsl.home{--crop-x:80.14%;--crop-y:70.18%;--crop-h:132.36%;--crop-angle:3.052deg;}
+  .match .half--outcasts.away{--crop-x:22.64%;--crop-y:33.84%;--crop-h:165.79%;--crop-angle:2.937deg;}
+  .match .half--outcasts.home{--crop-x:77.26%;--crop-y:33.83%;--crop-h:165.83%;--crop-angle:2.702deg;}
+  .match .half--maul.away{--crop-x:22.67%;--crop-y:58.03%;--crop-h:249.07%;--crop-angle:3.010deg;}
+  .match .half--maul.home{--crop-x:74.49%;--crop-y:58.04%;--crop-h:249.16%;--crop-angle:2.992deg;}
+  .match .half--raccoons.away{--crop-x:4.32%;--crop-y:110.51%;--crop-h:249.06%;--crop-angle:2.985deg;}
+  .match .half--raccoons.home{--crop-x:57.57%;--crop-y:110.51%;--crop-h:248.98%;--crop-angle:2.979deg;}
+}
