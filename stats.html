@@ -12,10 +12,7 @@
 <style>
 /* These rules only affect the main SNL site's Stats page. */
 #gc-stats { color: var(--text, #f7faff); }
-#gc-stats .gc-seasonbar { display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;margin:0 0 26px;padding:15px 18px;background:var(--panel2,#0c2943);border:1px solid var(--stroke,#587592);border-radius:12px; }
-#gc-stats .gc-seasonbar label {display:flex;align-items:center;gap:12px;font-size:12px;font-weight:900;color:#d9e5f0;letter-spacing:.04em;}
 #gc-stats select,#gc-stats input {width:100%;min-width:0;padding:10px 12px;border:1px solid #64809c;border-radius:8px;background:#06192b;color:#fff;font:inherit;font-size:13px;}
-#gc-stats .gc-seasonbar select {width:230px;max-width:60vw;}
 #gc-stats .gc-faint {color:var(--muted,#a9bfd2);font-size:12px;}
 #gc-stats .gc-leader-grid {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:27px;}
 #gc-stats .gc-leader {display:flex;flex-direction:column;align-items:stretch;text-align:left;min-width:0;min-height:218px;padding:16px;background:linear-gradient(150deg,#173b58,#081e33);border:1px solid #4b6b86;border-radius:12px;color:inherit;cursor:pointer;transition:border-color .15s,transform .15s;}
@@ -34,9 +31,9 @@
 #gc-stats .gc-filter-grid {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;padding:16px;margin:0 0 13px;border:1px solid #486580;border-radius:12px;background:var(--panel2,#0c2943);}
 #gc-stats .gc-filter-grid label {display:block;color:#c5d6e6;font-size:12px;font-weight:800;}
 #gc-stats .gc-filter-grid label select,#gc-stats .gc-filter-grid label input {display:block;margin-top:7px;}
-#gc-stats .gc-notice {display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;background:#13334e;border-left:3px solid var(--yellow,#ffde19);border-radius:8px;padding:13px 16px;margin:0 0 18px;color:#d6e5f1;}
-#gc-stats .gc-notice strong {font-size:12px;color:#fff;}
-#gc-stats .gc-notice p {margin:5px 0;font-size:12px;line-height:1.5;}
+#gc-stats .gc-leader-note {display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 15px;color:#b9ccdd;font-size:12px;line-height:1.4;}
+#gc-stats .gc-leader-note .gc-min-badge {padding:5px 9px;font-size:11px;}
+#gc-stats .gc-stats-source {margin-top:16px;}
 #gc-stats .gc-min-badge {flex-shrink:0;background:#ffde19;color:#06192b;border-radius:7px;padding:8px 12px;font-weight:900;font-size:12px;white-space:nowrap;}
 #gc-stats .gc-table-wrap {overflow-x:auto;border:1px solid #486580;border-radius:11px;background:#0b2943;}
 #gc-stats .gc-table {width:100%;min-width:880px;border-collapse:collapse;white-space:nowrap;font-size:13px;}
@@ -55,7 +52,7 @@
 #gc-stats .gc-section-spaced {margin-top:30px;}
 @media(max-width:1000px) {#gc-stats .gc-leader-grid {grid-template-columns:repeat(2,minmax(0,1fr));}}
 @media(max-width:700px) {#gc-stats .gc-filter-grid {grid-template-columns:1fr;}#gc-stats .gc-team-list {grid-template-columns:repeat(2,minmax(0,1fr));}}
-@media(max-width:480px) {#gc-stats .gc-leader-grid,#gc-stats .gc-team-list {grid-template-columns:1fr;}#gc-stats .gc-leader {min-height:190px;}#gc-stats .gc-seasonbar label {width:100%;justify-content:space-between;}#gc-stats .gc-seasonbar select {max-width:65%;}}
+@media(max-width:480px) {#gc-stats .gc-leader-grid,#gc-stats .gc-team-list {grid-template-columns:1fr;}#gc-stats .gc-leader {min-height:190px;}}
 </style>
 </head>
 <body data-page="stats">
@@ -364,22 +361,14 @@
       <div class="page-hero">
         <div>
           <h1>PLAYER <em>STATS</em></h1>
-          <p>GameChanger batting leaders and player statistics</p>
         </div>
       </div>
 
       <div id="gc-stats">
-        <div class="gc-seasonbar">
-          <label for="gcSeason">
-            SEASON
-            <select id="gcSeason" disabled>
-              <option>Loading seasons…</option>
-            </select>
-          </label>
-          <span class="gc-faint">
-            Statistics from participating SNL teams
-          </span>
-        </div>
+        <!-- Preserve internal season state; the shared header is the visible selector. -->
+        <select id="gcSeason" hidden aria-hidden="true" disabled>
+          <option>Loading seasons…</option>
+        </select>
 
         <section class="section" aria-labelledby="gcLeadersTitle">
           <div class="section-top">
@@ -392,19 +381,9 @@
             <small>CLICK A CATEGORY TO VIEW RANKINGS</small>
           </div>
 
-          <div class="gc-notice"
-               aria-label="About SNL Stats and leaderboard qualification">
-            <div>
-              <strong>ABOUT SNL STATS</strong>
-              <p>
-                Statistics are provided by participating teams
-                through GameChanger.
-              </p>
-              <p>
-                Leaderboard qualification:
-                <b>50% of games played to date</b>
-              </p>
-            </div>
+          <div class="gc-leader-note"
+               aria-label="Rate-stat leaderboard qualification">
+            <span>Rate-stat leaders must play 50% of games to date.</span>
             <span id="gcQualification"
                   class="gc-min-badge"
                   aria-live="polite">MIN 1 GP</span>
@@ -484,6 +463,7 @@
           </div>
           <div id="gcReporting" class="gc-team-list"></div>
           <p class="gc-faint" id="gcUpdated"></p>
+          <p class="gc-faint gc-stats-source">Only players with stats recorded in GameChanger appear.</p>
         </section>
       </div>`;
 
