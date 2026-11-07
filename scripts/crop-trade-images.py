@@ -69,6 +69,10 @@ def crop(name, opts):
     rgba[:,:,3]=alpha
     output=ASSETS/f"trade-{name}-cutout.png"
     Image.fromarray(rgba,"RGBA").save(output,optimize=True)
+    print(f"{name} alpha: min={alpha.min()}, max={alpha.max()}, opaque={(alpha==255).mean():.1%}, clear={(alpha==0).mean():.1%}, top_right={alpha[10,-10]}, top_left={alpha[10,10]}",flush=True)
+    debug=Image.new("RGBA",original.size,(86,226,140,255))
+    debug.alpha_composite(Image.fromarray(rgba,"RGBA"))
+    debug.convert("RGB").save(ASSETS/f"trade-{name}-cutout-preview.jpg",quality=88)
     print(f"Wrote {output}: {w}x{h}, with transparent background",flush=True)
 
 for person,options in SUBJECTS.items():
