@@ -685,3 +685,46 @@ main{padding-bottom:30px}.hero{border:1px solid #43617a;background:#102f4d;margi
   display:none;
  }
 }
+
+/* SNL Scoreboard: logo-consistent heading and verified LIVE indicator. */
+.scorehead h2{
+ display:flex;align-items:center;gap:5px;margin:0;
+ font-size:18px;font-weight:1000;letter-spacing:.35px;line-height:1.15;
+}
+.scorehead h2 .scoreboard-label-snl{color:#fff}
+.scorehead h2 .scoreboard-label-score{color:var(--yellow)}
+@keyframes snl-score-live-pulse{
+ 0%,100%{opacity:1;box-shadow:0 0 9px #ff414180}
+ 50%{opacity:.28;box-shadow:0 0 0 #ff414100}
+}
+.scoreboard-live-dot,.live-card-status-dot{
+ display:inline-block;width:9px;height:9px;flex:0 0 9px;
+ border-radius:50%;background:#fa4242;
+ animation:snl-score-live-pulse 1.3s ease-in-out infinite;
+}
+.scoreboard-live-dot{margin-right:3px}
+/* The first card advertises the next scheduled time unless verified live coverage exists. */
+.scoretrack .gamecenter.live-status-card{
+ display:flex;flex-direction:column;align-items:flex-start;justify-content:center;
+ gap:4px;flex:0 0 218px;min-height:111px;padding:10px 13px;
+ border:1px solid #c4ac28;border-radius:11px;background:#182d43;
+ text-decoration:none;color:#fff;
+}
+.live-status-card .live-card-kicker{
+ display:flex;align-items:center;gap:7px;min-height:11px;
+ color:var(--yellow);font-size:10px;font-weight:900;letter-spacing:.6px;
+}
+.live-status-card strong{font-size:15px;line-height:1.12;font-weight:900;color:#fff}
+.live-status-card .live-card-detail{font-size:12px;font-weight:900;color:#fff;line-height:1.25}
+.live-status-card small{display:block;font-size:10px;line-height:1.15;color:#aec0d0}
+.scoretrack .gamecenter.live-status-card.is-live{border-color:#fa5555}
+.live-status-card.is-live .live-card-kicker{color:#ff6666}
+.scoretrack .gamecenter.live-status-card:hover{background:#23425f;border-color:var(--yellow)}
+.scoretrack .gamecenter.live-status-card.is-live:hover{border-color:#ff6666}
+@media(max-width:480px){
+ .scorehead h2{font-size:14px;gap:4px;letter-spacing:.15px}
+ .scoretrack .gamecenter.live-status-card{flex-basis:205px;padding:9px 11px}
+}
+@media(prefers-reduced-motion:reduce){
+ .scoreboard-live-dot,.live-card-status-dot{animation:none}
+}
