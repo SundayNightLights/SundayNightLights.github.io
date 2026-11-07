@@ -25,7 +25,7 @@ SUBJECTS={
    "inner": [(145,24),(232,18),(269,50),(273,98),(253,147),(266,176),
              (305,218),(399,260),(445,341),(399,379),(160,380),
              (100,326),(154,259),(150,198),(145,135)],
-   "fade_start": .73, "fade_end": .95
+   "fade_start": .64, "fade_end": .84
  },
  "alfred": {
    "outer": [(150,0),(307,0),(329,26),(335,60),(331,116),(320,152),
@@ -34,7 +34,7 @@ SUBJECTS={
    "inner": [(186,26),(279,20),(301,61),(300,119),(274,167),(294,204),
              (370,242),(428,328),(401,388),(110,390),(83,292),
              (149,214),(168,151),(172,91)],
-   "fade_start": .76, "fade_end": .97
+   "fade_start": .66, "fade_end": .85
  }
 }
 
@@ -59,6 +59,21 @@ def crop(name, opts):
     if count>1:
         largest=np.argmax(stats[1:,cv2.CC_STAT_AREA])+1
         alpha=np.where(labels==largest,255,0).astype(np.uint8)
+    # Remove leftover poster ink adjacent to the original subjects.
+    hsv=cv2.cvtColor(bgr,cv2.COLOR_BGR2HSV)
+    yy,xx=np.indices((h,w))
+    if name=="alfred":
+        # The old orange IHT banner sits left of the cap and shoulder.
+        orange=(hsv[:,:,0]>=3)&(hsv[:,:,0]<=23)&(hsv[:,:,1]>145)
+        unwanted=orange&(xx<w*.44)&(yy<h*.64)
+        alpha[unwanted]=0
+    else:
+        # Remove white splatter behind Derek's raised finger and stray
+        # high-contrast top-corner flecks without altering his face.
+        whites=(hsv[:,:,1]<45)&(hsv[:,:,2]>190)
+        unwanted=whites&(xx<w*.145)&(yy>h*.59)&(yy<h*.72)
+        alpha[unwanted]=0
+        alpha[(yy<h*.05)&(xx<w*.245)]=0
     alpha=cv2.medianBlur(alpha,3)
     alpha=cv2.GaussianBlur(alpha,(3,3),.7)
     ys=np.arange(h,dtype=np.float32)[:,None]
