@@ -30,7 +30,7 @@
 }
 .match .half--buffaloes.away{background:linear-gradient(135deg,#f9d675,#f7e5ac);--crop-x:29.67%;--crop-y:81.18%;--crop-h:186.39%;--crop-angle:3.020deg;}
 .match .half--buffaloes.home{background:linear-gradient(135deg,#000c30,#000c24);--crop-x:82.09%;--crop-y:81.22%;--crop-h:186.46%;--crop-angle:3.037deg;}
-.match .half--iht.away{background:linear-gradient(135deg,#ed7c1d,#c85f0a);--crop-x:25.49%;--crop-y:58.83%;--crop-h:228.21%;--crop-angle:3.001deg;}
+.match .half--iht.away{background:linear-gradient(135deg,#f5f2eb,#e9e6df);--crop-x:25.49%;--crop-y:58.83%;--crop-h:228.21%;--crop-angle:3.001deg;}
 .match .half--iht.home{background:linear-gradient(135deg,#c85f0a,#f68a2c);--crop-x:74.49%;--crop-y:58.82%;--crop-h:228.16%;--crop-angle:3.024deg;}
 .match .half--morsl.away{background:linear-gradient(135deg,#fcfcfc,#f0f0f0);--crop-x:25.50%;--crop-y:72.35%;--crop-h:145.43%;--crop-angle:3.035deg;}
 .match .half--morsl.home{background:linear-gradient(135deg,#24c03c,#24b43c);--crop-x:74.50%;--crop-y:72.29%;--crop-h:145.43%;--crop-angle:3.020deg;}
