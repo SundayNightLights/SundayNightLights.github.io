@@ -18,6 +18,51 @@
 .snl-team-performance-tile{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-width:0;min-height:69px;padding:10px 5px;border-radius:9px;border:1px solid #41617e;background:#0b2944}
 .snl-team-performance-tile span{color:#c2d2e1;font-size:10px;font-weight:900}
 .snl-team-performance-tile strong{color:#f2f7fd;font-size:17px;font-weight:950;font-variant-numeric:tabular-nums}
+/* Team-level batting category sorting: one compact selector on mobile,
+   clickable stat headings on desktop, without adding another content panel. */
+.snl-team-stats-controls{
+ display:flex;align-items:center;justify-content:flex-start;
+ gap:10px;flex-wrap:wrap;margin:14px 0 5px;
+}
+.snl-team-stats-controls label{
+ color:#c6d8e9;font-size:10px;letter-spacing:.8px;
+ font-weight:900;white-space:nowrap;
+}
+.snl-team-stats-controls select{
+ min-width:215px;max-width:100%;padding:9px 34px 9px 12px;
+ border:1px solid #54768f;border-radius:7px;
+ background:#09263e;color:#f6faff;font-size:12px;font-weight:800;
+ font-family:inherit;cursor:pointer;
+}
+.snl-team-stats-controls select:focus-visible,
+.snl-team-stats-order:focus-visible,
+.snl-team-stats-heading:focus-visible{
+ outline:2px solid #ffde19;outline-offset:2px;
+}
+.snl-team-stats-order{
+ padding:9px 11px;border:1px solid #456680;border-radius:7px;
+ background:transparent;color:#ffde19;font-family:inherit;
+ font-size:12px;font-weight:850;cursor:pointer;white-space:nowrap;
+}
+.snl-team-stats-order:hover{border-color:#ffde19}
+.snl-team-stats-sort-note{
+ margin:0 0 9px;color:#aebfd1;font-size:11px;line-height:1.5;
+}
+.snl-team-batting-table .snl-team-stats-heading{
+ display:inline-flex;align-items:center;justify-content:center;
+ background:transparent;border:0;color:inherit;padding:4px;
+ font:inherit;font-weight:900;white-space:nowrap;cursor:pointer;
+}
+.snl-team-batting-table .snl-team-stats-heading:hover{color:#ffde19}
+.snl-team-batting-table th.snl-stat-selected{color:#ffde19}
+.snl-team-batting-table td.snl-stat-selected{color:#f9e982;font-weight:900}
+@media(max-width:480px){
+ .snl-team-stats-controls{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px;margin-top:12px}
+ .snl-team-stats-controls label{grid-column:1/-1}
+ .snl-team-stats-controls select{width:100%;min-width:0}
+ .snl-team-stats-order{padding:9px 8px;font-size:11px}
+}
+
 .snl-team-batting-scroll{width:100%;overflow-x:auto}
 .snl-team-batting-table{min-width:760px;width:100%}
 .snl-team-batting-table td:first-child{white-space:nowrap;font-weight:800}
