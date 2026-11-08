@@ -122,11 +122,79 @@
        '<b>'+(qualified?esc(winner.name):'No qualifying leader yet')+'</b>'+
        (rates.has(key)?'<small>Minimum '+minGP+' GP</small>':'')+'</div>';
    }).join('');
-   const ordered=[...players].sort((a,b)=>(value(b,'OPS')??-1)-(value(a,'OPS')??-1)||a.name.localeCompare(b.name));
-   batting.innerHTML='<div class="snl-team-batting-scroll"><table class="game-table snl-team-batting-table" aria-label="Team player batting statistics">'+
-     '<thead><tr><th>PLAYER</th>'+metrics.map(k=>'<th>'+k+'</th>').join('')+'</tr></thead><tbody>'+
-     ordered.map(p=>'<tr><td>'+esc(p.name)+'</td>'+metrics.map(k=>'<td>'+esc(fmt(p,k))+'</td>').join('')+'</tr>').join('')+
-     '</tbody></table></div><p class="section-note">'+players.length+' players with published batting statistics. This is not an official roster.</p>';
+   // Team batting table supports a mobile-friendly category selector and sortable headings.
+   // Missing GameChanger values stay at the bottom in either sort direction.
+   const metricNames={
+     GP:'Games Played',PA:'Plate Appearances',AVG:'Batting Average',
+     OBP:'On-Base Percentage',SLG:'Slugging Percentage',OPS:'On-Base Plus Slugging',
+     H:'Hits','2B':'Doubles','3B':'Triples',HR:'Home Runs',RBI:'Runs Batted In'
+   };
+   batting.innerHTML=
+     '<div class="snl-team-stats-controls">'+
+       '<label for="snlTeamStatSort">SORT PLAYERS BY</label>'+
+       '<select id="snlTeamStatSort" aria-label="Sort players by batting category">'+
+         metrics.map(k=>'<option value="'+k+'"'+(k==='OPS'?' selected':'')+'>'+k+' · '+metricNames[k]+'</option>').join('')+
+       '</select>'+
+       '<button type="button" class="snl-team-stats-order" id="snlTeamSortOrder" aria-label="Reverse sort order">↓ High to low</button>'+
+     '</div>'+
+     '<p class="snl-team-stats-sort-note" id="snlTeamSortNote" aria-live="polite"></p>'+
+     '<div class="snl-team-batting-scroll"><table class="game-table snl-team-batting-table" aria-label="Team player batting statistics">'+
+       '<thead><tr><th scope="col">PLAYER</th>'+
+       metrics.map(k=>'<th scope="col" data-stat-key="'+k+'"><button type="button" class="snl-team-stats-heading" data-sort-key="'+k+'" title="Sort by '+metricNames[k]+'" aria-label="Sort by '+metricNames[k]+'">'+k+'</button></th>').join('')+
+       '</tr></thead><tbody></tbody>'+
+     '</table></div>'+
+     '<p class="section-note">'+players.length+' players with published batting statistics. This is not an official roster. GameChanger statistics may be incomplete or inaccurate.</p>';
+   const sortSelect=batting.querySelector('#snlTeamStatSort');
+   const sortOrder=batting.querySelector('#snlTeamSortOrder');
+   const sortNote=batting.querySelector('#snlTeamSortNote');
+   const statTable=batting.querySelector('.snl-team-batting-table');
+   const statRows=statTable.querySelector('tbody');
+   let sortKey='OPS',descending=true;
+   const applySort=()=>{
+     const ordered=[...players].sort((a,b)=>{
+       const av=value(a,sortKey),bv=value(b,sortKey);
+       if(av===null||bv===null){
+         if(av===null&&bv!==null)return 1;
+         if(bv===null&&av!==null)return -1;
+         return a.name.localeCompare(b.name);
+       }
+       return (descending?bv-av:av-bv)||a.name.localeCompare(b.name);
+     });
+     statRows.innerHTML=ordered.map(p=>
+       '<tr><td>'+esc(p.name)+'</td>'+
+       metrics.map(k=>'<td'+(k===sortKey?' class="snl-stat-selected"':'')+'>'+esc(fmt(p,k))+'</td>').join('')+
+       '</tr>').join('');
+     statTable.querySelectorAll('[data-stat-key]').forEach(th=>{
+       const active=th.dataset.statKey===sortKey;
+       th.setAttribute('aria-sort',active?(descending?'descending':'ascending'):'none');
+       th.classList.toggle('snl-stat-selected',active);
+       th.querySelector('button').textContent=th.dataset.statKey+(active?(descending?' ↓':' ↑'):'');
+     });
+     sortSelect.value=sortKey;
+     sortOrder.textContent=descending?'↓ High to low':'↑ Low to high';
+     sortOrder.setAttribute('aria-label',descending?'Currently high to low; switch to low to high':'Currently low to high; switch to high to low');
+     sortNote.textContent='Sorted by '+metricNames[sortKey]+' ('+sortKey+') · '+(descending?'highest':'lowest')+' first';
+   };
+   sortSelect.addEventListener('change',()=>{
+     if(!metrics.includes(sortSelect.value))return;
+     sortKey=sortSelect.value;
+     descending=true;
+     applySort();
+   });
+   sortOrder.addEventListener('click',()=>{
+     descending=!descending;
+     applySort();
+   });
+   statTable.querySelectorAll('[data-sort-key]').forEach(button=>{
+     button.addEventListener('click',()=>{
+       const key=button.dataset.sortKey;
+       if(!metrics.includes(key))return;
+       if(sortKey===key)descending=!descending;
+       else {sortKey=key;descending=true;}
+       applySort();
+     });
+   });
+   applySort();
  }
  async function loadTeam(id){
    const [schedule,batting]=await Promise.allSettled([
