@@ -765,6 +765,27 @@ main{padding-bottom:30px}.hero{border:1px solid #43617a;background:#102f4d;margi
  .scoreboard .scoretrack>.gamecenter.live-status-card{min-height:88px}
 }
 
+/* Game-day ticker: fixtures, start times and diamonds; retain last week's results. */
+.scoreboard .scoretrack>.scorecard.snl-ticker-today{
+  flex:0 0 205px;opacity:1;border-color:#aa9034;
+}
+.scoreboard .scoretrack>.scorecard.snl-ticker-today .scoremeta span:first-child{
+  color:#ffde19;font-weight:900;
+}
+.scoreboard .scoretrack>.scorecard.snl-ticker-result{
+  flex:0 0 190px;opacity:1;
+}
+.scoreboard .scoretrack .snl-ticker-field{
+  font-size:9px;font-weight:800;line-height:1.15;color:#b4c8d7;
+  letter-spacing:.1px;margin:1px 0 5px;white-space:nowrap;
+}
+.scoreboard .scoretrack>.scorecard.snl-ticker-today .scoremeta{gap:7px}
+@media(max-width:480px){
+ .scoreboard .scoretrack>.scorecard.snl-ticker-today{flex-basis:178px}
+ .scoreboard .scoretrack>.scorecard.snl-ticker-result{flex-basis:170px}
+ .scoreboard .scoretrack .snl-ticker-field{font-size:8px;margin-bottom:3px}
+}
+
 /* Scoreboard logo lettering: same S/N/L identity as the masthead, compact scale. */
 .scorehead h2 .brand-mark.scoreboard-label-snl{
  display:inline-block;
