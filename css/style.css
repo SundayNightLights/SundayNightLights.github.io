@@ -870,24 +870,25 @@ main{padding-bottom:30px}.hero{border:1px solid #43617a;background:#102f4d;margi
 
 
 
-/* Canadian Bat Bros article: compact editorial lead instead of an empty logo panel. */
+/* Canadian Bat Bros editorial lead: logo left, introduction right on desktop. */
 .snl-article .article-content .batbros-lead {
   display:grid;
-  grid-template-columns:minmax(0,1fr) 188px;
+  grid-template-columns:clamp(140px,20vw,178px) minmax(0,1fr);
   align-items:center;
-  gap:clamp(18px,3vw,38px);
-  margin:4px 0 22px;
+  gap:clamp(16px,3vw,28px);
+  margin:3px 0 22px;
 }
 .snl-article .article-content .batbros-lead p {
   margin:0;
+  min-width:0;
 }
 .snl-article .article-content .batbros-lead-logo {
   width:100%;
-  max-width:188px;
+  max-width:178px;
   aspect-ratio:1;
   display:grid;
   place-items:center;
-  justify-self:end;
+  justify-self:start;
 }
 .snl-article .article-content .batbros-lead-logo img {
   display:block;
@@ -899,12 +900,11 @@ main{padding-bottom:30px}.hero{border:1px solid #43617a;background:#102f4d;margi
 @media(max-width:600px) {
   .snl-article .article-content .batbros-lead {
     grid-template-columns:minmax(0,1fr);
-    gap:5px;
+    gap:8px;
     margin-top:0;
   }
   .snl-article .article-content .batbros-lead-logo {
-    grid-row:1;
     justify-self:center;
-    max-width:154px;
+    max-width:144px;
   }
 }
