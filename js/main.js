@@ -131,17 +131,21 @@
  </header>`;}
  function footer(){return `<footer class="footer snl-footer" aria-label="SNL footer">
    <div class="snl-footer-main">
-     <div class="snl-footer-top">
+     <div class="snl-footer-info">
        <strong class="snl-footer-wordmark">SUNDAY <em>NIGHT</em> LIGHTS</strong>
-       <a class="snl-footer-instagram" href="https://www.instagram.com/snl_416/" target="_blank" rel="noopener noreferrer" aria-label="Follow SNL on Instagram @snl_416">${insta}<span>@snl_416</span></a>
+       <span class="snl-footer-venue">Markham Sports Dome · Markham, Ontario</span>
+       <nav class="snl-footer-links" aria-label="Footer navigation">
+         <a href="about.html">About</a>
+         <a href="rules.html">Rules</a>
+         <a href="join.html">Join SNL</a>
+         <a href="${cal}" target="_blank" rel="noopener noreferrer">Calendar</a>
+       </nav>
      </div>
-     <span class="snl-footer-venue">Markham Sports Dome · Markham, Ontario</span>
-     <nav class="snl-footer-links" aria-label="Footer navigation">
-       <a href="about.html">About</a>
-       <a href="rules.html">Rules</a>
-       <a href="join.html">Join SNL</a>
-       <a href="${cal}" target="_blank" rel="noopener noreferrer">Calendar</a>
-     </nav>
+     <a class="snl-footer-instagram" href="https://www.instagram.com/snl_416/" target="_blank" rel="noopener noreferrer" aria-label="Follow Sunday Night Lights on Instagram @snl_416">
+       ${insta}
+       <span class="snl-footer-instagram-copy"><strong>FOLLOW SNL ON INSTAGRAM</strong><span>@snl_416</span></span>
+       <span class="snl-footer-instagram-arrow" aria-hidden="true">↗</span>
+     </a>
    </div>
    <div class="snl-footer-bottom">© ${new Date().getFullYear()} Sunday Night Lights</div>
  </footer>`;}
