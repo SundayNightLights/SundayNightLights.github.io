@@ -11,7 +11,7 @@ window.SNL_ARTICLES = {
   },
   "batbros": {
     "date": "September 25, 2026",
-    "category": "SNL League News",
+    "category": "SNL Special Feature",
     "body": "<div class=\"batbros-lead\"><div class=\"batbros-lead-logo\"><img src=\"assets/batbros-logo.webp\" alt=\"Canadian Bat Bros logo\" loading=\"lazy\"></div><p>Two familiar faces in Canadian slo-pitch are bringing their game to Sunday Night Lights. <strong>Ryan Hayward and Warren Mangahas</strong>, the duo behind <strong>Canadian Bat Bros</strong>, are joining <strong>IHT</strong> for the 2026–27 Fall season.</p></div>\n<p>On their channel, the Bat Bros put the latest slo-pitch bats through hands-on testing, comparing feel, pop and on-field performance to find out which models live up to the hype. Ryan brings years of competitive playing experience, while Warren adds a detail-oriented approach to breaking down the equipment and the swings behind each review.</p>\n<p>For SNL, their arrival means more than having two well-known bat enthusiasts at the dome. Ryan and Warren are here to compete, adding experience to an IHT roster with championship ambitions. And for fellow players curious about a new bat or looking to sharpen their swing, there are now two more familiar faces to talk shop with between games.</p>\n<p class=\"article-close\">They know their bats. Now it’s time to see what they bring under the lights.</p>\n<div class=\"article-cta\"><a href=\"https://www.youtube.com/@CDNBatBros\" target=\"_blank\" rel=\"noopener noreferrer\">▶ Watch Canadian Bat Bros on YouTube ↗</a><small>Bat reviews, comparisons, and on-field testing.</small></div>"
   },
   "expansion": {
