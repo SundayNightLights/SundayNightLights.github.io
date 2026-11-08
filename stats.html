@@ -11,6 +11,8 @@
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <style>
 /* These rules only affect the main SNL site's Stats page. */
+#gc-stats .gc-stats-preview {margin:4px 0 25px;padding:12px 0;border-bottom:1px solid #39566a;color:var(--muted,#b9cde0);font-size:13px;line-height:1.55;}
+#gc-stats .gc-stats-preview strong {color:var(--yellow,#ffde19);letter-spacing:.045em;margin-right:7px;}
 #gc-stats { color: var(--text, #f7faff); }
 #gc-stats select,#gc-stats input {width:100%;min-width:0;padding:10px 12px;border:1px solid #64809c;border-radius:8px;background:#06192b;color:#fff;font:inherit;font-size:13px;}
 #gc-stats .gc-faint {color:var(--muted,#a9bfd2);font-size:12px;}
@@ -362,6 +364,7 @@
       </div>
 
       <div id="gc-stats">
+      <p class="gc-stats-preview" role="note"><strong>STATS PREVIEW ONLY</strong> GameChanger batting numbers may be incomplete or inaccurate. These figures demonstrate how the SNL Stats page could work and are not official player statistics or rankings.</p>
         <!-- Preserve internal season state; the shared header is the visible selector. -->
         <select id="gcSeason" hidden aria-hidden="true" disabled>
           <option>Loading seasons…</option>
@@ -395,7 +398,7 @@
           <div class="section-top">
             <div>
               <h2 id="gcBattingTitle">
-                COMPLETE <em>BATTING STATS</em>
+                RECORDED <em>BATTING STATS</em>
               </h2>
               <div class="section-rule"></div>
             </div>
