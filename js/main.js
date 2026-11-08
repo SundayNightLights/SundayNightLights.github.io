@@ -39,8 +39,7 @@
    feed.liveScoring.activeGameIds.includes(g.id)&&g.status!=='Final';
  const tickerGameCard=(g,today=false)=>{
    const final=g.status==='Final'&&Number.isInteger(g.awayScore)&&Number.isInteger(g.homeScore);
-   const label=final?'FINAL':tickerConfirmedGame(g)?'LIVE':
-     today&&tickerGameWindow(g)?'GAME TIME':today?'TODAY':'PENDING';
+   const label=final?'FINAL':tickerConfirmedGame(g)?'LIVE':today?'TODAY':'PENDING';
    const time=gameStart(g);
    const field=diamondCode(g);
    const klass=today?' snl-ticker-today':' snl-ticker-result';
@@ -57,8 +56,8 @@
    return previous?`WEEK ${previous} · ${dateLabel(weekGames(previous)[0].date)} · RESULTS`:'SCHEDULE & RESULTS';
  };
 
- // SNL live mode must be asserted by a trusted, verified scoring integration.
- // Never infer LIVE from scheduled times, incomplete scores, or the GameChanger embed.
+ // The Live Game Centre shows schedule-driven LIVE NOW from 10:10 PM on game nights.
+ // It does not confirm GameChanger live scoring; game-level LIVE remains feed-verified.
  const allScheduledGames=()=>[...regular(),...(Array.isArray(feed?.playoffs)?feed.playoffs:[])];
  const hasConfirmedLiveScoring=()=>{
    const live=feed?.liveScoring;
@@ -79,21 +78,22 @@
    if(!id){try{id=localStorage.getItem('snl-selected-season-v1');}catch(_){}}
    return !id||id==='F26';
  };
- const scheduledGamesActive=()=>{
+ const scheduledLiveNow=()=>{
    if(!selectedFall())return false;
    const now=torontoNowMinute();
    return allScheduledGames().some(g=>{
      if(g.status==='Final'||g.status==='Not Necessary')return false;
-     if(typeof g.date!=='string'||g.date.length!==10||
-        typeof g.timeStart!=='string'||g.timeStart.length!==5||
-        typeof g.timeEnd!=='string'||g.timeEnd.length!==5)return false;
+     if(typeof g.date!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(g.date)||
+        typeof g.timeStart!=='string'||!/^\d{2}:\d{2}$/.test(g.timeStart)||
+        typeof g.timeEnd!=='string'||!/^\d{2}:\d{2}$/.test(g.timeEnd))return false;
      const endDate=g.timeEnd<g.timeStart
        ?new Date(Date.parse(g.date+'T12:00:00Z')+86400000).toISOString().slice(0,10)
        :g.date;
-     return now>=g.date+'T'+g.timeStart && now<endDate+'T'+g.timeEnd;
+     // Activate from 10:10 PM Toronto time through this game's scheduled end.
+     return now>=g.date+'T22:10'&&now<endDate+'T'+g.timeEnd;
    });
  };
- const tickerGameTimeAlert=()=>selectedFall()&&(hasConfirmedLiveScoring()||scheduledGamesActive());
+ const tickerGameTimeAlert=()=>selectedFall()&&(hasConfirmedLiveScoring()||scheduledLiveNow());
  const nextScheduledGame=()=>{
    const now=torontoNowMinute();
    return allScheduledGames().filter(g=>
@@ -106,7 +106,7 @@
  const liveCentreCard=()=>{
    if(!selectedFall())return '';
    if(hasConfirmedLiveScoring())return `<a href="live.html#snlOfficialFeed" class="gamecenter live-status-card is-live" aria-label="View confirmed live SNL games"><span class="live-card-kicker"><span class="live-card-status-dot" aria-hidden="true"></span>LIVE NOW</span><strong>LIVE GAME CENTRE</strong><span class="live-card-detail">GAMES IN PROGRESS</span><small>View live coverage</small></a>`;
-   if(scheduledGamesActive())return `<a href="live.html#snlOfficialFeed" class="gamecenter live-status-card is-game-time" aria-label="Games are scheduled now; GameChanger live scoring may not be available"><span class="live-card-kicker"><span class="live-card-status-dot" aria-hidden="true"></span>GAME TIME</span><strong>LIVE GAME CENTRE</strong><span class="live-card-detail">SCHEDULED GAMES NOW</span><small>Live scoring not guaranteed</small></a>`;
+   if(scheduledLiveNow())return `<a href="live.html#snlOfficialFeed" class="gamecenter live-status-card is-live is-scheduled-live" aria-label="Open SNL Live Game Centre. LIVE NOW reflects the scheduled game window, not verified live scoring."><span class="live-card-kicker"><span class="live-card-status-dot" aria-hidden="true"></span>LIVE NOW</span><strong>LIVE GAME CENTRE</strong><span class="live-card-detail">SNL GAME NIGHT</span><small>View live coverage</small></a>`;
    const next=nextScheduledGame();
    if(!next)return '';
    const date=new Intl.DateTimeFormat('en-US',{timeZone:'America/Toronto',weekday:'short',month:'short',day:'numeric'}).format(new Date(next.date+'T12:00:00Z')).toUpperCase().replace(',', ' ·');
@@ -126,7 +126,7 @@
        dot.setAttribute('aria-hidden','true');
        title.insertBefore(dot,title.firstChild);
      }
-     dot.title=hasConfirmedLiveScoring()?'Confirmed live scoring':'Scheduled game time; live scoring not confirmed';
+     dot.title=hasConfirmedLiveScoring()?'Confirmed live scoring':'Scheduled live window from 10:10 PM; scoring is not verified';
    }else if(dot){dot.remove();}
    const heading=document.querySelector('#siteHeader .scorehead .right-text');
    if(heading)heading.textContent=tickerHeading();
