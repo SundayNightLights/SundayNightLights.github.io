@@ -789,25 +789,20 @@ main{padding-bottom:30px}.hero{border:1px solid #43617a;background:#102f4d;margi
   padding-right:3px;
  }
 }
-/* Compact SNL footer: logo colours, four useful links, and Instagram beside branding. */
+/* SNL footer — use the open bottom-right space for a prominent Instagram CTA.
+   Keep the same compact height on desktop and retain all league links. */
 .footer.snl-footer{
- display:block;
- margin-top:20px;
- padding:14px 0 9px;
- border-top:1px solid #345a75;
- color:#a4bcd0;
- text-align:left;
+ display:block;margin-top:20px;padding:15px 0 9px;
+ border-top:1px solid #345a75;color:#a4bcd0;text-align:left;
 }
-.snl-footer-main{display:flex;flex-direction:column;gap:8px}
-.snl-footer-top{display:flex;justify-content:space-between;align-items:center;gap:9px;flex-wrap:wrap}
+.snl-footer-main{
+ display:grid;grid-template-columns:minmax(0,1fr) minmax(225px,288px);
+ align-items:center;gap:22px;
+}
+.snl-footer-info{display:flex;flex-direction:column;gap:8px;min-width:0}
 .snl-footer-wordmark{
- display:block;
- color:#fff;
- font-size:16px;
- font-weight:900;
- font-style:italic;
- letter-spacing:-.35px;
- white-space:nowrap;
+ display:block;color:#fff;font-size:16px;font-weight:900;
+ font-style:italic;letter-spacing:-.35px;white-space:nowrap;
 }
 .snl-footer-wordmark em{color:#ffde19;font-style:inherit}
 .snl-footer-venue{color:#a9bfd2;font-size:11px;line-height:1.35}
@@ -815,31 +810,45 @@ main{padding-bottom:30px}.hero{border:1px solid #43617a;background:#102f4d;margi
 .snl-footer-links a{color:#d2dce7;font-size:11px;font-weight:750;white-space:nowrap}
 .snl-footer-links a:hover,.snl-footer-links a:focus-visible{color:#ffde19}
 .snl-footer-instagram{
- display:inline-flex;align-items:center;gap:6px;
- color:#fff;font-size:11px;font-weight:850;white-space:nowrap;
+ display:flex;align-items:center;gap:13px;justify-self:end;width:100%;min-height:79px;
+ padding:12px 15px;border:1px solid #54748e;border-left:3px solid #ffde19;
+ border-radius:10px;background:linear-gradient(125deg,#183d5b,#091d30);
+ box-shadow:0 5px 13px #0002;text-decoration:none;color:#fff;
+ transition:background .18s,border-color .18s,transform .18s;
 }
-.snl-footer-instagram svg{width:16px;height:16px;flex:0 0 16px;color:#ffde19}
-.snl-footer-instagram:hover,.snl-footer-instagram:focus-visible{color:#ffde19}
+.snl-footer-instagram svg{width:34px;height:34px;flex:0 0 34px;color:#ffde19}
+.snl-footer-instagram-copy{display:flex;flex-direction:column;gap:5px;min-width:0}
+.snl-footer-instagram-copy strong{
+ font-size:12px;line-height:1.1;font-weight:900;letter-spacing:.25px;
+ color:#fff;white-space:nowrap;
+}
+.snl-footer-instagram-copy>span{font-size:12px;font-weight:800;color:#ffde19}
+.snl-footer-instagram-arrow{margin-left:auto;color:#bad0df;font-size:20px;line-height:1}
+.snl-footer-instagram:hover,.snl-footer-instagram:focus-visible{
+ color:#fff;border-color:#ffde19;background:linear-gradient(125deg,#205070,#0b2740);
+ transform:translateY(-1px);
+}
 .snl-footer-bottom{
- margin-top:10px;
- padding-top:8px;
- border-top:1px solid #27425a;
- text-align:center;
- font-size:10px;
- color:#8fa9be;
+ margin-top:10px;padding-top:8px;border-top:1px solid #27425a;
+ text-align:center;font-size:10px;color:#8fa9be;
 }
 @media(max-width:640px){
  .footer.snl-footer{margin-top:18px;padding:12px 0 8px}
- .snl-footer-main{gap:7px}
- .snl-footer-top{gap:7px}
+ .snl-footer-main{grid-template-columns:1fr;gap:11px}
+ .snl-footer-info{gap:7px}
  .snl-footer-wordmark{font-size:13px;letter-spacing:-.25px}
- .snl-footer-instagram{font-size:10px;gap:5px}
- .snl-footer-instagram svg{width:15px;height:15px;flex-basis:15px}
  .snl-footer-venue{font-size:10px}
  .snl-footer-links{gap:8px 13px}
+ .snl-footer-instagram{min-height:55px;padding:9px 12px;gap:11px}
+ .snl-footer-instagram svg{width:29px;height:29px;flex:0 0 29px}
+ .snl-footer-instagram-copy strong{font-size:11px}
+ .snl-footer-instagram-copy>span{font-size:11px}
  .snl-footer-bottom{margin-top:9px;padding-top:7px}
 }
-@media(max-width:380px){.snl-footer-wordmark{font-size:12px}}
+@media(max-width:380px){
+ .snl-footer-wordmark{font-size:12px}
+ .snl-footer-instagram-copy strong{white-space:normal}
+}
 
 
 /* Official standings and tiebreaker disclosure */
