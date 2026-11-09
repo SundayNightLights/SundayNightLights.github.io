@@ -145,10 +145,42 @@
      if(!validatedFeed(data))throw new Error('Ticker feed validation failed');
      feed=data;
      syncScoreboardGameWindow();
+     refreshMatchupPanels();
    }catch(error){console.warn('SNL ticker refresh unavailable',error);}
  }
+ function refreshMatchupPanels(){
+   if(!feed||!selectedFall())return;
+   const homeRoot=document.getElementById('snlHomeGamesPanel');
+   if(homeRoot){
+     const html=gamesPanel(false);
+     if(homeRoot.innerHTML!==html)homeRoot.innerHTML=html;
+   }
+   const scheduleRoot=document.getElementById('scheduleArea');
+   if(scheduleRoot){
+     const active=document.querySelector('.filters [data-week].active');
+     const selected=active?.dataset.week;
+     const html=selected==='all'?allWeeksPanel(true):gamesPanel(true,selected?Number(selected):requestedWeek());
+     if(scheduleRoot.innerHTML!==html)scheduleRoot.innerHTML=html;
+   }
+ }
  function torontoToday(){const parts=new Intl.DateTimeFormat('en-US',{timeZone:'America/Toronto',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());const p=Object.fromEntries(parts.map(x=>[x.type,x.value]));return `${p.year}-${p.month}-${p.day}`;}
- function upcomingWeek(){if(!feed)return 2;const today=torontoToday();const g=regular().filter(g=>g.status!=='Final'&&g.date>=today).sort((a,b)=>a.date.localeCompare(b.date)||a.slot-b.slot)[0];return g?.week||regular().filter(g=>g.status!=='Final').sort((a,b)=>a.week-b.week)[0]?.week||10;}
+ // Matchup artwork remains unchanged until 12:30 AM Toronto time Monday.
+ const matchupResultsUnlocked=date=>{
+   if(typeof date!=='string'||!/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(date))return false;
+   const nextDay=new Date(Date.parse(date+'T12:00:00Z')+86400000).toISOString().slice(0,10);
+   return torontoNowMinute()>=nextDay+'T00:30';
+ };
+ function upcomingWeek(){
+   if(!feed)return 2;
+   const today=torontoToday();
+   const current=regular().filter(g=>g.date<=today&&!matchupResultsUnlocked(g.date))
+     .sort((a,b)=>b.date.localeCompare(a.date)||a.slot-b.slot);
+   if(current.length)return current[0].week;
+   const next=regular().filter(g=>g.status!=='Final'&&g.date>=today)
+     .sort((a,b)=>a.date.localeCompare(b.date)||a.slot-b.slot)[0];
+   return next?.week||regular().filter(g=>g.status!=='Final')
+     .sort((a,b)=>a.week-b.week)[0]?.week||10;
+ }
  const requestedWeek=()=>{const w=Number(new URLSearchParams(location.search).get('week'));return Number.isInteger(w)&&w>=1&&w<=10?w:upcomingWeek()};
  const feedNotice=()=>feed?'':'<div class="notice">Schedule and standings are temporarily unavailable. Please check back shortly.</div>';
  const validatedFeed=data=>data&&data.schemaVersion===1&&Array.isArray(data.regularSeason)&&data.regularSeason.length===60&&Array.isArray(data.standings)&&data.standings.length===6&&Array.isArray(data.playoffs)&&data.playoffs.length===15&&data.regularSeason.every(g=>teamMap[g.away]&&teamMap[g.home]&&Number.isInteger(g.week)&&g.week>=1&&g.week<=10);
@@ -246,12 +278,13 @@
  function gamesPanel(all=false,week=upcomingWeek()){
   const games=weekGames(week);
   if(!games.length)return `<div class="panel"><div class="panel-h"><span>LEAGUE SCHEDULE</span></div><div class="panel-foot">Live schedule unavailable.</div></div>`;
-  // Score entry controls EACH game independently. Passing a date does not turn
-  // an unscored diagonal matchup into a final-results card.
-  const isFinal=g=>g.status==='Final' &&
+  // Keep all approved diagonal matchup cards intact until 12:30 AM,
+  // even if one or every result was entered early.
+  const canSwitch=matchupResultsUnlocked(games[0].date);
+  const isFinal=g=>canSwitch&&g.status==='Final' &&
     Number.isInteger(g.awayScore) && Number.isInteger(g.homeScore);
-  if(games.every(isFinal))return allWeeksPanel(all,week);
-  const someFinal=games.some(isFinal);
+  if(canSwitch&&games.every(isFinal))return allWeeksPanel(all,week);
+  const someFinal=canSwitch&&games.some(isFinal);
   const cards=games.map(g=>isFinal(g)?overviewScorecard(g):matchup(gameCard(g))).join('');
   return `<div class="panel"><div class="panel-h"><span>${dateLabel(games[0].date)}</span><small>WEEK ${week}</small></div><div class="matches ${all?'large-matches':''} ${someFinal?'snl-mixed-games':''}">${cards}</div>${all?`<div class="panel-foot">All times local to Markham · ${D.venue} · Diamond 1 • Near and Diamond 2 • Far</div>`:''}</div>`;
  }
@@ -321,7 +354,7 @@
   function leaders(){return `<div class="leader-cards">${[['Batting Average','AVG'],['Home Runs','HR'],['Runs Batted In','RBI'],['Hits','H']].map(([t,s])=>`<div class="leader-card"><b>${t.toUpperCase()}</b><small>${s}</small><strong>—</strong><span>Awaiting verified player statistics</span></div>`).join('')}</div>`;}
  function storyArt(s){if(s.id==='opener')return `${im('raccoons','one','')}${im('buffaloes','two','')}`;if(s.id==='expansion')return `${im('morsl','one','')}${im('iht','two','')}${im('maul','three','')}`;if(s.id==='trade')return `${im('maul','one','')}${im('iht','two','')}`;return ''}
  function stories(){return `<div class="stories-viewport"><button type="button" class="story-arrow story-arrow-prev" data-story-step="-1" aria-label="Previous featured stories"><span aria-hidden="true">‹</span></button><div class="stories" aria-label="Featured story carousel">${D.stories.map(s=>`<a class="story ${s.id}" href="article.html?id=${s.id}" aria-label="Read ${s.title}"><div class="story-illustration"><img class="story-poster" src="assets/story-${s.id}.webp${s.id==='week2'?'?v=snl-week2-rob-magzz-lowered-20261108':''}" alt="" loading="lazy"></div><span class="story-tag">${s.tag}</span><div class="story-bottom"><h3>${s.title}</h3><small>SNL NEWS · FEATURE</small></div></a>`).join('')}</div><button type="button" class="story-arrow story-arrow-next" data-story-step="1" aria-label="Next featured stories"><span aria-hidden="true">›</span></button></div>`;}
- function home(){return `${hero()}<section class="section" id="featured">${sectionHead('FEATURED','STORIES','VIEW ALL STORIES ›','highlights.html')}${stories()}<div class="newsline"><b>LEAGUE NEWS</b><span class="news-updates"><span><strong>NOV 2</strong> Time slots changed for Weeks 2, 8 &amp; 9. <a class="news-inline-link" href="schedule.html">Check schedule ›</a></span></span><a href="highlights.html#league-news">VIEW ALL NEWS ›</a></div></section><section class="split"><div><div class="section-top"><div><h2>UPCOMING <em>GAMES</em></h2><div class="section-rule"></div></div><a href="schedule.html">VIEW FULL SCHEDULE ›</a></div>${gamesPanel(false)}</div><div><div class="section-top"><div><h2>LEAGUE <em>STANDINGS</em></h2><div class="section-rule"></div></div><a href="standings.html">FULL TABLE ›</a></div>${standingsTable(true)}</div></section><section class="section">${sectionHead('LEAGUE','LEADERS','VIEW ALL STATS ›','stats.html')}<p class="hint" style="margin:0 0 13px">Batting leaderboard preview · GameChanger figures may be inaccurate</p>${leaders()}</section><section class="join-home-prompt"><div><strong>INTERESTED IN JOINING SNL?</strong><p>Bring a team or join as a free agent. Explore your options for future sessions.</p></div><a class="join-home-action" href="join.html">JOIN SNL ›</a></section><section class="flat-card" style="display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap"><div><b style="color:var(--yellow);font-size:13px">PLAYER REGISTRATION &amp; WAIVERS</b><p class="section-note" style="margin:6px 0 0">Roster registration and league waivers are being prepared.</p></div><a class="neutral-link" href="registration.html">HOW IT WILL WORK ›</a></section>`;}
+ function home(){return `${hero()}<section class="section" id="featured">${sectionHead('FEATURED','STORIES','VIEW ALL STORIES ›','highlights.html')}${stories()}<div class="newsline"><b>LEAGUE NEWS</b><span class="news-updates"><span><strong>NOV 2</strong> Time slots changed for Weeks 2, 8 &amp; 9. <a class="news-inline-link" href="schedule.html">Check schedule ›</a></span></span><a href="highlights.html#league-news">VIEW ALL NEWS ›</a></div></section><section class="split"><div><div class="section-top"><div><h2>UPCOMING <em>GAMES</em></h2><div class="section-rule"></div></div><a href="schedule.html">VIEW FULL SCHEDULE ›</a></div><div id="snlHomeGamesPanel">${gamesPanel(false)}</div></div><div><div class="section-top"><div><h2>LEAGUE <em>STANDINGS</em></h2><div class="section-rule"></div></div><a href="standings.html">FULL TABLE ›</a></div>${standingsTable(true)}</div></section><section class="section">${sectionHead('LEAGUE','LEADERS','VIEW ALL STATS ›','stats.html')}<p class="hint" style="margin:0 0 13px">Batting leaderboard preview · GameChanger figures may be inaccurate</p>${leaders()}</section><section class="join-home-prompt"><div><strong>INTERESTED IN JOINING SNL?</strong><p>Bring a team or join as a free agent. Explore your options for future sessions.</p></div><a class="join-home-action" href="join.html">JOIN SNL ›</a></section><section class="flat-card" style="display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap"><div><b style="color:var(--yellow);font-size:13px">PLAYER REGISTRATION &amp; WAIVERS</b><p class="section-note" style="margin:6px 0 0">Roster registration and league waivers are being prepared.</p></div><a class="neutral-link" href="registration.html">HOW IT WILL WORK ›</a></section>`;}
  const pageHero=(a,b,sub='',action='')=>`<div class="page-hero"><div><h1>${a} <em>${b}</em></h1><p>${sub}</p></div>${action}</div>`;
  function schedule(){const active=requestedWeek();return `${pageHero('SNL','SCHEDULE','2026-27 Fall · Markham Sports Dome')}<div class="filters"><button class="filterbtn" data-week="all">All</button>${Array.from({length:10},(_,i)=>i+1).map(w=>`<button class="filterbtn ${w===active?'active':''}" data-week="${w}">Week ${w}</button>`).join('')}</div><div id="scheduleArea">${gamesPanel(true,active)}</div>${feedNotice()}<div class="notice">Ten playing Sundays · Holiday break December 27, 2026. Times and diamonds may change. Check back for the latest schedule.</div>`;}
 
@@ -428,6 +461,7 @@ function joinPage(){return `${pageHero('JOIN','SNL','Interested in playing Sunda
    window.setInterval(syncScoreboardGameWindow,30000);
    // Check OneDrive-derived official schedule/results feed regularly without reloading the page.
    window.setInterval(refreshTickerFeed,120000);
+   window.setInterval(refreshMatchupPanels,30000);
    const body={home, schedule,live:livePage,standings:standingsPage,playoffs:playoffsPage,teams:teamsPage,team:teamPage,stats:statsPage,highlights:highlightsPage,article:articlePage,rules:rulesPage,tournaments:tournamentsPage,about:aboutPage,join:joinPage,registration:registrationPage}[page]||home;
    document.getElementById('app').innerHTML=`<div class="wrap">${body()}${footer()}</div>`;
    if (location.hash === '#league-news') requestAnimationFrame(() => document.getElementById('league-news')?.scrollIntoView());
