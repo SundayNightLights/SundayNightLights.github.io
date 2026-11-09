@@ -944,8 +944,7 @@ main{padding-bottom:30px}.hero{border:1px solid #43617a;background:#102f4d;margi
   }
 }
 
-/* Week 2 story: contained portrait artwork and small game fixture cues. */
-.snl-article .article-content .week2-article-art{max-width:500px;margin:24px auto 28px}
-.snl-article .article-content .week2-article-art img{width:100%;height:auto;object-fit:contain}
+/* Week 2 article: wide 16:9 editorial image spanning the article column. */
+.snl-article .article-content .week2-article-art{width:100%;max-width:none;margin:24px 0 28px}
+.snl-article .article-content .week2-article-art img{display:block;width:100%;height:auto;object-fit:contain}
 .snl-article .article-content .week2-fixture{font-size:13px;font-weight:900;color:var(--yellow);margin:0 0 24px;letter-spacing:.025em}
-@media(max-width:600px){.snl-article .article-content .week2-article-art{max-width:100%}}
