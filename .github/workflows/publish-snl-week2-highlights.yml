@@ -1,0 +1,71 @@
+name: Publish Approved SNL Week 2 Highlights
+on:
+  push:
+    paths:
+      - ".github/workflows/publish-snl-week2-highlights.yml"
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: snl-week2-highlights-media
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Assemble Week 2 highlight media from verified Git objects
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p assets
+          tmpfile="$(mktemp)"
+          trap 'rm -f "$tmpfile"' EXIT
+          for blob in \
+            e0acbaa786f41372ccb7e401d3e0c6629af97b1a \
+            96f20618ccc3fd6c7751d3aa8158a6bd13d3d093 \
+            97fad5f2244942b702b64ab100dfefc7a341fc7a \
+            dbd5e4f95bc313dcb64d3a86d488fdf5f1974ed4 \
+            b859ba25afd8ef8c87de232f9b45da54bf84bb23 \
+            c721bf637b8262037a330ebc602b5ef6297b5ee1 \
+            5fee01976d860a2c357dd45efb6bf07c7439a034 \
+            c609ef9d3321c03f31bf524d0b900278da6b6113 \
+            b599c0d0ca98a58bfcee304d3225b2e3348dc0da \
+            983ca482378ca820c745327c78b4749d1106932a \
+            52d30d98ebcb275321856bd406cb322f9d187db1 \
+            401d821acc496230df6bba2152edf7372a917f29 \
+            848174fadcdaae718a932ba67fd4e46478f88cbc \
+            5b5f4008478edc890176b67a7a95b65b595d7393 \
+            61c4f41fcc2c657a4f40b39603f8cafb7e20909e
+          do
+            curl --fail --silent --show-error --retry 3 \
+              -H "Authorization: Bearer ${GH_TOKEN}" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/${GITHUB_REPOSITORY}/git/blobs/${blob}" \
+              | jq -r ".content" | base64 --decode >> "$tmpfile"
+          done
+          test "$(git hash-object "$tmpfile")" = "e9342c0fb613ce650bc43900f405ee9760287539"
+          cp "$tmpfile" assets/week3-highlight.mp4
+          curl --fail --silent --show-error --retry 3 \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/git/blobs/c19b56fd7c851523d8a40c04c610ce7ce0d5d13e" \
+            | jq -r ".content" | base64 --decode > assets/story-week3.webp
+          test "$(git hash-object assets/story-week3.webp)" = "c19b56fd7c851523d8a40c04c610ce7ce0d5d13e"
+          echo "Both file checksums verified."
+      - name: Publish MP4 and cover to website
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/week3-highlight.mp4 assets/story-week3.webp
+          if git diff --cached --quiet; then echo "Assets already current."; exit 0; fi
+          git commit -m "Publish approved SNL Week 2 highlights video and cover"
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
