@@ -953,3 +953,4 @@ main{padding-bottom:30px}.hero{border:1px solid #43617a;background:#102f4d;margi
 .story .story-illustration video.story-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;pointer-events:none;display:block}
 .snl-article .article-content .week3-video{width:min(100%,460px);margin:24px auto 28px}
 .snl-article .article-content .week3-video video{display:block;width:100%;height:auto;aspect-ratio:478/850;object-fit:contain;background:#04111f;border:1px solid #4d6a83;border-radius:11px}
+.snl-article .article-content .week3-video figcaption{margin:10px 0 0;text-align:center;font-size:12px;line-height:1.5;letter-spacing:.075em;text-transform:uppercase;color:#b9cadd}
