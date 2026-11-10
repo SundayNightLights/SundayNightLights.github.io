@@ -1,0 +1,81 @@
+name: Publish smaller SNL Week 2 highlights MP4
+on:
+  push:
+    paths:
+      - ".github/workflows/publish-optimized-week2-video.yml"
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: snl-highlight-video-optimization
+  cancel-in-progress: false
+jobs:
+  compress:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Verify source and install FFmpeg
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git hash-object assets/week3-highlight.mp4)" = "e9342c0fb613ce650bc43900f405ee9760287539" || exit 1
+          if ! command -v ffmpeg >/dev/null || ! command -v ffprobe >/dev/null; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq ffmpeg
+          fi
+      - name: Make high quality web MP4
+        shell: bash
+        run: |
+          set -euo pipefail
+          ffmpeg -nostdin -hide_banner -loglevel error -y \
+            -i assets/week3-highlight.mp4 \
+            -map 0:v:0 -map 0:a? -map_metadata 0 \
+            -c:v libx264 -preset slow -crf 25 -pix_fmt yuv420p \
+            -c:a aac -b:a 128k -movflags +faststart \
+            /tmp/snl-week2-optimized.mp4
+          ffmpeg -nostdin -hide_banner \
+            -i assets/week3-highlight.mp4 -i /tmp/snl-week2-optimized.mp4 \
+            -lavfi ssim -an -f null - > /tmp/snl-ssim.log 2>&1
+          grep "SSIM" /tmp/snl-ssim.log | tail -1
+      - name: Validate encoding and publish if the quality and size checks pass
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, re, subprocess
+          src = 'assets/week3-highlight.mp4'
+          out = '/tmp/snl-week2-optimized.mp4'
+          def probe(path):
+              return json.loads(subprocess.check_output(['ffprobe','-v','error','-show_streams','-show_format','-of','json',path]))
+          a,b=probe(src),probe(out)
+          v1=next(s for s in a['streams'] if s['codec_type']=='video')
+          v2=next(s for s in b['streams'] if s['codec_type']=='video')
+          old,new=os.path.getsize(src),os.path.getsize(out)
+          logs=open('/tmp/snl-ssim.log').read()
+          scores=re.findall(r'All:([0-9.]+)',logs)
+          assert scores,'Video quality metric missing'
+          ssim=float(scores[-1])
+          assert v1['width']==v2['width'] and v1['height']==v2['height'], 'Resolution changed'
+          assert v1['r_frame_rate']==v2['r_frame_rate'], 'Frame rate changed'
+          assert abs(float(a['format']['duration'])-float(b['format']['duration'])) < 0.15, 'Duration changed'
+          assert v2['codec_name']=='h264', 'Unexpected video codec'
+          assert ssim >= 0.94, 'Video failed reasonable-quality threshold'
+          assert new <= old*0.80, 'Savings below 20%'
+          print(f"Original {old} bytes; compressed {new} bytes; saving {(1-new/old):.1%}; SSIM {ssim:.5f}")
+          print(f"Original {v1['width']}x{v1['height']} at {v1['r_frame_rate']}, duration {a['format']['duration']} s")
+          print(f"Compressed {v2['width']}x{v2['height']} at {v2['r_frame_rate']}, duration {b['format']['duration']} s")
+          with open(os.environ['GITHUB_STEP_SUMMARY'],'a') as f:
+              f.write(f'Optimized 49-second SNL Week 2 highlight: **{old/1048576:.2f} MiB → {new/1048576:.2f} MiB ({(1-new/old):.1%} smaller)**; H.264, original dimensions and frame rate preserved, SSIM {ssim:.4f}.\n')
+          PY
+          cp /tmp/snl-week2-optimized.mp4 assets/week3-highlight.mp4
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/publish-optimized-week2-video.yml
+          git add assets/week3-highlight.mp4
+          git commit -m "Serve smaller high-quality Week 2 highlights MP4"
+          git fetch origin main
+          test "$(git rev-parse origin/main:assets/week3-highlight.mp4)" = "e9342c0fb613ce650bc43900f405ee9760287539" || exit 1
+          git rebase origin/main
+          git push origin HEAD:main
