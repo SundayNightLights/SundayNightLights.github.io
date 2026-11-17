@@ -1,0 +1,82 @@
+name: Publish Corrected SNL Week 3 Highlights
+on:
+  push:
+    paths:
+      - ".github/workflows/publish-snl-week3-approved.yml"
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: snl-week3-approved-video
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Reconstruct and checksum approved 22.2 MB highlights video
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p assets
+          tmpfile="$(mktemp)"
+          posterfile="$(mktemp)"
+          trap 'rm -f "$tmpfile" "$posterfile"' EXIT
+          for blob in \
+            bb93fd05bd6d35a24005bce7878e4615485eaaf7 \
+            a75209288ae669b06a20828fe2205ae0f46ba06b \
+            147fe9965e9dbfd83849b58427eda2ce5fa26a95 \
+            e8f6933012c8636e3617e76617c2c775001c43c6 \
+            3b774a2bb1200c6fdd6486fb48532ee3582ee6bf \
+            53ffe3eada608e6fd32f3211c9cef1cb611b8f21 \
+            0fdcb390091ef9150d19f2c912e7341cd8e20c27 \
+            95d0eb707d5cc68852ee1d2b0921e0c8410f07fc \
+            54520b2256c7fa217f32501b3014a67fb7bb557e \
+            1f5d16c5e85e9b0b246da5d3c502c4b67ddad779 \
+            5547be79ebbf4fd1b6ce04b982d4df641c7b138a \
+            09c9ad799bf0ee13c6fda4643f9d1021497ab150 \
+            ed930937ce53f0742adf718f2ecad3b3192a3ad7 \
+            b4a22bfc7b7203741bc990065b8fff1e8ea2d42c \
+            97fced6eb141e2b46ecc03865fb96b459ba80b17 \
+            9a9acc71b29b30a22cf097bb1ba07f9c732444cb \
+            f4a410605f69efc27f0ba1a22d3a90218d22c835 \
+            7a14f4705668b62b71cb3688b141070d9254a1ac \
+            16ca125f285a3066e9f55484cbce1c7e259501f5 \
+            ee4f4314aa9d538d720a0f87f27515aff29fed2d \
+            af49b74a411dfa5e6c687eb9502eba80f6e9dd49 \
+            e7135115d3049ef56cc52c668361b1b20160b856
+          do
+            curl --fail --silent --show-error --retry 3 \
+              -H "Authorization: Bearer ${GH_TOKEN}" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/${GITHUB_REPOSITORY}/git/blobs/${blob}" \
+              | jq -r '.content' | base64 --decode >> "$tmpfile"
+          done
+          test "$(wc -c < "$tmpfile" | tr -d ' ')" = "22231693"
+          echo "ed13efc961a86a7fbc0eaf4a0fa9902b00719f3adbf5a5f4090f32c51d98e8b8  $tmpfile" | sha256sum --check --status
+          echo "Approved Week 3 video: 22,231,693 bytes; SHA-256 verified"
+          curl --fail --silent --show-error --retry 3 \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/git/blobs/55512856b2d3590d00b8104c2da3e6f7601e821b" \
+            | jq -r '.content' | base64 --decode > "$posterfile"
+          test "$(wc -c < "$posterfile" | tr -d ' ')" = "73624"
+          cp "$tmpfile" assets/SNL_Week_3_Highlights_FIXED_Web.mp4
+          cp "$posterfile" assets/SNL_Week3_Approved_Video_Poster.webp
+      - name: Commit verified MP4 and approved video poster
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/SNL_Week_3_Highlights_FIXED_Web.mp4 assets/SNL_Week3_Approved_Video_Poster.webp
+          if git diff --cached --quiet; then
+            echo "Verified video and poster already present"
+            exit 0
+          fi
+          git commit -m "Publish verified corrected SNL Week 3 highlights MP4 and poster"
+          git push origin HEAD:main
