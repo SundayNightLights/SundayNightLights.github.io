@@ -480,6 +480,22 @@ function joinPage(){return `${pageHero('JOIN','SNL','Interested in playing Sunda
    window.setInterval(refreshMatchupPanels,30000);
    const body={home, schedule,live:livePage,standings:standingsPage,playoffs:playoffsPage,teams:teamsPage,team:teamPage,stats:statsPage,highlights:highlightsPage,article:articlePage,rules:rulesPage,tournaments:tournamentsPage,about:aboutPage,join:joinPage,registration:registrationPage}[page]||home;
    document.getElementById('app').innerHTML=`<div class="wrap">${body()}${footer()}</div>`;
+   // Show the approved Week 3 reel only after its actual MP4 exists on the website.
+   // The former Week 2 highlights video must never be substituted.
+   const week3VideoSlot=document.getElementById('snl-week3-video-slot');
+   if(week3VideoSlot){
+     const week3VideoPath='assets/week3-highlights-2026-11-15.mp4';
+     fetch(week3VideoPath,{method:'HEAD',cache:'no-store'}).then(response=>{
+       if(!response.ok)return;
+       week3VideoSlot.innerHTML='<h2>Week 3 Highlights: Under the Dome</h2>'+
+         '<p>Before looking ahead, revisit the biggest swings and standout moments from Week 3.</p>'+
+         '<figure class="article-video week3-video">'+
+         '<video controls playsinline preload="metadata" poster="assets/snl-dome-banner.webp" aria-label="Sunday Night Lights Week 3 softball highlights">'+
+         '<source src="'+week3VideoPath+'" type="video/mp4">Your browser does not support this video.</video>'+
+         '<figcaption>Week 3 highlights · Markham Sports Dome · November 15, 2026</figcaption></figure>';
+       week3VideoSlot.hidden=false;
+     }).catch(()=>{});
+   }
    initFeaturedVideoPlayback();
    if (location.hash === '#league-news') requestAnimationFrame(() => document.getElementById('league-news')?.scrollIntoView());
    if (location.hash === '#standings-tiebreakers') requestAnimationFrame(() => document.getElementById('standings-tiebreakers')?.scrollIntoView());
