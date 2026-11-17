@@ -353,22 +353,65 @@
 
   function leaders(){return `<div class="leader-cards">${[['Batting Average','AVG'],['Home Runs','HR'],['Runs Batted In','RBI'],['Hits','H']].map(([t,s])=>`<div class="leader-card"><b>${t.toUpperCase()}</b><small>${s}</small><strong>—</strong><span>Awaiting verified player statistics</span></div>`).join('')}</div>`;}
  function storyArt(s){if(s.id==='opener')return `${im('raccoons','one','')}${im('buffaloes','two','')}`;if(s.id==='expansion')return `${im('morsl','one','')}${im('iht','two','')}${im('maul','three','')}`;if(s.id==='trade')return `${im('maul','one','')}${im('iht','two','')}`;return ''}
- function stories(){return `<div class="stories-viewport"><button type="button" class="story-arrow story-arrow-prev" data-story-step="-1" aria-label="Previous featured stories"><span aria-hidden="true">‹</span></button><div class="stories" aria-label="Featured story carousel">${D.stories.map(s=>`<a class="story ${s.id}" href="article.html?id=${s.id}" aria-label="Read ${s.title}"><div class="story-illustration">${(s.id==='week3'||s.id==='week4')?`<video class="story-poster story-video" autoplay muted loop playsinline preload="metadata" poster="${s.id==='week4'?'assets/SNL_Week3_Approved_Video_Poster.webp':'assets/story-week3.webp'}" aria-hidden="true" tabindex="-1"><source src="${s.id==='week4'?'assets/SNL_Week_3_Highlights_FIXED_Web.mp4':'assets/week3-highlight.mp4'}" type="video/mp4"></video>`:`<img class="story-poster" src="${s.id==='week4'?'assets/snl-dome-banner.webp':`assets/story-${s.id}.webp${s.id==='week2'?'?v=snl-week2-rob-magzz-lowered-20261108':''}`}" alt="" loading="lazy">`}</div><span class="story-tag">${s.tag}</span><div class="story-bottom"><h3>${s.title}</h3><small>SNL NEWS · FEATURE</small></div></a>`).join('')}</div><button type="button" class="story-arrow story-arrow-next" data-story-step="1" aria-label="Next featured stories"><span aria-hidden="true">›</span></button></div>`;}
+ function stories(){return `<div class="stories-viewport"><button type="button" class="story-arrow story-arrow-prev" data-story-step="-1" aria-label="Previous featured stories"><span aria-hidden="true">‹</span></button><div class="stories" aria-label="Featured story carousel">${D.stories.map(s=>`<a class="story ${s.id}" href="article.html?id=${s.id}" aria-label="Read ${s.title}"><div class="story-illustration">${(s.id==='week3'||s.id==='week4')?`<video class="story-poster story-video" muted loop playsinline preload="metadata" poster="${s.id==='week4'?'assets/SNL_Week3_Approved_Video_Poster.webp':'assets/story-week3.webp'}" aria-hidden="true" tabindex="-1"><source src="${s.id==='week4'?'assets/SNL_Week_3_Highlights_FIXED_Web.mp4':'assets/week3-highlight.mp4'}" type="video/mp4"></video>`:`<img class="story-poster" src="${s.id==='week4'?'assets/snl-dome-banner.webp':`assets/story-${s.id}.webp${s.id==='week2'?'?v=snl-week2-rob-magzz-lowered-20261108':''}`}" alt="" loading="lazy">`}</div><span class="story-tag">${s.tag}</span><div class="story-bottom"><h3>${s.title}</h3><small>SNL NEWS · FEATURE</small></div></a>`).join('')}</div><button type="button" class="story-arrow story-arrow-next" data-story-step="1" aria-label="Next featured stories"><span aria-hidden="true">›</span></button></div>`;}
  function initFeaturedVideoPlayback(){
-   const videos=[...document.querySelectorAll('video.story-video')];
-   if(!videos.length)return;
-   const reduced=typeof window.matchMedia==='function'&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-   const toggle=v=>{
-     const box=v.getBoundingClientRect();
-     const visible=box.width>0&&box.height>0&&box.bottom>window.innerHeight*.1&&box.top<window.innerHeight*.9;
-     if(!reduced&&!document.hidden&&visible){v.play().catch(()=>{});}else{v.pause();}
-   };
-   const observer=typeof IntersectionObserver==='function'
-     ?new IntersectionObserver(entries=>{for(const e of entries)toggle(e.target);},{threshold:[0,.3,.6]})
-     :null;
-   videos.forEach(v=>{v.muted=true;if(observer)observer.observe(v);else toggle(v);});
-   document.addEventListener('visibilitychange',()=>videos.forEach(toggle));
-   if(!observer)window.addEventListener('scroll',()=>videos.forEach(toggle),{passive:true});
+   document.querySelectorAll('.stories-viewport').forEach(viewport=>{
+     const track=viewport.querySelector('.stories');
+     if(!track)return;
+     const cards=[...track.querySelectorAll('.story')];
+     const videos=[...track.querySelectorAll('video.story-video')];
+     if(!videos.length)return;
+
+     // Do not autoplay all visible previews: only the card at the carousel's leading edge plays.
+     const reduced=typeof window.matchMedia==='function'&&
+       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+     videos.forEach(video=>{video.muted=true;video.pause();});
+     let activeIndex=-1;
+     let scheduled=false;
+     const update=()=>{
+       scheduled=false;
+       const trackBox=track.getBoundingClientRect();
+       const visible=trackBox.width>0&&trackBox.height>0&&
+         trackBox.bottom>window.innerHeight*.1&&trackBox.top<window.innerHeight*.9;
+       let index=0;
+       let nearest=Infinity;
+       cards.forEach((card,i)=>{
+         const distance=Math.abs(card.getBoundingClientRect().left-trackBox.left);
+         if(distance<nearest){nearest=distance;index=i;}
+       });
+       const switched=index!==activeIndex;
+       activeIndex=index;
+       const current=cards[index]?.querySelector('video.story-video')||null;
+       videos.forEach(video=>{if(video!==current&&!video.paused)video.pause();});
+       if(switched&&current){
+         current.pause();
+         try{current.currentTime=0;}catch(_){}
+       }
+       if(reduced||document.hidden||!visible||!current){
+         if(current&&!current.paused)current.pause();
+         return;
+       }
+       if(current.paused)current.play().catch(()=>{});
+     };
+     const schedule=()=>{
+       if(scheduled)return;
+       scheduled=true;
+       window.requestAnimationFrame(update);
+     };
+     track.addEventListener('scroll',schedule,{passive:true});
+     window.addEventListener('scroll',schedule,{passive:true});
+     window.addEventListener('resize',schedule,{passive:true});
+     document.addEventListener('visibilitychange',schedule);
+     if(typeof IntersectionObserver==='function'){
+       const observer=new IntersectionObserver(schedule,{threshold:[0,.15,.5]});
+       observer.observe(viewport);
+     }
+     if(typeof ResizeObserver==='function'){
+       const observer=new ResizeObserver(schedule);
+       observer.observe(track);
+     }
+     schedule();
+   });
  }
  function home(){return `${hero()}<section class="section" id="featured">${sectionHead('FEATURED','STORIES','VIEW ALL STORIES ›','highlights.html')}${stories()}<div class="newsline"><b>LEAGUE NEWS</b><span class="news-updates"><span><strong>NOV 2</strong> Time slots changed for Weeks 2, 8 &amp; 9. <a class="news-inline-link" href="schedule.html">Check schedule ›</a></span></span><a href="highlights.html#league-news">VIEW ALL NEWS ›</a></div></section><section class="split"><div><div class="section-top"><div><h2>UPCOMING <em>GAMES</em></h2><div class="section-rule"></div></div><a href="schedule.html">VIEW FULL SCHEDULE ›</a></div><div id="snlHomeGamesPanel">${gamesPanel(false)}</div></div><div><div class="section-top"><div><h2>LEAGUE <em>STANDINGS</em></h2><div class="section-rule"></div></div><a href="standings.html">FULL TABLE ›</a></div>${standingsTable(true)}</div></section><section class="section">${sectionHead('LEAGUE','LEADERS','VIEW ALL STATS ›','stats.html')}<p class="hint" style="margin:0 0 13px">Batting leaderboard preview · GameChanger figures may be inaccurate</p>${leaders()}</section><section class="join-home-prompt"><div><strong>INTERESTED IN JOINING SNL?</strong><p>Bring a team or join as a free agent. Explore your options for future sessions.</p></div><a class="join-home-action" href="join.html">JOIN SNL ›</a></section><section class="flat-card" style="display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap"><div><b style="color:var(--yellow);font-size:13px">PLAYER REGISTRATION &amp; WAIVERS</b><p class="section-note" style="margin:6px 0 0">Roster registration and league waivers are being prepared.</p></div><a class="neutral-link" href="registration.html">HOW IT WILL WORK ›</a></section>`;}
  const pageHero=(a,b,sub='',action='')=>`<div class="page-hero"><div><h1>${a} <em>${b}</em></h1><p>${sub}</p></div>${action}</div>`;
