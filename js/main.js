@@ -484,7 +484,7 @@ function joinPage(){return `${pageHero('JOIN','SNL','Interested in playing Sunda
    // The former Week 2 highlights video must never be substituted.
    const week3VideoSlot=document.getElementById('snl-week3-video-slot');
    if(week3VideoSlot){
-     const week3VideoPath='assets/SNL_Week_3_Highlights_Final_Approved_Opener_Web.mp4';
+     const week3VideoPath='assets/SNL_Week_3_Highlights_FIXED_Web.mp4';
      fetch(week3VideoPath,{method:'HEAD',cache:'no-store'}).then(response=>{
        if(!response.ok)return;
        week3VideoSlot.innerHTML='<h2>Week 3 Highlights: Under the Dome</h2>'+
