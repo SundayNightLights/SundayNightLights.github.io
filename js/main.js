@@ -490,7 +490,7 @@ function joinPage(){return `${pageHero('JOIN','SNL','Interested in playing Sunda
        week3VideoSlot.innerHTML='<h2>Week 3 Highlights: Under the Dome</h2>'+
          '<p>Before looking ahead, revisit the biggest swings and standout moments from Week 3.</p>'+
          '<figure class="article-video week3-video">'+
-         '<video controls playsinline preload="metadata" poster="assets/snl-dome-banner.webp" aria-label="Sunday Night Lights Week 3 softball highlights">'+
+         '<video controls playsinline preload="metadata" poster="assets/SNL_Week3_Approved_Video_Poster.webp" aria-label="Sunday Night Lights Week 3 softball highlights">'+
          '<source src="'+week3VideoPath+'" type="video/mp4">Your browser does not support this video.</video>'+
          '<figcaption>Week 3 highlights · Markham Sports Dome · November 15, 2026</figcaption></figure>';
        week3VideoSlot.hidden=false;
