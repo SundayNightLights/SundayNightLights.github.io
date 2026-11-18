@@ -505,7 +505,15 @@ function joinPage(){return `${pageHero('JOIN','SNL','Interested in playing Sunda
 <section class="flat-card join-detail" id="join-team"><span class="info-kicker">PROSPECTIVE TEAMS</span><h2>BRING YOUR TEAM TO SNL</h2><p class="section-note">Contact the league to express interest in a future season. Team spots and league arrangements will be confirmed directly by SNL.</p><a class="neutral-link" href="https://www.instagram.com/snl_416/" target="_blank" rel="noopener noreferrer">MESSAGE SNL ON INSTAGRAM ↗</a></section>
 <section class="flat-card join-detail" id="join-free-agent"><span class="info-kicker">INDIVIDUAL PLAYERS</span><h2>LOOKING FOR A TEAM?</h2><p class="section-note">Free agents can get in touch to introduce themselves and ask about possible openings. Placement is not guaranteed and no personal information is collected on this website.</p><a class="neutral-link" href="https://www.instagram.com/snl_416/" target="_blank" rel="noopener noreferrer">MESSAGE SNL ON INSTAGRAM ↗</a></section>
 <div class="notice">Already on an SNL team? The separate <a href="registration.html">Registration &amp; Waivers</a> page is for existing-player administration once that process opens.</div>`;}
- function registrationPage(){return `${pageHero('PLAYER','REGISTRATION','Registration, team rosters and league waiver process')}<div class="notice"><b>Registration is not open yet.</b> This is an information page. No form is connected and no personal information is being collected through this website.</div><div class="register-steps"><div class="register-step"><span class="step">STEP 01</span><h3>Player Information</h3><p>Players will provide their name, team, private contact details and optional jersey information.</p></div><div class="register-step"><span class="step">STEP 02</span><h3>League Waiver</h3><p>Players will review and complete the approved SNL waiver through an appropriate secure process.</p></div><div class="register-step"><span class="step">STEP 03</span><h3>Roster Approval</h3><p>League administrators can verify registrations before approved names appear on public team rosters.</p></div></div><div class="flat-card" style="margin-top:18px"><h2>Player Privacy</h2><p class="section-note">Email addresses, phone numbers, and signed waivers will not appear in public player profiles. Registration and waiver storage will be configured before the form goes live.</p></div>`;}
+ function registrationPage(){return `${pageHero('PLAYER','REGISTRATION','One SNL profile for league seasons, tournaments and waivers')}
+<section class="flat-card info-landing"><span class="info-kicker">PLAYER REGISTRATION &amp; WAIVERS</span>
+<h2>ONE PROFILE. INDOOR &amp; OUTDOOR.</h2>
+<p class="section-note">We're designing secure player registration for league seasons and SNL tournaments. Each player will use their preferred public display name, while legal names and signed waivers remain private.</p>
+<div class="notice"><strong>DESIGN PREVIEW ONLY — REGISTRATION IS NOT OPEN.</strong> The example below does not accept real registrations, invitations, personal information or electronic signatures. Please use only sample details when exploring it.</div>
+</section>
+<div id="snl-reg-preview" aria-label="SNL interactive registration design preview"></div>
+<section class="flat-card info-landing" style="margin-top:20px"><h2>WHAT COMES NEXT</h2><p class="section-note">Before opening registration, SNL will approve the indoor and outdoor agreements, set up secure email sign-in and private storage, link returning player identities to their historical statistics, and establish captain and administrator permissions.</p><p class="section-note"><strong>Privacy:</strong> captains will see registration and eligibility status, not legal names, private contact details or signed waiver documents.</p></section>`;}
+
  async function init(){
    document.getElementById('app').innerHTML='<div class="wrap"><div class="notice">Loading the latest SNL schedule and standings…</div></div>';
    try{
@@ -523,6 +531,7 @@ function joinPage(){return `${pageHero('JOIN','SNL','Interested in playing Sunda
    window.setInterval(refreshMatchupPanels,30000);
    const body={home, schedule,live:livePage,standings:standingsPage,playoffs:playoffsPage,teams:teamsPage,team:teamPage,stats:statsPage,highlights:highlightsPage,article:articlePage,rules:rulesPage,tournaments:tournamentsPage,about:aboutPage,join:joinPage,registration:registrationPage}[page]||home;
    document.getElementById('app').innerHTML=`<div class="wrap">${body()}${footer()}</div>`;
+   if(page==='registration' && window.SNLRegistrationPreview?.init)window.SNLRegistrationPreview.init();
    // Show the approved Week 3 reel only after its actual MP4 exists on the website.
    // The former Week 2 highlights video must never be substituted.
    const week3VideoSlot=document.getElementById('snl-week3-video-slot');
