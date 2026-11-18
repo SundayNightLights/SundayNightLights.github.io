@@ -505,14 +505,17 @@ function joinPage(){return `${pageHero('JOIN','SNL','Interested in playing Sunda
 <section class="flat-card join-detail" id="join-team"><span class="info-kicker">PROSPECTIVE TEAMS</span><h2>BRING YOUR TEAM TO SNL</h2><p class="section-note">Contact the league to express interest in a future season. Team spots and league arrangements will be confirmed directly by SNL.</p><a class="neutral-link" href="https://www.instagram.com/snl_416/" target="_blank" rel="noopener noreferrer">MESSAGE SNL ON INSTAGRAM ↗</a></section>
 <section class="flat-card join-detail" id="join-free-agent"><span class="info-kicker">INDIVIDUAL PLAYERS</span><h2>LOOKING FOR A TEAM?</h2><p class="section-note">Free agents can get in touch to introduce themselves and ask about possible openings. Placement is not guaranteed and no personal information is collected on this website.</p><a class="neutral-link" href="https://www.instagram.com/snl_416/" target="_blank" rel="noopener noreferrer">MESSAGE SNL ON INSTAGRAM ↗</a></section>
 <div class="notice">Already on an SNL team? The separate <a href="registration.html">Registration &amp; Waivers</a> page is for existing-player administration once that process opens.</div>`;}
- function registrationPage(){return `${pageHero('PLAYER','REGISTRATION','One SNL profile for league seasons, tournaments and waivers')}
-<section class="flat-card info-landing"><span class="info-kicker">PLAYER REGISTRATION &amp; WAIVERS</span>
-<h2>ONE PROFILE. INDOOR &amp; OUTDOOR.</h2>
-<p class="section-note">We're designing secure player registration for league seasons and SNL tournaments. Each player will use their preferred public display name, while legal names and signed waivers remain private.</p>
-<div class="notice"><strong>DESIGN PREVIEW ONLY — REGISTRATION IS NOT OPEN.</strong> The example below does not accept real registrations, invitations, personal information or electronic signatures. Please use only sample details when exploring it.</div>
+ function registrationPage(){return `${pageHero('PLAYER','REGISTRATION & WAIVERS','Explore the new SNL player signup and waiver experience')}
+<section class="flat-card info-landing"><span class="info-kicker">SNL PLAYER REGISTRATION</span>
+<h2>ONE PROFILE. EVERY SEASON.</h2>
+<p class="section-note">Test the planned signup experience, including your playing profile, a sample indoor or outdoor waiver, returning-player recognition and the captain roster dashboard.</p>
+<div class="notice"><strong>TEST MODE — REGISTRATION IS NOT OPEN.</strong> Use fictional details only. The sample waiver is not a legal agreement and the test does not save information, collect signatures, send invitations or create accounts.</div>
 </section>
-<div id="snl-reg-preview" aria-label="SNL interactive registration design preview"></div>
-<section class="flat-card info-landing" style="margin-top:20px"><h2>WHAT COMES NEXT</h2><p class="section-note">Before opening registration, SNL will approve the indoor and outdoor agreements, set up secure email sign-in and private storage, link returning player identities to their historical statistics, and establish captain and administrator permissions.</p><p class="section-note"><strong>Privacy:</strong> captains will see registration and eligibility status, not legal names, private contact details or signed waiver documents.</p></section>`;}
+<div id="snl-reg-preview" aria-label="Interactive SNL registration and waiver demo"></div>
+<section class="flat-card info-landing" style="margin-top:20px"><h2>BEFORE LIVE REGISTRATION OPENS</h2>
+<p class="section-note">SNL must finalize and obtain legal and facility approval for its waiver agreements, establish secure sign-in and private waiver storage, confirm its privacy and media practices, and test the captain/admin approval system.</p>
+<p class="section-note"><strong>Privacy by design:</strong> The public website will show approved roster names and sports records. Captains will see waiver and registration status, not legal names or signed waiver documents.</p>
+</section>`;}
 
  async function init(){
    document.getElementById('app').innerHTML='<div class="wrap"><div class="notice">Loading the latest SNL schedule and standings…</div></div>';
