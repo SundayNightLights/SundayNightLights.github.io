@@ -1,0 +1,75 @@
+
+/* SNL Player Registration: isolated, non-collecting design preview */
+#snl-reg-preview{max-width:1000px;margin:28px auto 34px}
+.snl-rp-top{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:22px}
+.snl-rp-eyebrow{font-size:11px;font-weight:900;letter-spacing:1.8px;color:var(--yellow)}
+.snl-rp-top h2{font-size:clamp(27px,4vw,39px);margin:7px 0 5px;line-height:1.1;letter-spacing:-.8px}
+.snl-rp-top p{margin:0;color:var(--muted);font-size:15px;line-height:1.6}
+.snl-rp-demo-badge{border:1px solid #ac9224;background:#333420;color:#ffe55e;font-size:10px;font-weight:900;letter-spacing:.8px;padding:9px 12px;border-radius:5px;text-align:center;white-space:nowrap}
+.snl-rp-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:15px}
+.snl-rp-tabs button{padding:12px 19px;border:1px solid #52718c;border-radius:7px;background:#0a243b;color:#cadbe8;font-weight:900;font-size:12px;letter-spacing:.6px}
+.snl-rp-tabs button[aria-pressed=true]{background:var(--yellow);color:#06182b;border-color:var(--yellow)}
+.snl-rp-panel{border:1px solid #4b6b86;border-radius:12px;background:linear-gradient(155deg,#11334f,#071e32);box-shadow:0 16px 34px #0003;padding:clamp(20px,3.5vw,34px)}
+.snl-rp-heading h3{font-size:24px;margin:0 0 7px;font-weight:900}
+.snl-rp-heading p{font-size:14px;line-height:1.6;color:#b9cede;margin:0 0 22px;max-width:730px}
+.snl-rp-stepper{display:flex;justify-content:space-between;gap:8px;margin:0 0 15px}
+.snl-rp-stepper span{flex:1;border-top:3px solid #3b5a74;padding-top:9px;color:#aabccc;text-transform:uppercase;font-size:10px;font-weight:900;letter-spacing:.5px}
+.snl-rp-stepper span.current{border-color:#ffde19;color:#ffde19}
+.snl-rp-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:17px 18px}
+.snl-rp-field{display:flex;flex-direction:column;gap:7px;font-size:12px;font-weight:900;color:#eef4fa}
+.snl-rp-field span em{font-size:10px;color:#a7bbc9;font-style:normal;font-weight:600;display:block;margin-top:3px}
+.snl-rp-field input,.snl-rp-field select{appearance:auto;width:100%;height:44px;border:1px solid #5a7792;border-radius:6px;background:#061c30;color:#f8fbff;font:inherit;font-size:14px;font-weight:500;padding:0 12px}
+.snl-rp-field input::placeholder{color:#859aab}
+.snl-rp-field input:focus,.snl-rp-field select:focus{outline:2px solid #ffde19;outline-offset:2px}
+.snl-rp-disabled{display:flex;align-items:center;min-height:44px;border:1px dashed #597187;border-radius:6px;padding:9px 12px;background:#193248;color:#a8c1d2;font-size:12px;font-weight:500}
+.snl-rp-pref{margin:23px 0 17px;border:1px solid #385876;border-radius:7px;padding:15px}
+.snl-rp-pref legend{font-size:13px;font-weight:900;padding:0 5px;color:#f5f8fb}
+.snl-rp-pref legend span{font-size:11px;color:#aac0d2;font-weight:500;margin-left:4px}
+.snl-rp-checks{display:flex;flex-wrap:wrap;gap:12px 22px}
+.snl-rp-checks label{font-size:13px;color:#dbe6f0;display:flex;align-items:center;gap:7px}
+.snl-rp-checks input{accent-color:#ffde19;width:17px;height:17px}
+.snl-rp-note{border-left:3px solid #ffde19;background:#172f43;padding:13px 16px;margin-top:18px;color:#d0e0ed;font-size:13px;line-height:1.6}
+.snl-rp-actions{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;margin-top:24px}
+.snl-rp-primary,.snl-rp-secondary{border:1px solid #f6d523;padding:11px 17px;border-radius:6px;font-size:12px;font-weight:900}
+.snl-rp-primary{background:#ffde19;color:#07172b}
+.snl-rp-secondary{background:#0d2a42;color:#eff5fa;border-color:#536c80}
+.snl-rp-primary:hover{background:#f2d016}.snl-rp-secondary:hover{background:#1b3d58}
+.snl-rp-waiver{padding:20px;border:1px solid #516879;border-radius:8px;background:#f4f6f7;color:#172537;margin-bottom:22px}
+.snl-rp-waiver-label{color:#826300;font-weight:900;letter-spacing:1px;font-size:10px;margin-bottom:9px}
+.snl-rp-waiver h4{margin:0 0 9px;font-size:19px}
+.snl-rp-waiver p{font-size:13px;line-height:1.65;margin:8px 0;color:#324454}
+.snl-rp-success-icon{width:54px;height:54px;border:2px solid #a6d9b9;color:#a6d9b9;border-radius:50%;display:grid;place-items:center;font-size:30px;margin-bottom:18px}
+.snl-rp-complete>h3{font-size:23px;margin:0 0 9px}.snl-rp-complete>p{font-size:14px;color:#c3d6e5;line-height:1.6}
+.snl-rp-summary{border:1px solid #3f5c73;border-radius:8px;overflow:hidden;margin-top:20px}
+.snl-rp-summary h4{font-size:14px;padding:15px 16px;margin:0;background:#0a263e}
+.snl-rp-status-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;border-top:1px solid #344f66}
+.snl-rp-status-row:first-child{border-top:0}
+.snl-rp-status-row strong{display:block;font-size:13px}
+.snl-rp-status-row small{display:block;color:#b5c9d9;margin-top:4px;font-size:11px}
+.snl-rp-pill{display:inline-block;font-size:10px;font-weight:900;white-space:nowrap;color:#c8d9e8;border:1px solid #5a6e7d;border-radius:50px;padding:6px 10px}
+.snl-rp-pill.good{background:#14392e;color:#a8e8c4;border-color:#3f8d6c}
+.snl-rp-pill.pending{background:#3a3021;color:#ffdc8a;border-color:#846d41}
+.snl-rp-example-profile{display:flex;align-items:center;gap:15px;border:1px solid #44647d;border-radius:9px;padding:17px;background:#0a273d}
+.snl-rp-example-profile>div:nth-child(2){flex:1}
+.snl-rp-avatar{display:flex;align-items:center;justify-content:center;width:62px;height:62px;border-radius:9px;background:#ffde19;color:#06192b;font-size:22px;font-weight:900}
+.snl-rp-example-profile small{font-size:10px;font-weight:900;letter-spacing:.8px;color:#ebd252}
+.snl-rp-example-profile h4{font-size:22px;margin:4px 0}
+.snl-rp-example-profile p{font-size:12px;color:#b9cddd;margin:0}
+.snl-rp-returning .snl-rp-summary{margin-top:14px}
+.snl-rp-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.snl-rp-metrics>div{background:#08253b;border:1px solid #41647f;border-radius:7px;padding:16px}
+.snl-rp-metrics strong{font-size:29px;display:block;color:#fff}
+.snl-rp-metrics small{font-size:11px;color:#acc1d2}
+.snl-rp-invite{display:flex;justify-content:space-between;align-items:center;gap:20px;border:1px dashed #c3a425;padding:18px;background:#252b29;border-radius:8px;margin-bottom:19px}
+.snl-rp-invite strong{font-size:14px}
+.snl-rp-invite p{font-size:12px;color:#c3d1d8;line-height:1.55;margin:5px 0 0}
+.snl-rp-invite button{background:#5f6070;color:#efeff4;padding:10px 12px;border:0;border-radius:5px;font-size:11px;font-weight:900;opacity:.75;cursor:not-allowed;white-space:nowrap}
+.snl-rp-filter{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.snl-rp-filter button{padding:7px 12px;font-size:11px;font-weight:900;background:#11344f;border:1px solid #496d86;color:#c8dae8;border-radius:5px}
+.snl-rp-filter button[aria-pressed=true]{color:#07172b;background:#ffde19;border-color:#ffde19}
+.snl-rp-table-wrap{overflow-x:auto;border-radius:8px;border:1px solid #3e5e78}
+.snl-rp-table{width:100%;border-collapse:collapse;min-width:440px;text-align:left}
+.snl-rp-table th{padding:13px;background:#09243a;color:#a9c0d1;font-size:10px;letter-spacing:.8px}
+.snl-rp-table td{padding:13px;color:#f1f6fb;font-size:13px;border-top:1px solid #36536b}
+.snl-rp-footer{font-size:12px;text-align:center;color:#b5c7d7;line-height:1.6;margin:14px 0}
+@media(max-width:740px){.snl-rp-top{flex-direction:column}.snl-rp-demo-badge{white-space:normal}.snl-rp-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}.snl-rp-tabs button{padding:11px 6px;font-size:11px}.snl-rp-grid{grid-template-columns:1fr}.snl-rp-panel{padding:19px}.snl-rp-heading h3{font-size:21px}.snl-rp-stepper span{font-size:9px}.snl-rp-invite{flex-direction:column;align-items:flex-start}.snl-rp-actions button{flex:1}.snl-rp-status-row{align-items:flex-start}.snl-rp-example-profile{flex-wrap:wrap}.snl-rp-metrics{gap:7px}.snl-rp-metrics>div{padding:12px}.snl-rp-metrics strong{font-size:24px}}
