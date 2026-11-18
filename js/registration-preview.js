@@ -1,4 +1,4 @@
-(function snlRegistrationPreview(){
+function snlRegistrationPreview(){
   "use strict";
   const root=document.getElementById("snl-reg-preview");
   if(!root || root.dataset.initialized==="yes")return;
@@ -101,5 +101,4 @@
     if(el.dataset.pref)state.prefs[el.dataset.pref]=el.checked;
   });
   render();
-});
-window.SNLRegistrationPreview={init:snlRegistrationPreview};
+}window.SNLRegistrationPreview={init:snlRegistrationPreview};
