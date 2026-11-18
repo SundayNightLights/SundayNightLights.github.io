@@ -22,8 +22,8 @@ function snlRegistrationPreview(){
           <label class="snl-rp-field"><span>First Name <em>Public · SNL approval required</em></span><input data-field="rosterFirst" value="${escapeHtml(d.rosterFirst)}" placeholder="e.g. Michael or Mike" autocomplete="off"></label>
           <label class="snl-rp-field"><span>Last Name <em>Public · SNL approval required</em></span><input data-field="rosterLast" value="${escapeHtml(d.rosterLast)}" placeholder="e.g. Smith" autocomplete="off"></label>
           <label class="snl-rp-field"><span>Email for secure sign-in <em>Private</em></span><input type="email" data-field="email" value="${escapeHtml(d.email)}" placeholder="e.g. player@example.com" autocomplete="off"></label>
-          <label class="snl-rp-field"><span>Jersey number <em>Season-specific · Optional</em></span><input data-field="number" value="${escapeHtml(d.number)}" placeholder="e.g. 27" maxlength="3" inputmode="numeric" autocomplete="off"></label>
-          <label class="snl-rp-field"><span>Participation type</span><select data-field="season"><option value="indoor"${selected(d.season,"indoor")}>Indoor · Fall / Winter</option><option value="outdoor"${selected(d.season,"outdoor")}>Outdoor · Spring / Summer</option></select></label>
+          <label class="snl-rp-field"><span>Jersey Number <em>Required · Can change by team or season</em></span><input data-field="number" value="${escapeHtml(d.number)}" placeholder="e.g. 27 or 00" maxlength="3" inputmode="numeric" required autocomplete="off"></label>
+          <div class="snl-rp-field"><span>Registration for <em>Assigned by your team or event invitation</em></span><div class="snl-rp-disabled"><strong>Indoor softball · Fall / Winter</strong> <small>Example invitation</small></div></div>
           <label class="snl-rp-field"><span>Bats <em>Required</em></span><select data-field="bats" required><option value="" disabled${selected(d.bats,"")}>Select batting side</option><option value="R"${selected(d.bats,"R")}>Right</option><option value="L"${selected(d.bats,"L")}>Left</option><option value="S"${selected(d.bats,"S")}>Switch</option></select></label>
           <label class="snl-rp-field"><span>Throws <em>Required</em></span><select data-field="throws" required><option value="" disabled${selected(d.throws,"")}>Select throwing hand</option><option value="R"${selected(d.throws,"R")}>Right</option><option value="L"${selected(d.throws,"L")}>Left</option></select></label>
         </div>
@@ -31,8 +31,9 @@ function snlRegistrationPreview(){
         <div class="snl-rp-checks"><label><input type="radio" name="snl-rp-preferred-area" value="IF" data-pref="IF"${checked(state.preferredArea==="IF")}> Infield (includes catcher)</label><label><input type="radio" name="snl-rp-preferred-area" value="OF" data-pref="OF"${checked(state.preferredArea==="OF")}> Outfield</label><label><input type="radio" name="snl-rp-preferred-area" value="P" data-pref="P"${checked(state.preferredArea==="P")}> Pitcher</label><label><input type="radio" name="snl-rp-preferred-area" value="UTIL" data-pref="UTIL"${checked(state.preferredArea==="UTIL")}> Utility (multiple positions)</label></div>
         ${state.preferredArea?'<button type="button" class="snl-rp-clear" data-action="clear-pref">Clear preference</button>':""}
         </fieldset>
+        <div class="snl-rp-note"><strong>Registration context:</strong> The live system will determine indoor or outdoor coverage from the captain invitation, season or tournament link. Players should not have to choose a session just to register. A general sign-up without a link can ask which activity they want to join.</div>
         <div class="snl-rp-note"><strong>Professional roster names:</strong> Use the first name you normally go by, such as Mike instead of Michael, and your roster last name. Gamer tags, joke names and made-up titles will not be published. SNL reviews names before they appear on the public website. Your legal full name is collected privately for the waiver.</div>
-        ${state.showRequiredFields && (!d.bats || !d.throws)?'<p class="snl-rp-required" role="alert">Please select your batting side and throwing hand before continuing.</p>':""}
+        ${state.showRequiredFields && (!/^\d{1,3}$/.test(d.number.trim()) || !d.bats || !d.throws)?'<p class="snl-rp-required" role="alert">Please enter a jersey number (up to three digits) and choose your batting side and throwing hand before continuing.</p>':""}
         <div class="snl-rp-actions"><button type="button" class="snl-rp-primary" data-action="next">Preview waiver step <span aria-hidden="true">→</span></button></div>
       </div>`;
     }
@@ -89,7 +90,7 @@ function snlRegistrationPreview(){
     if(el.dataset.regTab){state.view=el.dataset.regTab;render();return;}
     if(el.dataset.tabDirect){state.view=el.dataset.tabDirect;render();return;}
     if(el.dataset.filter){state.filter=el.dataset.filter;render();return;}
-    if(el.dataset.action==="next"){if(state.view==="new"&&state.step===1&&(!state.fields.bats||!state.fields.throws)){state.showRequiredFields=true;render();return;}state.showRequiredFields=false;state.step=Math.min(3,state.step+1);render();}
+    if(el.dataset.action==="next"){if(state.view==="new"&&state.step===1&&(!/^\d{1,3}$/.test(state.fields.number.trim())||!state.fields.bats||!state.fields.throws)){state.showRequiredFields=true;render();return;}state.showRequiredFields=false;state.step=Math.min(3,state.step+1);render();}
     if(el.dataset.action==="clear-pref"){state.preferredArea="";render();return;}
     if(el.dataset.action==="back"){state.step=Math.max(1,state.step-1);render();}
     if(el.dataset.action==="restart"){state.step=1;state.fields={rosterFirst:"",rosterLast:"",email:"",number:"",bats:"",throws:"",season:"indoor"};state.preferredArea="";state.showRequiredFields=false;render();}
