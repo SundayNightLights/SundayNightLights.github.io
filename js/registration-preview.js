@@ -19,8 +19,8 @@ function snlRegistrationPreview(){
       return `${steps}<div class="snl-rp-panel">
         <div class="snl-rp-heading"><h3>Create your player profile</h3><p>One profile for leagues, tournaments and career statistics. Use sample information in this preview.</p></div>
         <div class="snl-rp-grid">
-          <label class="snl-rp-field"><span>First name for roster <em>Public · SNL approval required</em></span><input data-field="rosterFirst" value="${escapeHtml(d.rosterFirst)}" placeholder="e.g. Michael or Mike" autocomplete="off"></label>
-          <label class="snl-rp-field"><span>Last name for roster <em>Public · SNL approval required</em></span><input data-field="rosterLast" value="${escapeHtml(d.rosterLast)}" placeholder="e.g. Smith" autocomplete="off"></label>
+          <label class="snl-rp-field"><span>First Name <em>Public · SNL approval required</em></span><input data-field="rosterFirst" value="${escapeHtml(d.rosterFirst)}" placeholder="e.g. Michael or Mike" autocomplete="off"></label>
+          <label class="snl-rp-field"><span>Last Name <em>Public · SNL approval required</em></span><input data-field="rosterLast" value="${escapeHtml(d.rosterLast)}" placeholder="e.g. Smith" autocomplete="off"></label>
           <label class="snl-rp-field"><span>Email for secure sign-in <em>Private</em></span><input type="email" data-field="email" value="${escapeHtml(d.email)}" placeholder="e.g. player@example.com" autocomplete="off"></label>
           <label class="snl-rp-field"><span>Jersey number <em>Season-specific · Optional</em></span><input data-field="number" value="${escapeHtml(d.number)}" placeholder="e.g. 27" maxlength="3" inputmode="numeric" autocomplete="off"></label>
           <label class="snl-rp-field"><span>Participation type</span><select data-field="season"><option value="indoor"${selected(d.season,"indoor")}>Indoor · Fall / Winter</option><option value="outdoor"${selected(d.season,"outdoor")}>Outdoor · Spring / Summer</option></select></label>
