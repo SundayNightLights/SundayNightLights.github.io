@@ -6,18 +6,47 @@ function snlRegistrationDemo(){
   const events={
     fall:{label:"2026–27 Fall League",kind:"indoor"},
     summer:{label:"2027 Summer League",kind:"outdoor"},
-    tournament:{label:"2027 Winter Indoor Tournament",kind:"indoor"}
+    tournament:{label:"2027 Winter Indoor Tournament",kind:"indoor"},outdoorTourney:{label:"2027 Summer Outdoor Tournament",kind:"outdoor"}
   };
   const sample=()=>({first:"",last:"",email:"",jersey:"",bats:"",throws:"",position:""});
   const blankWaiver=()=>({media:"",read:false,demo:false,code:""});
-  const st={view:"new",step:1,event:"fall",data:sample(),waiver:blankWaiver(),error:"",done:false,skipped:false,editing:false,returning:false,filter:"all",joined:[]};
+  const st={view:"new",step:1,event:"fall",data:sample(),waiver:blankWaiver(),error:"",done:false,skipped:false,editing:false,returning:false,filter:"all",joined:[],tournamentData:{first:"",last:"",email:""}};
   const e=s=>String(s??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
   const sel=(x,y)=>x===y?" selected":"";
   const chk=v=>v?" checked":"";
   const current=()=>events[st.event];
   const status=(name,detail,txt,good)=>`<div class="snl-rp-status-row"><div><strong>${name}</strong><small>${detail}</small></div><span class="snl-rp-pill ${good?"good":"pending"}">${txt}</span></div>`;
   const hasFields=()=>!!(st.data.first.trim()&&st.data.last.trim()&&/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(st.data.email.trim())&&/^\d{1,3}$/.test(st.data.jersey.trim())&&["R","L","S"].includes(st.data.bats)&&["R","L"].includes(st.data.throws));
+  const hasTournamentFields=()=>!!(st.tournamentData.first.trim()&&st.tournamentData.last.trim()&&/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(st.tournamentData.email.trim()));
   const hasWaiver=()=>st.waiver.read&&st.waiver.demo&&!!st.waiver.media&&st.waiver.code.trim().toUpperCase()==="DEMO";
+
+  function tournamentIntro(){
+    const p=st.tournamentData;
+    return `<div class="snl-rp-panel"><div class="snl-rp-heading"><h3>Tournament waiver only</h3><p>For players joining an SNL tournament without signing up for a league or creating a website account. Enter sample information only.</p></div>
+      <div class="snl-rp-demo-event"><small>EXAMPLE TOURNAMENT INVITATION</small><strong>${e(current().label)}</strong><span>Example Tournament Team · ${current().kind==="indoor"?"Indoor":"Outdoor"} waiver</span></div>
+      <div class="snl-rp-grid">
+        <label class="snl-rp-field"><span>Legal First Name <em>Required for real waiver · Private</em></span><input data-tournament="first" value="${e(p.first)}" maxlength="60" placeholder="e.g. Alex" autocomplete="off"></label>
+        <label class="snl-rp-field"><span>Legal Last Name <em>Required for real waiver · Private</em></span><input data-tournament="last" value="${e(p.last)}" maxlength="60" placeholder="e.g. Example" autocomplete="off"></label>
+        <label class="snl-rp-field"><span>Email <em>For waiver confirmation · Private</em></span><input type="email" data-tournament="email" value="${e(p.email)}" placeholder="e.g. alex@example.com" autocomplete="off"></label>
+        <div class="snl-rp-field"><span>Event / Team <em>Already assigned by captain invitation</em></span><div class="snl-rp-disabled">Example Tournament Team · ${e(current().label)}</div></div>
+      </div>
+      <div class="snl-rp-note"><strong>Waiver only.</strong> No jersey number, batting side, throwing hand or position is needed. The real organizer would see completion status, not the participant's private waiver details.</div>
+      ${st.error?`<p class="snl-rp-required" role="alert">${e(st.error)}</p>`:""}
+      <div class="snl-rp-actions"><button type="button" class="snl-rp-primary" data-action="tournament-next">Review full tournament waiver →</button></div></div>`;
+  }
+  function tournamentComplete(){
+    return `<div class="snl-rp-panel snl-rp-complete">
+      <div class="snl-rp-success-icon" aria-hidden="true">✓</div>
+      <h3>Tournament waiver demo complete</h3>
+      <p>No league registration, website account, permanent player ID or official waiver record has been created. This is only a test confirmation.</p>
+      <div class="snl-rp-summary">
+        ${status("Event",e(current().label)+" · Example Tournament Team","Demo only",true)}
+        ${status("Waiver",current().kind==="indoor"?"Indoor draft":"Outdoor draft","Demo completed",true)}
+        ${status("Player account","Not required for tournament-only participants","Not created",true)}
+        ${status("Organizer verification","Would be shown in the authorized event dashboard","Example only",true)}
+      </div>
+      <div class="snl-rp-actions"><button type="button" class="snl-rp-secondary" data-action="tournament-restart">Test another waiver →</button><button type="button" class="snl-rp-primary" data-view="new">See league signup →</button></div></div>`;
+  }
   function profile(){
     const d=st.data;
     return `<div class="snl-rp-panel"><div class="snl-rp-heading"><h3>${st.editing?"Edit demo profile":"Player registration"}</h3><p>Enter fictional information to test this page. Nothing is saved or submitted.</p></div>
@@ -50,7 +79,7 @@ function snlRegistrationDemo(){
     ? "ALL SPORT, INCLUDING INDOOR SOFTBALL, HAS ITS RISKS."
     : "ALL SPORT, INCLUDING OUTDOOR SOFTBALL, HAS ITS RISKS.";
   return `<div class="snl-rp-panel">
-    <div class="snl-rp-heading"><h3>Full ${kind.toLowerCase()} waiver — demo</h3><p>${current().label}. Review the entire proposed SNL agreement below. This is draft language and no actual waiver is signed here.</p></div>
+    <div class="snl-rp-heading"><h3>Full ${kind.toLowerCase()} waiver — demo</h3><p>${current().label}. Review the entire proposed SNL agreement below. This is draft language and no actual waiver is signed here.${st.view==="tournament"?" No league profile is required.":""}</p></div>
     <article class="snl-rp-waiver snl-rp-waiver-full" aria-label="Full draft SNL ${kind} player participation waiver">
       <header class="snl-rp-legal-head">
         <div class="snl-rp-waiver-label">REVIEW DRAFT · NOT APPROVED FOR SIGNING</div>
@@ -170,21 +199,23 @@ function snlRegistrationDemo(){
   }
   function draw(){
     const steps=`<div class="snl-rp-stepper" aria-label="Registration progress"><span class="${st.step>=1?"current":""}">1 · Profile</span><span class="${st.step>=2?"current":""}">2 · Waiver</span><span class="${st.step>=3?"current":""}">3 · Confirmation</span></div>`;
-    root.innerHTML=`<div class="snl-rp-top"><div><span class="snl-rp-eyebrow">SNL REGISTRATION & WAIVERS</span><h2>Try the complete experience</h2><p>Player registration, sample waiver, returning players and captain dashboard.</p></div><span class="snl-rp-demo-badge">INTERACTIVE DEMO · NO REAL SIGNATURES</span></div>
-      <div class="snl-rp-demo-switch"><label><strong>Test invitation type</strong><span>Demo control only. Real player invitations will assign the event automatically.</span></label><select data-event><option value="fall"${sel(st.event,"fall")}>Fall League · Indoor</option><option value="summer"${sel(st.event,"summer")}>Summer League · Outdoor</option><option value="tournament"${sel(st.event,"tournament")}>Winter Tournament · Indoor</option></select></div>
-      <div class="snl-rp-tabs" role="group" aria-label="Choose demo experience"><button type="button" data-view="new" aria-pressed="${st.view==="new"}">New player</button><button type="button" data-view="returning" aria-pressed="${st.view==="returning"}">Returning player</button><button type="button" data-view="captain" aria-pressed="${st.view==="captain"}">Team captain</button></div>
-      ${st.view==="new"?steps+(st.step===1?profile():st.step===2?waiver():completed()):st.view==="returning"?returning():captain()}
+    root.innerHTML=`<div class="snl-rp-top"><div><span class="snl-rp-eyebrow">SNL REGISTRATION & WAIVERS</span><h2>Try the complete experience</h2><p>League player registration or a simple waiver for tournament-only participants.</p></div><span class="snl-rp-demo-badge">INTERACTIVE DEMO · NO REAL SIGNATURES</span></div>
+      <div class="snl-rp-demo-switch"><label><strong>Test invitation type</strong><span>Demo control only. Real player invitations will assign the event automatically.</span></label><select data-event><option value="fall"${sel(st.event,"fall")}>Fall League · Indoor</option><option value="summer"${sel(st.event,"summer")}>Summer League · Outdoor</option><option value="tournament"${sel(st.event,"tournament")}>Winter Tournament · Indoor</option><option value="outdoorTourney"${sel(st.event,"outdoorTourney")}>Summer Tournament · Outdoor</option></select></div>
+      <div class="snl-rp-tabs" role="group" aria-label="Choose demo experience"><button type="button" data-view="new" aria-pressed="${st.view==="new"}">League signup</button><button type="button" data-view="tournament" aria-pressed="${st.view==="tournament"}">Tournament waiver only</button><button type="button" data-view="returning" aria-pressed="${st.view==="returning"}">Returning player</button><button type="button" data-view="captain" aria-pressed="${st.view==="captain"}">Team captain</button></div>
+      ${st.view==="new"?steps+(st.step===1?profile():st.step===2?waiver():completed()):st.view==="tournament"?`<div class="snl-rp-stepper" aria-label="Tournament waiver steps"><span class="${st.step>=1?"current":""}">1 · Participant</span><span class="${st.step>=2?"current":""}">2 · Full waiver</span><span class="${st.step>=3?"current":""}">3 · Confirmation</span></div>`+(st.step===1?tournamentIntro():st.step===2?waiver():tournamentComplete()):st.view==="returning"?returning():captain()}
       <p class="snl-rp-footer">Test only. Information exists in this page's temporary memory, not a server or database. Refresh to clear it. Please use fictional details, not real signatures.</p>`;
   }
   root.addEventListener("input",event=>{
     const t=event.target;
     if(t.dataset.field)st.data[t.dataset.field]=t.value;
+    if(t.dataset.tournament)st.tournamentData[t.dataset.tournament]=t.value;
     if(t.dataset.waiver==="code")st.waiver.code=t.value;
     if(t.dataset.area&&t.checked)st.data.position=t.dataset.area;
   });
   root.addEventListener("change",event=>{
     const t=event.target;
     if(t.dataset.field)st.data[t.dataset.field]=t.value;
+    if(t.dataset.tournament)st.tournamentData[t.dataset.tournament]=t.value;
     if(t.dataset.event){st.event=t.value;st.step=1;st.error="";st.waiver=blankWaiver();st.done=false;st.editing=false;draw();return;}
     if(t.dataset.area&&t.checked)st.data.position=t.dataset.area;
     if(t.dataset.waiver==="yes"||t.dataset.waiver==="no")st.waiver.media=t.dataset.waiver;
@@ -193,9 +224,11 @@ function snlRegistrationDemo(){
   });
   root.addEventListener("click",event=>{
     const b=event.target.closest("button");if(!b)return;
-    if(b.dataset.view){st.view=b.dataset.view;st.error="";draw();return;}
+    if(b.dataset.view){st.view=b.dataset.view;if(st.view==="tournament"){if(st.event!=="outdoorTourney")st.event="tournament";st.step=1;st.waiver=blankWaiver();}else if(st.view==="new"){st.step=1;}st.error="";draw();return;}
     if(b.dataset.filter){st.filter=b.dataset.filter;draw();return;}
     if(b.dataset.action==="clear-area"){st.data.position="";draw();return;}
+    if(b.dataset.action==="tournament-next"){if(!hasTournamentFields()){st.error="Please enter a fictional legal first name, legal last name and valid email to continue.";draw();return;}st.error="";st.step=2;draw();return;}
+    if(b.dataset.action==="tournament-restart"){st.step=1;st.error="";st.tournamentData={first:"",last:"",email:""};st.waiver=blankWaiver();draw();return;}
     if(b.dataset.action==="next"||b.dataset.action==="save-edit"){
       if(!hasFields()){st.error="Please complete first name, last name, a valid email, jersey number, bats and throws.";draw();return;}
       st.error="";
@@ -206,7 +239,7 @@ function snlRegistrationDemo(){
     if(b.dataset.action==="finish"){
       if(!hasWaiver()){st.error="Choose a media preference, check both statements and type DEMO.";draw();return;}
       st.error="";st.step=3;st.done=true;st.skipped=false;
-      if(!st.returning)st.joined.push({name:st.data.first.trim()+" "+st.data.last.trim(),jersey:st.data.jersey.trim(),status:"Awaiting approval · demo",good:false});
+      if(st.view!=="tournament"&&!st.returning)st.joined.push({name:st.data.first.trim()+" "+st.data.last.trim(),jersey:st.data.jersey.trim(),status:"Awaiting approval · demo",good:false});
       draw();return;
     }
     if(b.dataset.action==="edit"){st.step=1;st.editing=true;st.view="new";draw();return;}
