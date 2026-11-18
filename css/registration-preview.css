@@ -78,3 +78,26 @@
 .snl-rp-clear{background:transparent;border:0;color:#ffe16b;text-decoration:underline;text-underline-offset:3px;padding:7px 0 0;font-size:12px;font-weight:700}
 .snl-rp-clear:hover{color:#fff}
 .snl-rp-required{border:1px solid #c99043;background:#3b2a19;color:#ffe0ab;border-radius:6px;padding:11px 13px;font-size:13px;font-weight:700;margin:14px 0 0}
+
+/* Interactive registration and waiver demo, November 2026 */
+.snl-rp-demo-switch{display:flex;align-items:center;justify-content:space-between;gap:22px;margin:0 0 15px;padding:17px 19px;background:#0a253c;border:1px solid #58718a;border-radius:10px}
+.snl-rp-demo-switch label{display:flex;flex-direction:column;gap:5px}
+.snl-rp-demo-switch label strong{font-size:13px;color:#f7fbff}
+.snl-rp-demo-switch label span{font-size:12px;line-height:1.5;color:#a9c2d7}
+.snl-rp-demo-switch select{min-width:220px;max-width:100%;border:1px solid #6787a0;border-radius:6px;background:#061b2d;color:#f7fbff;font:inherit;font-size:13px;padding:10px 12px}
+.snl-rp-demo-event{display:flex;flex-direction:column;gap:5px;padding:15px 18px;margin:0 0 22px;border-left:4px solid #ffde19;border-radius:5px;background:#142f44}
+.snl-rp-demo-event small{font-size:10px;color:#ffe15a;font-weight:900;letter-spacing:1px}
+.snl-rp-demo-event strong{font-size:17px}
+.snl-rp-demo-event span{font-size:12px;color:#bed1e2}
+.snl-rp-waiver-section{padding:10px 0;border-top:1px solid #ced6dc}
+.snl-rp-waiver-section:first-of-type{border-top:0}
+.snl-rp-waiver-section strong{font-size:13px;color:#142b40}
+.snl-rp-waiver-section p{margin:6px 0 0!important;color:#455463!important}
+.snl-rp-waiver-hint{color:#b7ccdc;font-size:12px;line-height:1.6;margin:4px 0 15px}
+.snl-rp-demo-ack{display:grid;gap:16px;margin-top:19px;padding:18px;background:#0a253b;border:1px solid #4f6d85;border-radius:9px}
+.snl-rp-demo-ack>label:not(.snl-rp-field){display:flex;align-items:flex-start;gap:10px;font-size:13px;line-height:1.5;color:#e7f0f7}
+.snl-rp-demo-ack input[type=checkbox]{width:18px;height:18px;accent-color:#ffde19;flex-shrink:0}
+.snl-rp-demo-ack .snl-rp-field{margin-top:2px;max-width:400px}
+.snl-rp-demo-invite{background:#ffde19!important;color:#071a2c!important;opacity:1!important;cursor:pointer!important}
+.snl-rp-demo-invite:hover{background:#f0ce13!important}
+@media(max-width:680px){.snl-rp-demo-switch{flex-direction:column;align-items:stretch}.snl-rp-demo-switch select{width:100%}.snl-rp-invite button.snl-rp-demo-invite{width:100%}}
