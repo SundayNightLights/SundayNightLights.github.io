@@ -6,7 +6,7 @@ function snlRegistrationPreview(){
   const state={
     view:"new",step:1,filter:"all",
     fields:{rosterFirst:"",rosterLast:"",email:"",number:"",bats:"",throws:"",season:"indoor"},
-    prefs:{IF:false,OF:false,P:false,ANY:false}
+    preferredArea:"",showRequiredFields:false
   };
   const escapeHtml=value=>String(value??"").replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
   const checked=value=>value?" checked":"";
@@ -24,13 +24,15 @@ function snlRegistrationPreview(){
           <label class="snl-rp-field"><span>Email for secure sign-in <em>Private</em></span><input type="email" data-field="email" value="${escapeHtml(d.email)}" placeholder="e.g. player@example.com" autocomplete="off"></label>
           <label class="snl-rp-field"><span>Jersey number <em>Season-specific · Optional</em></span><input data-field="number" value="${escapeHtml(d.number)}" placeholder="e.g. 27" maxlength="3" inputmode="numeric" autocomplete="off"></label>
           <label class="snl-rp-field"><span>Participation type</span><select data-field="season"><option value="indoor"${selected(d.season,"indoor")}>Indoor · Fall / Winter</option><option value="outdoor"${selected(d.season,"outdoor")}>Outdoor · Spring / Summer</option></select></label>
-          <label class="snl-rp-field"><span>Bats <em>Optional</em></span><select data-field="bats"><option value=""${selected(d.bats,"")}>Prefer not to specify</option><option value="R"${selected(d.bats,"R")}>Right</option><option value="L"${selected(d.bats,"L")}>Left</option><option value="S"${selected(d.bats,"S")}>Switch</option></select></label>
-          <label class="snl-rp-field"><span>Throws <em>Optional</em></span><select data-field="throws"><option value=""${selected(d.throws,"")}>Prefer not to specify</option><option value="R"${selected(d.throws,"R")}>Right</option><option value="L"${selected(d.throws,"L")}>Left</option></select></label>
+          <label class="snl-rp-field"><span>Bats <em>Required</em></span><select data-field="bats" required><option value="" disabled${selected(d.bats,"")}>Select batting side</option><option value="R"${selected(d.bats,"R")}>Right</option><option value="L"${selected(d.bats,"L")}>Left</option><option value="S"${selected(d.bats,"S")}>Switch</option></select></label>
+          <label class="snl-rp-field"><span>Throws <em>Required</em></span><select data-field="throws" required><option value="" disabled${selected(d.throws,"")}>Select throwing hand</option><option value="R"${selected(d.throws,"R")}>Right</option><option value="L"${selected(d.throws,"L")}>Left</option></select></label>
         </div>
-        <fieldset class="snl-rp-pref"><legend>Preferred fielding area <span>Optional · Choose any that apply</span></legend>
-        <div class="snl-rp-checks"><label><input type="checkbox" data-pref="IF"${checked(state.prefs.IF)}> Infield (incl. catcher)</label><label><input type="checkbox" data-pref="OF"${checked(state.prefs.OF)}> Outfield</label><label><input type="checkbox" data-pref="P"${checked(state.prefs.P)}> Pitcher</label><label><input type="checkbox" data-pref="ANY"${checked(state.prefs.ANY)}> Anywhere / Utility</label></div>
+        <fieldset class="snl-rp-pref"><legend>Preferred fielding area <span>Optional · Choose one</span></legend>
+        <div class="snl-rp-checks"><label><input type="radio" name="snl-rp-preferred-area" value="IF" data-pref="IF"${checked(state.preferredArea==="IF")}> Infield (includes catcher)</label><label><input type="radio" name="snl-rp-preferred-area" value="OF" data-pref="OF"${checked(state.preferredArea==="OF")}> Outfield</label><label><input type="radio" name="snl-rp-preferred-area" value="P" data-pref="P"${checked(state.preferredArea==="P")}> Pitcher</label><label><input type="radio" name="snl-rp-preferred-area" value="UTIL" data-pref="UTIL"${checked(state.preferredArea==="UTIL")}> Utility (multiple positions)</label></div>
+        ${state.preferredArea?'<button type="button" class="snl-rp-clear" data-action="clear-pref">Clear preference</button>':""}
         </fieldset>
         <div class="snl-rp-note"><strong>Professional roster names:</strong> Use the first name you normally go by, such as Mike instead of Michael, and your roster last name. Gamer tags, joke names and made-up titles will not be published. SNL reviews names before they appear on the public website. Your legal full name is collected privately for the waiver.</div>
+        ${state.showRequiredFields && (!d.bats || !d.throws)?'<p class="snl-rp-required" role="alert">Please select your batting side and throwing hand before continuing.</p>':""}
         <div class="snl-rp-actions"><button type="button" class="snl-rp-primary" data-action="next">Preview waiver step <span aria-hidden="true">→</span></button></div>
       </div>`;
     }
@@ -87,19 +89,20 @@ function snlRegistrationPreview(){
     if(el.dataset.regTab){state.view=el.dataset.regTab;render();return;}
     if(el.dataset.tabDirect){state.view=el.dataset.tabDirect;render();return;}
     if(el.dataset.filter){state.filter=el.dataset.filter;render();return;}
-    if(el.dataset.action==="next"){state.step=Math.min(3,state.step+1);render();}
+    if(el.dataset.action==="next"){if(state.view==="new"&&state.step===1&&(!state.fields.bats||!state.fields.throws)){state.showRequiredFields=true;render();return;}state.showRequiredFields=false;state.step=Math.min(3,state.step+1);render();}
+    if(el.dataset.action==="clear-pref"){state.preferredArea="";render();return;}
     if(el.dataset.action==="back"){state.step=Math.max(1,state.step-1);render();}
-    if(el.dataset.action==="restart"){state.step=1;state.fields={rosterFirst:"",rosterLast:"",email:"",number:"",bats:"",throws:"",season:"indoor"};state.prefs={IF:false,OF:false,P:false,ANY:false};render();}
+    if(el.dataset.action==="restart"){state.step=1;state.fields={rosterFirst:"",rosterLast:"",email:"",number:"",bats:"",throws:"",season:"indoor"};state.preferredArea="";state.showRequiredFields=false;render();}
   });
   root.addEventListener("input",event=>{
     const el=event.target;
     if(el.dataset.field)state.fields[el.dataset.field]=el.value;
-    if(el.dataset.pref)state.prefs[el.dataset.pref]=el.checked;
+    if(el.dataset.pref && el.checked)state.preferredArea=el.dataset.pref;
   });
   root.addEventListener("change",event=>{
     const el=event.target;
     if(el.dataset.field)state.fields[el.dataset.field]=el.value;
-    if(el.dataset.pref)state.prefs[el.dataset.pref]=el.checked;
+    if(el.dataset.pref && el.checked)state.preferredArea=el.dataset.pref;
   });
   render();
 }window.SNLRegistrationPreview={init:snlRegistrationPreview};
