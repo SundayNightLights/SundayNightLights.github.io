@@ -507,8 +507,8 @@ function joinPage(){return `${pageHero('JOIN','SNL','Interested in playing Sunda
 <div class="notice">Already on an SNL team? The separate <a href="registration.html">Registration &amp; Waivers</a> page is for existing-player administration once that process opens.</div>`;}
  function registrationPage(){return `${pageHero('PLAYER','REGISTRATION & WAIVERS','Explore the new SNL player signup and waiver experience')}
 <section class="flat-card info-landing"><span class="info-kicker">SNL PLAYER REGISTRATION</span>
-<h2>ONE PROFILE. EVERY SEASON.</h2>
-<p class="section-note">Test the planned signup experience, including your playing profile, a sample indoor or outdoor waiver, returning-player recognition and the captain roster dashboard.</p>
+<h2>LEAGUE REGISTRATION OR TOURNAMENT WAIVER.</h2>
+<p class="section-note">League players can test creating a permanent player profile. Tournament-only participants can test completing an indoor or outdoor waiver without creating an account. Both paths are simulations.</p>
 <div class="notice"><strong>TEST MODE — REGISTRATION IS NOT OPEN.</strong> Use fictional details only. The sample waiver is not a legal agreement and the test does not save information, collect signatures, send invitations or create accounts.</div>
 </section>
 <div id="snl-reg-preview" aria-label="Interactive SNL registration and waiver demo"></div>
