@@ -73,3 +73,8 @@
 .snl-rp-table td{padding:13px;color:#f1f6fb;font-size:13px;border-top:1px solid #36536b}
 .snl-rp-footer{font-size:12px;text-align:center;color:#b5c7d7;line-height:1.6;margin:14px 0}
 @media(max-width:740px){.snl-rp-top{flex-direction:column}.snl-rp-demo-badge{white-space:normal}.snl-rp-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}.snl-rp-tabs button{padding:11px 6px;font-size:11px}.snl-rp-grid{grid-template-columns:1fr}.snl-rp-panel{padding:19px}.snl-rp-heading h3{font-size:21px}.snl-rp-stepper span{font-size:9px}.snl-rp-invite{flex-direction:column;align-items:flex-start}.snl-rp-actions button{flex:1}.snl-rp-status-row{align-items:flex-start}.snl-rp-example-profile{flex-wrap:wrap}.snl-rp-metrics{gap:7px}.snl-rp-metrics>div{padding:12px}.snl-rp-metrics strong{font-size:24px}}
+
+
+.snl-rp-clear{background:transparent;border:0;color:#ffe16b;text-decoration:underline;text-underline-offset:3px;padding:7px 0 0;font-size:12px;font-weight:700}
+.snl-rp-clear:hover{color:#fff}
+.snl-rp-required{border:1px solid #c99043;background:#3b2a19;color:#ffe0ab;border-radius:6px;padding:11px 13px;font-size:13px;font-weight:700;margin:14px 0 0}
