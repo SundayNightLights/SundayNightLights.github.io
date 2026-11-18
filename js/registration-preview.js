@@ -5,7 +5,7 @@ function snlRegistrationPreview(){
   root.dataset.initialized="yes";
   const state={
     view:"new",step:1,filter:"all",
-    fields:{displayName:"",email:"",number:"",bats:"",throws:"",season:"indoor"},
+    fields:{rosterFirst:"",rosterLast:"",email:"",number:"",bats:"",throws:"",season:"indoor"},
     prefs:{IF:false,OF:false,P:false,ANY:false}
   };
   const escapeHtml=value=>String(value??"").replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
@@ -19,7 +19,8 @@ function snlRegistrationPreview(){
       return `${steps}<div class="snl-rp-panel">
         <div class="snl-rp-heading"><h3>Create your player profile</h3><p>One profile for leagues, tournaments and career statistics. Use sample information in this preview.</p></div>
         <div class="snl-rp-grid">
-          <label class="snl-rp-field"><span>Public display name <em>Required in live registration</em></span><input data-field="displayName" value="${escapeHtml(d.displayName)}" placeholder="e.g. Johnny Smith" autocomplete="off"></label>
+          <label class="snl-rp-field"><span>First name for roster <em>Public · SNL approval required</em></span><input data-field="rosterFirst" value="${escapeHtml(d.rosterFirst)}" placeholder="e.g. Michael or Mike" autocomplete="off"></label>
+          <label class="snl-rp-field"><span>Last name for roster <em>Public · SNL approval required</em></span><input data-field="rosterLast" value="${escapeHtml(d.rosterLast)}" placeholder="e.g. Smith" autocomplete="off"></label>
           <label class="snl-rp-field"><span>Email for secure sign-in <em>Private</em></span><input type="email" data-field="email" value="${escapeHtml(d.email)}" placeholder="e.g. player@example.com" autocomplete="off"></label>
           <label class="snl-rp-field"><span>Jersey number <em>Season-specific · Optional</em></span><input data-field="number" value="${escapeHtml(d.number)}" placeholder="e.g. 27" maxlength="3" inputmode="numeric" autocomplete="off"></label>
           <label class="snl-rp-field"><span>Participation type</span><select data-field="season"><option value="indoor"${selected(d.season,"indoor")}>Indoor · Fall / Winter</option><option value="outdoor"${selected(d.season,"outdoor")}>Outdoor · Spring / Summer</option></select></label>
@@ -29,7 +30,7 @@ function snlRegistrationPreview(){
         <fieldset class="snl-rp-pref"><legend>Preferred fielding area <span>Optional · Choose any that apply</span></legend>
         <div class="snl-rp-checks"><label><input type="checkbox" data-pref="IF"${checked(state.prefs.IF)}> Infield (incl. catcher)</label><label><input type="checkbox" data-pref="OF"${checked(state.prefs.OF)}> Outfield</label><label><input type="checkbox" data-pref="P"${checked(state.prefs.P)}> Pitcher</label><label><input type="checkbox" data-pref="ANY"${checked(state.prefs.ANY)}> Anywhere / Utility</label></div>
         </fieldset>
-        <div class="snl-rp-note"><strong>Public vs. private:</strong> Your chosen display name appears on SNL rosters and statistics. Your legal name is requested separately and kept private for waiver signing.</div>
+        <div class="snl-rp-note"><strong>Professional roster names:</strong> Use the first name you normally go by, such as Mike instead of Michael, and your roster last name. Gamer tags, joke names and made-up titles will not be published. SNL reviews names before they appear on the public website. Your legal full name is collected privately for the waiver.</div>
         <div class="snl-rp-actions"><button type="button" class="snl-rp-primary" data-action="next">Preview waiver step <span aria-hidden="true">→</span></button></div>
       </div>`;
     }
@@ -46,8 +47,8 @@ function snlRegistrationPreview(){
         <div class="snl-rp-actions"><button type="button" class="snl-rp-secondary" data-action="back">← Back</button><button type="button" class="snl-rp-primary" data-action="next">View confirmation design →</button></div>
       </div>`;
     }
-    return `${steps}<div class="snl-rp-panel snl-rp-complete"><div class="snl-rp-success-icon" aria-hidden="true">✓</div><h3>Registration confirmation — design preview</h3><p>In the live version, a registered player would receive an email confirmation and appear on the captain's roster with verified waiver status.</p>
-      <div class="snl-rp-summary">${statusCard("Player profile","Display name: "+escapeHtml(d.displayName||"Sample Player"),"Not submitted","pending")}${statusCard(d.season==="indoor"?"Indoor waiver":"Outdoor waiver","Legal signature required","Not signed","pending")}${statusCard("Captain roster","Team and event assignment","Pending","pending")}</div>
+    return `${steps}<div class="snl-rp-panel snl-rp-complete"><div class="snl-rp-success-icon" aria-hidden="true">✓</div><h3>Registration confirmation — design preview</h3><p>In the live version, a registered player would receive an email confirmation. SNL would approve their public roster name and verify eligibility before publishing the profile.</p>
+      <div class="snl-rp-summary">${statusCard("Player profile","Roster name (pending approval): "+escapeHtml(([d.rosterFirst,d.rosterLast].filter(Boolean).join(" "))||"Sample Player"),"Not submitted","pending")}${statusCard(d.season==="indoor"?"Indoor waiver":"Outdoor waiver","Legal signature required","Not signed","pending")}${statusCard("Captain roster","Team and event assignment","Pending","pending")}</div>
       <div class="snl-rp-actions"><button type="button" class="snl-rp-secondary" data-action="restart">Restart preview</button><button type="button" class="snl-rp-primary" data-tab-direct="captain">View captain dashboard →</button></div></div>`;
   }
   function returning(){
@@ -69,7 +70,7 @@ function snlRegistrationPreview(){
     const rows=players.filter(p=>state.filter==="all"||p.key===state.filter);
     return `<div class="snl-rp-panel"><div class="snl-rp-heading"><h3>Captain roster dashboard</h3><p>Illustrative team: Buffaloes · 2026–27 Indoor. Captains see registration clearance, not legal names, contact details or signed documents.</p></div>
       <div class="snl-rp-metrics"><div><strong>4</strong><small>Example players</small></div><div><strong>2</strong><small>Cleared</small></div><div><strong>2</strong><small>Action required</small></div></div>
-      <div class="snl-rp-invite"><div><strong>Invite players to join your roster</strong><p>At launch: send an email invitation or share a team-specific WhatsApp link. Players supply their own preferred and legal names.</p></div><button type="button" disabled title="Invitations will be enabled when secure registration launches">Invite player · Coming soon</button></div>
+      <div class="snl-rp-invite"><div><strong>Invite players to join your roster</strong><p>At launch: send an email invitation or share a team-specific WhatsApp link. Players choose their roster name, subject to SNL approval, and enter their legal full name privately for waiver signing.</p></div><button type="button" disabled title="Invitations will be enabled when secure registration launches">Invite player · Coming soon</button></div>
       <div class="snl-rp-filter" aria-label="Roster filter"><button type="button" data-filter="all" aria-pressed="${state.filter==="all"}">All players</button><button type="button" data-filter="cleared" aria-pressed="${state.filter==="cleared"}">Cleared</button><button type="button" data-filter="pending" aria-pressed="${state.filter==="pending"}">Action needed</button></div>
       <div class="snl-rp-table-wrap"><table class="snl-rp-table"><thead><tr><th>Player</th><th>Jersey</th><th>Registration / Waiver</th></tr></thead><tbody>${rows.map(p=>`<tr><td>${p.name}</td><td>${p.number}</td><td><span class="snl-rp-pill ${p.key==="cleared"?"good":"pending"}">${p.status}</span></td></tr>`).join("")}</tbody></table></div>
       <div class="snl-rp-note">Sample records only. A real captain dashboard will be available only after captain authentication and SNL administrator approval.</div></div>`;
@@ -88,7 +89,7 @@ function snlRegistrationPreview(){
     if(el.dataset.filter){state.filter=el.dataset.filter;render();return;}
     if(el.dataset.action==="next"){state.step=Math.min(3,state.step+1);render();}
     if(el.dataset.action==="back"){state.step=Math.max(1,state.step-1);render();}
-    if(el.dataset.action==="restart"){state.step=1;state.fields={displayName:"",email:"",number:"",bats:"",throws:"",season:"indoor"};state.prefs={IF:false,OF:false,P:false,ANY:false};render();}
+    if(el.dataset.action==="restart"){state.step=1;state.fields={rosterFirst:"",rosterLast:"",email:"",number:"",bats:"",throws:"",season:"indoor"};state.prefs={IF:false,OF:false,P:false,ANY:false};render();}
   });
   root.addEventListener("input",event=>{
     const el=event.target;
