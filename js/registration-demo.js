@@ -24,7 +24,7 @@ function snlRegistrationDemo(){
   const teamChoices=selected=>Object.entries(teams).map(([code,name])=>`<option value="${code}"${sel(selected,code)}>${e(name)}</option>`).join("");
   const sample=()=>({first:"",last:"",email:"",jersey:"",bats:"",throws:"",position:""});
   const blankWaiver=()=>({code:""});
-  const st={view:"new",step:1,event:incomingInvite?.event||"fall",team:incomingInvite?.team||"BUF",captainTeam:incomingInvite?.team||"BUF",captainEvent:incomingInvite?.event||"fall",invite:incomingInvite,copyStatus:"",data:sample(),waiver:blankWaiver(),error:"",done:false,skipped:false,editing:false,returning:false,filter:"all",joined:[],tournamentData:{first:"",last:"",email:""}};
+  const st={view:"new",step:1,event:incomingInvite?.event||"fall",team:incomingInvite?.team||"BUF",captainTeam:incomingInvite?.team||"BUF",captainEvent:incomingInvite?.event||"fall",invite:incomingInvite,copyStatus:"",samples:{},tournamentRecords:[],nextId:0,adminTeam:incomingInvite?.team||"BUF",adminEvent:incomingInvite?.event||"fall",data:sample(),waiver:blankWaiver(),error:"",done:false,skipped:false,editing:false,returning:false,filter:"all",joined:[],tournamentData:{first:"",last:"",email:""}};
   const e=s=>String(s??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
   const sel=(x,y)=>x===y?" selected":"";
   const chk=v=>v?" checked":"";
@@ -33,6 +33,58 @@ function snlRegistrationDemo(){
   const hasFields=()=>!!(st.data.first.trim()&&st.data.last.trim()&&/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(st.data.email.trim())&&/^\d{1,3}$/.test(st.data.jersey.trim())&&["R","L","S"].includes(st.data.bats)&&["R","L"].includes(st.data.throws));
   const hasTournamentFields=()=>!!(st.tournamentData.first.trim()&&st.tournamentData.last.trim()&&/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(st.tournamentData.email.trim()));
   const hasWaiver=()=>st.waiver.code.trim().toUpperCase()==="DEMO";
+
+  const rosterKey=(team,event)=>team+"-"+event;
+  const ensureExamples=(team,event)=>{
+    const key=rosterKey(team,event);
+    if(!st.samples[key])st.samples[key]=[
+      {id:key+"-A",name:"Sample Player A",jersey:"12",team,event,approval:"approved",waiver:"checked"},
+      {id:key+"-B",name:"Sample Player B",jersey:"7",team,event,approval:"approved",waiver:"missing"},
+      {id:key+"-C",name:"Sample Player C",jersey:"24",team,event,approval:"pending",waiver:"submitted"},
+      {id:key+"-D",name:"Sample Player D",jersey:"—",team,event,approval:"pending",waiver:"missing"}
+    ];
+    return st.samples[key];
+  };
+  const rosterFor=(team,event)=>[...ensureExamples(team,event),...st.joined.filter(p=>p.team===team&&p.event===event)];
+  const isCleared=p=>p.approval==="approved"&&p.waiver==="checked";
+  const decisionLabel=p=>p.approval==="approved"?"Approved · demo":p.approval==="declined"?"Declined · demo":"Pending review";
+  const waiverLabel=p=>p.waiver==="checked"?"Checked · demo":p.waiver==="submitted"?"Demo completed · review needed":"Not completed · demo";
+  const readinessLabel=p=>p.approval==="declined"?"Declined":isCleared(p)?"Cleared · demo":p.approval!=="approved"&&p.waiver!=="checked"?"Both steps outstanding":p.approval!=="approved"?"Captain approval needed":"Waiver check needed";
+  const rosterSummary=players=>`<div class="snl-rp-metrics">
+    <div><strong>${players.length}</strong><small>Example entries</small></div>
+    <div><strong>${players.filter(isCleared).length}</strong><small>Cleared · demo</small></div>
+    <div><strong>${players.filter(p=>p.approval==="pending").length}</strong><small>Captain pending</small></div>
+    <div><strong>${players.filter(p=>p.waiver!=="checked").length}</strong><small>Waiver needs review</small></div>
+  </div>`;
+  function rosterCards(players,role){
+    return `<div class="snl-rp-review-grid">${players.map(p=>`<article class="snl-rp-review-card">
+      <div class="snl-rp-review-top"><div><strong>${e(p.name)}</strong><small>Jersey #${e(p.jersey)} · ${e(teamName(p.team))} · ${e(events[p.event].label)}</small></div><span class="snl-rp-pill ${isCleared(p)?"good":"pending"}">${e(readinessLabel(p))}</span></div>
+      <div class="snl-rp-review-details">
+        <div><span>Captain decision</span><strong>${e(decisionLabel(p))}</strong></div>
+        <div><span>Waiver status</span><strong>${e(waiverLabel(p))}</strong></div>
+      </div>
+      ${role==="captain"?`<div class="snl-rp-review-actions">
+        ${p.approval!=="approved"?`<button type="button" data-captain-decision="approved" data-record-id="${e(p.id)}">Approve roster · demo</button>`:`<button type="button" data-captain-decision="pending" data-record-id="${e(p.id)}">Undo approval</button>`}
+        ${p.approval==="pending"?`<button type="button" class="snl-rp-review-decline" data-captain-decision="declined" data-record-id="${e(p.id)}">Decline · demo</button>`:p.approval==="declined"?`<button type="button" data-captain-decision="pending" data-record-id="${e(p.id)}">Restore pending</button>`:""}
+      </div>`:`<div class="snl-rp-review-actions">
+        ${p.waiver==="missing"?`<button type="button" data-admin-waiver="submitted" data-record-id="${e(p.id)}">Simulate received</button>`:
+          p.waiver==="submitted"?`<button type="button" data-admin-waiver="checked" data-record-id="${e(p.id)}">Mark checked · demo</button>`:
+          `<button type="button" data-admin-waiver="submitted" data-record-id="${e(p.id)}">Require recheck · demo</button>`}
+        ${p.waiver==="submitted"?`<button type="button" class="snl-rp-review-decline" data-admin-waiver="missing" data-record-id="${e(p.id)}">Mark missing · demo</button>`:""}
+      </div>`}
+    </article>`).join("")}</div>`;
+  }
+  function tournamentCards(){
+    return `<div class="snl-rp-review-grid">${st.tournamentRecords.map(p=>`<article class="snl-rp-review-card">
+      <div class="snl-rp-review-top"><div><strong>${e(p.name)}</strong><small>Third Annual Holiday Tournament · December 27, 2026 · Waiver only</small></div>
+        <span class="snl-rp-pill ${p.waiver==="checked"?"good":"pending"}">${p.waiver==="checked"?"Checked · demo":"Not checked"}</span></div>
+      <div class="snl-rp-review-details"><div><span>Account</span><strong>Not required</strong></div><div><span>Waiver status</span><strong>${e(waiverLabel(p))}</strong></div></div>
+      <div class="snl-rp-review-actions">${p.waiver==="submitted"?`<button type="button" data-tournament-waiver="checked" data-record-id="${e(p.id)}">Mark checked · demo</button>`:
+        p.waiver==="checked"?`<button type="button" data-tournament-waiver="submitted" data-record-id="${e(p.id)}">Require recheck · demo</button>`:
+        `<button type="button" data-tournament-waiver="submitted" data-record-id="${e(p.id)}">Simulate received</button>`}</div>
+    </article>`).join("")}</div>`;
+  }
+
 
   function tournamentIntro(){
     const p=st.tournamentData;
@@ -59,7 +111,7 @@ function snlRegistrationDemo(){
         ${status("Player account","Not required for tournament-only participants","Not created",true)}
         ${status("Organizer verification","Would be shown in the authorized event dashboard","Example only",true)}
       </div>
-      <div class="snl-rp-actions"><button type="button" class="snl-rp-secondary" data-action="tournament-restart">Test another waiver →</button><button type="button" class="snl-rp-primary" data-view="new">See league signup →</button></div></div>`;
+      <div class="snl-rp-actions"><button type="button" class="snl-rp-secondary" data-action="tournament-restart">Test another waiver →</button><button type="button" class="snl-rp-primary" data-view="admin">View simulated admin check →</button></div></div>`;
   }
   function profile(){
     const d=st.data;
@@ -168,7 +220,7 @@ function snlRegistrationDemo(){
     const d=st.data;
     return `<div class="snl-rp-panel snl-rp-complete"><div class="snl-rp-success-icon" aria-hidden="true">✓</div><h3>Demo registration complete</h3><p>This is a simulated confirmation. No real registration was submitted, no waiver was signed and no SNL player ID was created.</p>
       <div class="snl-rp-summary">${status("Player profile",e(d.first+" "+d.last)+" · #"+e(d.jersey),"Sample complete",true)}
-        ${status("Indoor waiver",st.skipped?"Existing sample waiver reused":"Sample waiver demo completed","Demo only",true)}
+        ${status("Indoor waiver",st.skipped?"Existing sample waiver reused":"Demo completed · admin check needed",st.skipped?"Reused · sample":"Not checked · demo",st.skipped)}
         ${status("Team roster",e(teamName(st.team))+" · "+e(current().label)+" · Administrator review","Pending · demo",false)}
         ${status("SNL Player ID","Issued only after live registration","Not issued",false)}
       </div>
@@ -185,23 +237,17 @@ function snlRegistrationDemo(){
   }
   function captain(){
     const team=st.captainTeam,event=st.captainEvent,link=invitationUrl(team,event);
-    const examples=[
-      {name:"Sample Player A",jersey:"12",status:"Cleared · demo",good:true},
-      {name:"Sample Player B",jersey:"7",status:"Cleared · demo",good:true},
-      {name:"Sample Player C",jersey:"24",status:"Waiver needed · demo",good:false},
-      {name:"Sample Player D",jersey:"—",status:"Invited · demo",good:false}
-    ];
-    const players=[...examples,...st.joined.filter(p=>p.team===team&&p.event===event)];
-    const rows=players.filter(p=>st.filter==="all"||(st.filter==="good")===p.good);
+    const players=rosterFor(team,event);
+    const rows=players.filter(p=>st.filter==="all"||(st.filter==="good")===isCleared(p));
     return `<div class="snl-rp-panel">
-      <div class="snl-rp-heading"><h3>Captain invitations &amp; roster — demo</h3><p>Choose a team and indoor season, then copy a sample invitation link or preview the player's registration flow. No captain login or real invitations are active.</p></div>
+      <div class="snl-rp-heading"><h3>Captain invitations &amp; approvals — demo</h3><p>Choose a team and season. A captain can approve roster membership but cannot mark a waiver as checked. All names and decisions here are fictional and temporary.</p></div>
       <div class="snl-rp-captain-picker">
         <label class="snl-rp-field"><span>Team</span><select data-captain-team>${teamChoices(team)}</select></label>
         <label class="snl-rp-field"><span>Indoor Season</span><select data-captain-event><option value="fall"${sel(event,"fall")}>2026–27 Fall League</option><option value="winter"${sel(event,"winter")}>2026–27 Winter League</option></select></label>
       </div>
       <div class="snl-rp-invite-builder">
         <div class="snl-rp-invite-heading"><strong>${e(teamName(team))} invitation</strong><small>${e(events[event].label)}</small></div>
-        <p>This demo link opens registration with <strong>${e(teamName(team))}</strong> and <strong>${e(events[event].label)}</strong> already assigned. Anyone can open it; the code is not a secure invitation token.</p>
+        <p>Example invitation link for <strong>${e(teamName(team))}</strong> and <strong>${e(events[event].label)}</strong>. Anyone can open this link; it is not a secure captain credential.</p>
         <label class="snl-rp-field snl-rp-link-field"><span>Shareable demo URL</span><input type="text" readonly value="${e(link)}" aria-label="Demo captain invitation link"></label>
         <div class="snl-rp-link-actions">
           <button type="button" class="snl-rp-primary" data-action="copy-invite">Copy demo link</button>
@@ -209,12 +255,44 @@ function snlRegistrationDemo(){
           <button type="button" class="snl-rp-secondary" data-action="preview-invite">Preview in this tab</button>
         </div>
         ${st.copyStatus?`<p class="snl-rp-copy-status" role="status">${e(st.copyStatus)}</p>`:""}
-        <p class="snl-rp-invite-clarifier"><strong>Demo limitation:</strong> Results from a different tab won't appear in this dashboard. Use “Preview in this tab” to simulate a new player appearing here.</p>
+        <p class="snl-rp-invite-clarifier">Preview a registration in this tab to see its sample record here. New tabs do not share demo records.</p>
       </div>
-      <div class="snl-rp-metrics"><div><strong>${players.length}</strong><small>Example players</small></div><div><strong>${players.filter(p=>p.good).length}</strong><small>Cleared · sample</small></div><div><strong>${players.filter(p=>!p.good).length}</strong><small>Need action</small></div></div>
-      <div class="snl-rp-filter"><button type="button" data-filter="all" aria-pressed="${st.filter==="all"}">All</button><button type="button" data-filter="good" aria-pressed="${st.filter==="good"}">Cleared</button><button type="button" data-filter="pending" aria-pressed="${st.filter==="pending"}">Needs action</button></div>
-      <div class="snl-rp-table-wrap"><table class="snl-rp-table"><thead><tr><th>Player</th><th>Jersey</th><th>Status</th></tr></thead><tbody>${rows.map(p=>`<tr><td>${e(p.name)}</td><td>${e(p.jersey)}</td><td><span class="snl-rp-pill ${p.good?"good":"pending"}">${e(p.status)}</span></td></tr>`).join("")}</tbody></table></div>
-      <div class="snl-rp-note">All entries are fictional, and changes are temporary. Captains will eventually see registration and waiver status, but not legal names, private contact information or signed agreements.</div>
+      <h4 class="snl-rp-review-heading">Roster approval queue</h4>
+      ${rosterSummary(players)}
+      <div class="snl-rp-review-legend"><strong>Cleared = captain approved + waiver checked by SNL admin</strong><span>A captain's approval alone never clears a player.</span></div>
+      <div class="snl-rp-filter"><button type="button" data-filter="all" aria-pressed="${st.filter==="all"}">All</button><button type="button" data-filter="good" aria-pressed="${st.filter==="good"}">Cleared</button><button type="button" data-filter="pending" aria-pressed="${st.filter==="pending"}">Not cleared</button></div>
+      ${rosterCards(rows,"captain")}
+      <div class="snl-rp-note"><strong>Captain access in a real system:</strong> team assignment, roster decisions and waiver-status labels only. Captains would never see legal names, email addresses, signatures or the signed waiver document.</div>
+    </div>`;
+  }
+  function admin(){
+    const team=st.adminTeam,event=st.adminEvent;
+    const holiday=event==="tournament";
+    const players=holiday?[]:rosterFor(team,event);
+    const rows=players.filter(p=>st.filter==="all"||(st.filter==="good")===isCleared(p));
+    return `<div class="snl-rp-panel">
+      <div class="snl-rp-heading"><h3>SNL administrator review — demo</h3><p>Review sample waiver completion separately from captain approvals. This page is publicly accessible because it is a simulation; it does not grant administrative access to any real records.</p></div>
+      <div class="snl-rp-captain-picker">
+        <label class="snl-rp-field"><span>Event</span><select data-admin-event>
+          <option value="fall"${sel(event,"fall")}>2026–27 Fall League</option>
+          <option value="winter"${sel(event,"winter")}>2026–27 Winter League</option>
+          <option value="tournament"${sel(event,"tournament")}>Holiday Tournament · Dec 27</option>
+        </select></label>
+        ${holiday?`<div class="snl-rp-admin-note"><strong>Waiver-only participants</strong><span>No team account or league roster required</span></div>`:
+          `<label class="snl-rp-field"><span>Team</span><select data-admin-team>${teamChoices(team)}</select></label>`}
+      </div>
+      <div class="snl-rp-review-legend"><strong>Simulation — not verification of a signed agreement</strong><span>“Checked · demo” is only a sample status. No real identity, consent, signature or document is being reviewed or stored.</span></div>
+      ${holiday
+        ?`<h4 class="snl-rp-review-heading">Holiday Tournament waiver-only checks</h4>
+          <div class="snl-rp-metrics"><div><strong>${st.tournamentRecords.length}</strong><small>Sample participants</small></div>
+          <div><strong>${st.tournamentRecords.filter(p=>p.waiver==="checked").length}</strong><small>Checked · demo</small></div>
+          <div><strong>${st.tournamentRecords.filter(p=>p.waiver!=="checked").length}</strong><small>Need review</small></div></div>
+          ${st.tournamentRecords.length?tournamentCards():'<p class="snl-rp-review-empty">No tournament waiver examples yet. Complete the “Tournament waiver only” demo to add one here.</p>'}`
+        :`<h4 class="snl-rp-review-heading">${e(teamName(team))} · ${e(events[event].label)}</h4>
+          ${rosterSummary(players)}
+          <div class="snl-rp-filter"><button type="button" data-filter="all" aria-pressed="${st.filter==="all"}">All</button><button type="button" data-filter="good" aria-pressed="${st.filter==="good"}">Cleared</button><button type="button" data-filter="pending" aria-pressed="${st.filter==="pending"}">Not cleared</button></div>
+          ${rosterCards(rows,"admin")}`}
+      <div class="snl-rp-note">A real admin system would require authenticated roles, event-specific access checks, secure audit logs and private waiver storage. None are active in this demo.</div>
     </div>`;
   }
   function draw(){
@@ -225,8 +303,8 @@ function snlRegistrationDemo(){
         :`<div class="snl-rp-demo-switch"><label><strong>Demo indoor event</strong><span>Opening a captain invitation link fills in the team and season automatically.</span></label><select data-event>${st.view==="tournament"
           ?`<option value="tournament" selected>Third Annual Holiday Tournament · Dec 27, 2026</option>`
           :`<option value="fall"${sel(st.event,"fall")}>Fall League · 2026–27</option><option value="winter"${sel(st.event,"winter")}>Winter League · 2026–27</option>`}</select></div>`}
-      <div class="snl-rp-tabs" role="group" aria-label="Choose demo experience"><button type="button" data-view="new" aria-pressed="${st.view==="new"}">League signup</button><button type="button" data-view="tournament" aria-pressed="${st.view==="tournament"}">Tournament waiver only</button><button type="button" data-view="returning" aria-pressed="${st.view==="returning"}">Returning player</button><button type="button" data-view="captain" aria-pressed="${st.view==="captain"}">Team captain</button></div>
-      ${st.view==="new"?steps+(st.step===1?profile():st.step===2?waiver():completed()):st.view==="tournament"?`<div class="snl-rp-stepper" aria-label="Tournament waiver steps"><span class="${st.step>=1?"current":""}">1 · Participant</span><span class="${st.step>=2?"current":""}">2 · Full waiver</span><span class="${st.step>=3?"current":""}">3 · Confirmation</span></div>`+(st.step===1?tournamentIntro():st.step===2?waiver():tournamentComplete()):st.view==="returning"?returning():captain()}
+      <div class="snl-rp-tabs" role="group" aria-label="Choose demo experience"><button type="button" data-view="new" aria-pressed="${st.view==="new"}">League signup</button><button type="button" data-view="tournament" aria-pressed="${st.view==="tournament"}">Tournament waiver only</button><button type="button" data-view="returning" aria-pressed="${st.view==="returning"}">Returning player</button><button type="button" data-view="captain" aria-pressed="${st.view==="captain"}">Team captain</button><button type="button" data-view="admin" aria-pressed="${st.view==="admin"}">SNL admin</button></div>
+      ${st.view==="new"?steps+(st.step===1?profile():st.step===2?waiver():completed()):st.view==="tournament"?`<div class="snl-rp-stepper" aria-label="Tournament waiver steps"><span class="${st.step>=1?"current":""}">1 · Participant</span><span class="${st.step>=2?"current":""}">2 · Full waiver</span><span class="${st.step>=3?"current":""}">3 · Confirmation</span></div>`+(st.step===1?tournamentIntro():st.step===2?waiver():tournamentComplete()):st.view==="returning"?returning():st.view==="captain"?captain():admin()}
       <p class="snl-rp-footer">Test only. Information exists in this page's temporary memory, not a server or database. Refresh to clear it. Please use fictional details, not real signatures.</p>`;
   }
   root.addEventListener("input",event=>{
@@ -243,13 +321,43 @@ function snlRegistrationDemo(){
     if(t.dataset.event){st.event=t.value;st.invite=null;st.step=1;st.error="";st.waiver=blankWaiver();st.done=false;st.editing=false;draw();return;}
     if(t.dataset.captainTeam){st.captainTeam=t.value;st.copyStatus="";draw();return;}
     if(t.dataset.captainEvent){st.captainEvent=t.value;st.copyStatus="";draw();return;}
+    if(t.dataset.adminTeam){st.adminTeam=t.value;draw();return;}
+    if(t.dataset.adminEvent){st.adminEvent=t.value;draw();return;}
     if(t.dataset.area&&t.checked)st.data.position=t.dataset.area;
     if(t.dataset.waiver==="code")st.waiver.code=t.value;
   });
   root.addEventListener("click",event=>{
     const b=event.target.closest("button");if(!b)return;
-    if(b.dataset.view){if(b.dataset.view==="captain"&&st.view==="new"&&st.done){st.captainTeam=st.team;st.captainEvent=st.event;}st.view=b.dataset.view;if(st.view==="tournament"){st.event="tournament";st.invite=null;st.step=1;st.waiver=blankWaiver();}else if(st.view==="new"){if(st.event==="tournament")st.event="fall";st.step=1;}st.error="";draw();return;}
+    if(b.dataset.view){if(b.dataset.view==="captain"&&st.view==="new"&&st.done){st.captainTeam=st.team;st.captainEvent=st.event;}
+      if(b.dataset.view==="admin"&&st.view==="tournament")st.adminEvent="tournament";
+      if(b.dataset.view==="admin"&&st.view==="new"&&st.done){st.adminTeam=st.team;st.adminEvent=st.event;}
+      st.view=b.dataset.view;if(st.view==="tournament"){st.event="tournament";st.invite=null;st.step=1;st.waiver=blankWaiver();}else if(st.view==="new"){if(st.event==="tournament")st.event="fall";st.step=1;}st.error="";draw();return;}
     if(b.dataset.filter){st.filter=b.dataset.filter;draw();return;}
+    if(b.dataset.captainDecision&&st.view==="captain"){
+      const target=rosterFor(st.captainTeam,st.captainEvent).find(p=>p.id===b.dataset.recordId);
+      if(target&&["approved","declined","pending"].includes(b.dataset.captainDecision)){
+        target.approval=b.dataset.captainDecision;draw();
+      }
+      return;
+    }
+    if(b.dataset.adminWaiver&&st.view==="admin"&&st.adminEvent!=="tournament"){
+      const target=rosterFor(st.adminTeam,st.adminEvent).find(p=>p.id===b.dataset.recordId);
+      const next=b.dataset.adminWaiver;
+      if(target&&(
+        (target.waiver==="missing"&&next==="submitted")||
+        (target.waiver==="submitted"&&["checked","missing"].includes(next))||
+        (target.waiver==="checked"&&next==="submitted")
+      )){target.waiver=next;draw();}
+      return;
+    }
+    if(b.dataset.tournamentWaiver&&st.view==="admin"&&st.adminEvent==="tournament"){
+      const target=st.tournamentRecords.find(p=>p.id===b.dataset.recordId);
+      const next=b.dataset.tournamentWaiver;
+      if(target&&((target.waiver==="submitted"&&next==="checked")||(target.waiver==="checked"&&next==="submitted")||(target.waiver==="missing"&&next==="submitted"))){
+        target.waiver=next;draw();
+      }
+      return;
+    }
     if(b.dataset.action==="preview-invite"){
       st.invite={team:st.captainTeam,event:st.captainEvent};
       st.team=st.captainTeam;st.event=st.captainEvent;
@@ -286,7 +394,8 @@ function snlRegistrationDemo(){
     if(b.dataset.action==="finish"){
       if(!hasWaiver()){st.error="To test completion, type DEMO into the confirmation-code field.";draw();return;}
       st.error="";st.step=3;st.done=true;st.skipped=false;
-      if(st.view!=="tournament"&&!st.returning)st.joined.push({name:st.data.first.trim()+" "+st.data.last.trim(),jersey:st.data.jersey.trim(),team:st.team,event:st.event,status:"Awaiting approval · demo",good:false});
+      if(st.view!=="tournament"&&!st.returning)st.joined.push({id:"joined-"+(++st.nextId),name:st.data.first.trim()+" "+st.data.last.trim(),jersey:st.data.jersey.trim(),team:st.team,event:st.event,approval:"pending",waiver:"submitted"});
+      if(st.view==="tournament")st.tournamentRecords.push({id:"holiday-"+(++st.nextId),name:st.tournamentData.first.trim()+" "+st.tournamentData.last.trim(),waiver:"submitted"});
       draw();return;
     }
     if(b.dataset.action==="edit"){st.step=1;st.editing=true;st.view="new";draw();return;}
