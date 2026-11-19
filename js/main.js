@@ -3,8 +3,10 @@
  const D=window.SNL_DATA, teamMap=Object.fromEntries(D.teams.map(t=>[t.id,t]));
  const page=document.body.dataset.page||'home';
  const FEED_URL='/SNL-Calendar-Hub/site-data.json';
+ const BACKUP_FEED_URL='data/site-data.json';
  let feed=null;
  let feedFailed=false;
+ let feedWasCached=false;
  const escapeHtml=value=>String(value??'').replace(/[&<>\"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[ch]));
  const regular=()=>feed?.regularSeason||[];
  const weekGames=week=>regular().filter(g=>g.week===week).sort((a,b)=>(a.slot-b.slot)||(a.diamond-b.diamond));
@@ -139,13 +141,15 @@
  }
  async function refreshTickerFeed(){
    try{
-     const response=await fetch(FEED_URL,{cache:'no-store'});
-     if(!response.ok)throw new Error('Ticker feed HTTP '+response.status);
-     const data=await response.json();
-     if(!validatedFeed(data))throw new Error('Ticker feed validation failed');
-     feed=data;
-     syncScoreboardGameWindow();
-     refreshMatchupPanels();
+     const result=await fetchCalendarFeed();
+     const incoming=Date.parse(result.data.generatedAt||'')||0;
+     const displayed=Date.parse(feed?.generatedAt||'')||0;
+     if(!feed||incoming>=displayed){
+       feed=result.data;
+       feedWasCached=result.cached;
+       syncScoreboardGameWindow();
+       refreshMatchupPanels();
+     }
    }catch(error){console.warn('SNL ticker refresh unavailable',error);}
  }
  function refreshMatchupPanels(){
@@ -182,8 +186,25 @@
      .sort((a,b)=>a.week-b.week)[0]?.week||10;
  }
  const requestedWeek=()=>{const w=Number(new URLSearchParams(location.search).get('week'));return Number.isInteger(w)&&w>=1&&w<=10?w:upcomingWeek()};
- const feedNotice=()=>feed?'':'<div class="notice">Schedule and standings are temporarily unavailable. Please check back shortly.</div>';
+ const feedNotice=()=>!feed?'<div class="notice">Schedule and standings are temporarily unavailable. Please check back shortly.</div>':feedWasCached?'<div class="notice">Showing the last verified SNL Master snapshot while live data is unavailable.</div>':'';
  const validatedFeed=data=>data&&data.schemaVersion===1&&Array.isArray(data.regularSeason)&&data.regularSeason.length===60&&Array.isArray(data.standings)&&data.standings.length===6&&Array.isArray(data.playoffs)&&data.playoffs.length===15&&data.regularSeason.every(g=>teamMap[g.away]&&teamMap[g.home]&&Number.isInteger(g.week)&&g.week>=1&&g.week<=10);
+ // Verified local snapshot prevents blank schedules when the Calendar Hub request fails.
+ async function fetchCalendarFeed(){
+   let lastError;
+   for(const url of [FEED_URL,BACKUP_FEED_URL]){
+     const controller=new AbortController();
+     const timer=setTimeout(()=>controller.abort(),7000);
+     try{
+       const response=await fetch(url,{cache:'no-store',signal:controller.signal});
+       if(!response.ok)throw new Error('Calendar feed HTTP '+response.status);
+       const data=await response.json();
+       if(!validatedFeed(data))throw new Error('Calendar data validation failed');
+       return {data,cached:url===BACKUP_FEED_URL};
+     }catch(error){lastError=error;console.warn('SNL calendar source unavailable',url,error);}
+     finally{clearTimeout(timer);}
+   }
+   throw lastError||new Error('SNL calendar sources unavailable');
+ }
  const im=(id,cl='',alt='')=>`<img src="${id==='morsl'?'assets/morsl.webp?v=morsl-excel-20261105':(window.__ASSET_DATA?.[id+'.webp']||'assets/'+id+'.webp')}" class="${cl}" alt="${alt||teamMap[id]?.name||''}" loading="lazy">`;
  const primaryNav=[['home','Home','index.html'],['schedule','Schedule','schedule.html'],['standings','Standings','standings.html'],['teams','Teams','teams.html'],['live','Live','live.html'],['stats','Stats','stats.html'],['highlights','News','highlights.html']];
  const extraNav=[['playoffs','Playoffs','playoffs.html'],['tournaments','Tournaments','tournaments.html'],['rules','Rules','rules.html'],['about','About','about.html']];
@@ -520,12 +541,10 @@ function joinPage(){return `${pageHero('JOIN','SNL','Interested in playing Sunda
  async function init(){
    document.getElementById('app').innerHTML='<div class="wrap"><div class="notice">Loading the latest SNL schedule and standings…</div></div>';
    try{
-     const response=await fetch(FEED_URL,{cache:'no-store'});
-     if(!response.ok)throw new Error(`HTTP ${response.status}`);
-     const data=await response.json();
-     if(!validatedFeed(data))throw new Error('SNL data validation failed');
-     feed=data;
-   }catch(error){feedFailed=true;console.warn('SNL live feed unavailable',error);}
+     const result=await fetchCalendarFeed();
+     feed=result.data;
+     feedWasCached=result.cached;
+   }catch(error){feedFailed=true;console.warn('SNL live feed and fallback unavailable',error);}
    document.getElementById('siteHeader').innerHTML=header();
    syncScoreboardGameWindow();
    window.setInterval(syncScoreboardGameWindow,30000);

@@ -60,12 +60,28 @@
 <div id="siteHeader"></div>
 <main id="app"></main>
 <script src="js/data.js?v=snl-content-20261104"></script>
-<script src="js/main.js?v=snl-matchup-cutoff-0030-20261109"></script>
+<script src="js/main.js?v=snl-data-recovery-20261119-snl-matchup-cutoff-0030-20261109"></script>
 <script>
 (() => {
   'use strict';
   const FEED = 'https://sundaynightlights.github.io/SNL-Stats-Hub/stats-data.json';
   const SCHEDULE_FEED = '/SNL-Calendar-Hub/site-data.json';
+  const STATS_BACKUP='data/stats-data.json';
+  const SCHEDULE_BACKUP='data/site-data.json';
+  async function fetchFeedWithBackup(url,backup){
+    let lastError;
+    for(const source of [url,backup]){
+      const controller=new AbortController();
+      const timer=setTimeout(()=>controller.abort(),7000);
+      try{
+        const response=await fetch(source,{cache:'no-store',signal:controller.signal});
+        if(!response.ok)throw new Error('HTTP '+response.status);
+        return {data:await response.json(),cached:source===backup};
+      }catch(error){lastError=error;console.warn('SNL feed unavailable',source,error);}
+      finally{clearTimeout(timer);}
+    }
+    throw lastError||new Error('No SNL data source available');
+  }
   const stats = ['GP','PA','AVG','OBP','SLG','OPS','H','2B','3B','HR','RBI'];
   const rateStats = new Set(['AVG','OBP','SLG','OPS']);
   const categories = [
@@ -289,10 +305,8 @@
 
   async function loadStats() {
     try {
-      const response = await fetch(FEED,{cache:'no-store'});
-      if(!response.ok) throw new Error('HTTP '+response.status);
-
-      const incoming = await response.json();
+      const statsResult=await fetchFeedWithBackup(FEED,STATS_BACKUP);
+      const incoming=statsResult.data;
       if(!Array.isArray(incoming.seasons) || !incoming.seasons.length) {
         throw new Error('No seasons available');
       }
@@ -302,8 +316,8 @@
       // Read the official playing-week dates for the matching season.
       // A missing calendar never blocks the player statistics feed.
       try {
-        const calendarResponse = await fetch(SCHEDULE_FEED,{cache:'no-store'});
-        if(calendarResponse.ok) schedule = await calendarResponse.json();
+        const calendarResult=await fetchFeedWithBackup(SCHEDULE_FEED,SCHEDULE_BACKUP);
+        if(Array.isArray(calendarResult.data?.regularSeason))schedule=calendarResult.data;
       } catch(error) {
         console.warn('SNL schedule not available for qualification',error);
       }
@@ -328,6 +342,7 @@
           });
       }
 
+      if(statsResult.cached)byId('gcUpdated').textContent += ' · Last verified snapshot (live sync temporarily unavailable)';
       renderSeason();
     } catch(error) {
       console.error('SNL GameChanger stats unavailable:',error);

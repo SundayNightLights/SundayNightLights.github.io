@@ -16,7 +16,7 @@
   <main id="app"></main>
 
   <script src="js/data.js?v=snl-fnl-images-20261119"></script>
-  <script src="js/main.js?v=snl-fnl-images-20261119"></script>
+  <script src="js/main.js?v=snl-data-recovery-20261119-snl-fnl-images-20261119"></script>
 
   <script>
   (() => {
@@ -27,6 +27,8 @@
 
     const SCHEDULE_URL =
       'https://sundaynightlights.github.io/SNL-Calendar-Hub/site-data.json';
+    const STATS_BACKUP_URL='data/stats-data.json';
+    const SCHEDULE_BACKUP_URL='data/site-data.json';
 
     const CATEGORIES = [
       'AVG',
@@ -35,18 +37,19 @@
       'H'
     ];
 
-    async function fetchJSON(url) {
-      const response = await fetch(url, {
-        cache: 'no-store'
-      });
-
-      if (!response.ok) {
-        throw new Error(
-          'HTTP ' + response.status
-        );
+    async function fetchJSON(url, backupUrl) {
+      let lastError;
+      for(const source of [url,backupUrl]){
+        const controller=new AbortController();
+        const timer=setTimeout(()=>controller.abort(),7000);
+        try{
+          const response=await fetch(source,{cache:'no-store',signal:controller.signal});
+          if(!response.ok)throw new Error('HTTP '+response.status);
+          return await response.json();
+        }catch(error){lastError=error;console.warn('SNL feed unavailable',source,error);}
+        finally{clearTimeout(timer);}
       }
-
-      return response.json();
+      throw lastError||new Error('No SNL data source available');
     }
 
     function stat(player, key) {
@@ -296,8 +299,8 @@
           statsResult,
           scheduleResult
         ] = await Promise.allSettled([
-          fetchJSON(STATS_URL),
-          fetchJSON(SCHEDULE_URL)
+          fetchJSON(STATS_URL,STATS_BACKUP_URL),
+          fetchJSON(SCHEDULE_URL,SCHEDULE_BACKUP_URL)
         ]);
 
         if (
