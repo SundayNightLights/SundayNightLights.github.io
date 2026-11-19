@@ -138,3 +138,13 @@
 .snl-rp-demo-sign-notice strong{color:#ffe169}
 .snl-rp-demo-ack .snl-rp-field{max-width:500px}
 @media(max-width:420px){.snl-rp-waiver-brand{gap:9px}.snl-rp-waiver-brand img{height:49px;width:49px}.snl-rp-waiver-wordmark span{font-size:9px}}
+
+/* Indoor waiver v0.7: original ball-only SNL mark, no venue or banner artwork */
+.snl-rp-waiver-brand{display:flex;justify-content:center;align-items:center;margin:12px auto 5px;max-width:none}
+.snl-rp-waiver-brand img{display:block;width:94px;height:94px;object-fit:contain;flex:none}
+.snl-rp-waiver-full .snl-rp-legal-brand{text-align:center;font-size:12px;letter-spacing:1.6px;color:#16334a;margin:6px auto 8px}
+.snl-rp-release{border:2px solid #ad7a1b;border-radius:7px;padding:17px 17px 6px;background:#fff7e4;color:#263c4d;margin-top:16px}
+.snl-rp-release>strong{font-size:12px;letter-spacing:.35px;color:#654412;display:block;margin-bottom:13px}
+.snl-rp-waiver-full .snl-rp-release p{color:#293e50!important}
+.snl-rp-waiver-full .snl-rp-legal-section a{color:#10507a;text-decoration:underline;text-underline-offset:2px}
+@media(max-width:560px){.snl-rp-waiver-brand img{width:78px;height:78px}.snl-rp-release{padding:13px 12px 3px}}
