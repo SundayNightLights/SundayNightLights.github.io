@@ -508,12 +508,12 @@ function joinPage(){return `${pageHero('JOIN','SNL','Interested in playing Sunda
  function registrationPage(){return `${pageHero('PLAYER','REGISTRATION & WAIVERS','Explore the new SNL player signup and waiver experience')}
 <section class="flat-card info-landing"><span class="info-kicker">SNL PLAYER REGISTRATION</span>
 <h2>LEAGUE REGISTRATION OR TOURNAMENT WAIVER.</h2>
-<p class="section-note">League players can test creating a permanent player profile. Tournament-only participants can test completing an indoor or outdoor waiver without creating an account. Both paths are simulations.</p>
+<p class="section-note">League players can test a profile and the SNL indoor waiver. Players joining the Third Annual Holiday Tournament can test the indoor waiver without creating a website account. Both paths are simulations; outdoor waivers will be handled separately later.</p>
 <div class="notice"><strong>TEST MODE — REGISTRATION IS NOT OPEN.</strong> Use fictional details only. The sample waiver is not a legal agreement and the test does not save information, collect signatures, send invitations or create accounts.</div>
 </section>
 <div id="snl-reg-preview" aria-label="Interactive SNL registration and waiver demo"></div>
 <section class="flat-card info-landing" style="margin-top:20px"><h2>BEFORE LIVE REGISTRATION OPENS</h2>
-<p class="section-note">Before opening registration, SNL needs Ontario legal review of the waiver and league-coverage notice, confirmation of liability insurance and any separate venue requirements, secure electronic signing and private record storage, and tested captain/admin permissions.</p>
+<p class="section-note">Before real registration opens, SNL must address its uninsured liability exposure, verify any separate venue requirements, establish a secure signing and private recordkeeping system, confirm privacy/consent practices, and test captain/admin permissions. The draft release has not been legally validated.</p>
 <p class="section-note"><strong>Privacy by design:</strong> The public website will show approved roster names and sports records. Captains will see waiver and registration status, not legal names or signed waiver documents.</p>
 </section>`;}
 
