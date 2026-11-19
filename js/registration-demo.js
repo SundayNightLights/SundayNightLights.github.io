@@ -86,9 +86,9 @@ function snlRegistrationDemo(){
         <div class="snl-rp-legal-brand">SUNDAY NIGHT LIGHTS</div>
         <h4>PLAYER PARTICIPATION &amp; LIABILITY WAIVER</h4>
         <p class="snl-rp-legal-subtitle">${kind} leagues, playoffs and SNL-organized tournaments</p>
-        <p class="snl-rp-legal-version">Website demo · Based on SNL waiver draft v0.1 (November 18, 2026), with proposed seasonal coverage and venue-risk wording. Not final legal text.</p>
+        <p class="snl-rp-legal-version">Website demo · SNL-only draft v0.2 (November 18, 2026), adapted for indoor/outdoor leagues and tournaments. Not final legal text.</p>
       </header>
-      <div class="snl-rp-legal-warning"><strong>Proposed document, not a signing form.</strong> Adapted from the Markham Sports Dome waiver provided to SNL. The facility's original waiver is not replaced or amended without its approval. Ontario legal review, facility authorization and a secure signing process are required before use.</div>
+      <div class="snl-rp-legal-warning"><strong>Independent SNL draft — not an approved signing form.</strong> This waiver is intended solely for Sunday Night Lights leagues and SNL-organized tournaments, not as a waiver issued by any event venue. A facility may separately require its own waiver or impose participation and filming conditions. SNL must finalize its agreement with Ontario legal counsel and use a secure signing process before collecting real signatures.</div>
 
       <section class="snl-rp-legal-section"><h4>A | Participant &amp; Event</h4>
         <p><strong>Private registration details, in the live system:</strong> Full legal name, team, email, relevant contact information, event/season, participation dates, venue and emergency contact where required. These are not collected in this demo.</p>
@@ -116,8 +116,8 @@ function snlRegistrationDemo(){
       </section>
 
       <section class="snl-rp-legal-section"><h4>D | Release of Responsibility — Draft for Legal Review</h4>
-        <p>For this proposed agreement, “organizers” means Sunday Night Lights (SNL) and, for an event held at Markham Sports Dome and subject to facility approval, Markham Sports Dome, together with their respective directors, officers, members, employees, volunteers, officials, participants, clubs, agents, sponsors, facility owner/operators, and representatives.</p>
-        <p>I release the organizers from claims, demands, actions, and costs arising from my voluntary participation in the identified softball activity, to the extent permitted by applicable law. The precise scope, treatment of negligence, and enforceability of this release must be reviewed by Ontario legal counsel before any participant signs it.</p>
+        <p>For this proposed SNL agreement, “SNL parties” refers to Sunday Night Lights (SNL) and its league and tournament organizers, administrators, directors, officers, employees, volunteers, officials, and agents acting on SNL’s behalf. The draft does not name a venue or independent facility operator as an SNL party.</p>
+        <p>I release the SNL parties from claims, demands, actions, and costs arising from my voluntary participation in the identified SNL softball activity, to the extent permitted by applicable law. The precise scope, treatment of negligence, and enforceability of this release must be reviewed by Ontario legal counsel before any participant signs it.</p>
       </section>
 
       <section class="snl-rp-legal-section"><h4>E | Website Rosters &amp; Player Statistics</h4>
@@ -148,7 +148,7 @@ function snlRegistrationDemo(){
         <p>By signing, I confirm that I have read and understood Sections A–D, the website-statistics disclosure in Section E, the filming notice in Section F, and the privacy terms in Section H. My separate response in Section G records my optional media choice. I am signing voluntarily.</p>
         <p><strong>In the eventual secure version:</strong> Printed legal name, electronic signature, signing date, agreement version and reliable audit trail will be recorded privately. No real signature is taken in this demo.</p>
       </section>
-      <div class="snl-rp-legal-end">DRAFT ONLY · NOT APPROVED FOR SIGNING · FACILITY APPROVAL &amp; ONTARIO LEGAL REVIEW REQUIRED</div>
+      <div class="snl-rp-legal-end">SNL DRAFT ONLY · NOT APPROVED FOR SIGNING · ONTARIO LEGAL REVIEW REQUIRED</div>
     </article>
 
     <div class="snl-rp-demo-ack">
