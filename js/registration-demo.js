@@ -9,7 +9,7 @@ function snlRegistrationDemo(){
     tournament:{label:"2027 Winter Indoor Tournament",kind:"indoor"},outdoorTourney:{label:"2027 Summer Outdoor Tournament",kind:"outdoor"}
   };
   const sample=()=>({first:"",last:"",email:"",jersey:"",bats:"",throws:"",position:""});
-  const blankWaiver=()=>({media:"",read:false,demo:false,code:""});
+  const blankWaiver=()=>({code:""});
   const st={view:"new",step:1,event:"fall",data:sample(),waiver:blankWaiver(),error:"",done:false,skipped:false,editing:false,returning:false,filter:"all",joined:[],tournamentData:{first:"",last:"",email:""}};
   const e=s=>String(s??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
   const sel=(x,y)=>x===y?" selected":"";
@@ -18,7 +18,7 @@ function snlRegistrationDemo(){
   const status=(name,detail,txt,good)=>`<div class="snl-rp-status-row"><div><strong>${name}</strong><small>${detail}</small></div><span class="snl-rp-pill ${good?"good":"pending"}">${txt}</span></div>`;
   const hasFields=()=>!!(st.data.first.trim()&&st.data.last.trim()&&/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(st.data.email.trim())&&/^\d{1,3}$/.test(st.data.jersey.trim())&&["R","L","S"].includes(st.data.bats)&&["R","L"].includes(st.data.throws));
   const hasTournamentFields=()=>!!(st.tournamentData.first.trim()&&st.tournamentData.last.trim()&&/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(st.tournamentData.email.trim()));
-  const hasWaiver=()=>st.waiver.read&&st.waiver.demo&&!!st.waiver.media&&st.waiver.code.trim().toUpperCase()==="DEMO";
+  const hasWaiver=()=>st.waiver.code.trim().toUpperCase()==="DEMO";
 
   function tournamentIntro(){
     const p=st.tournamentData;
@@ -83,12 +83,12 @@ function snlRegistrationDemo(){
     <article class="snl-rp-waiver snl-rp-waiver-full" aria-label="Full draft SNL ${kind} player participation waiver">
       <header class="snl-rp-legal-head">
         <div class="snl-rp-waiver-label">REVIEW DRAFT · NOT APPROVED FOR SIGNING</div>
-        <div class="snl-rp-legal-brand">SUNDAY NIGHT LIGHTS</div>
+        <div class="snl-rp-waiver-brand"><img src="assets/favicon.svg" alt="SNL official site mark" width="60" height="60"><div class="snl-rp-waiver-wordmark"><strong>SUNDAY NIGHT LIGHTS</strong><span>OFFICIAL LEAGUE HUB</span></div></div>
         <h4>PLAYER PARTICIPATION &amp; LIABILITY WAIVER</h4>
         <p class="snl-rp-legal-subtitle">${kind} leagues, playoffs and SNL-organized tournaments</p>
-        <p class="snl-rp-legal-version">Website demo · SNL-only draft v0.2 (November 18, 2026), adapted for indoor/outdoor leagues and tournaments. Not final legal text.</p>
+        <p class="snl-rp-legal-version">Website demo · SNL-only draft v0.3 (November 18, 2026) · Not final legal text.</p>
       </header>
-      <div class="snl-rp-legal-warning"><strong>Independent SNL draft — not an approved signing form.</strong> This waiver is intended solely for Sunday Night Lights leagues and SNL-organized tournaments, not as a waiver issued by any event venue. A facility may separately require its own waiver or impose participation and filming conditions. SNL must finalize its agreement with Ontario legal counsel and use a secure signing process before collecting real signatures.</div>
+      <div class="snl-rp-legal-warning"><strong>SNL draft — not an approved signing form.</strong> This document concerns Sunday Night Lights leagues and SNL-organized tournaments. It is not a venue-issued waiver. Any separate venue participation requirements remain independent. SNL must obtain Ontario legal review and set up secure signing and recordkeeping before this agreement can be used.</div>
 
       <section class="snl-rp-legal-section"><h4>A | Participant &amp; Event</h4>
         <p><strong>Private registration details, in the live system:</strong> Full legal name, team, email, relevant contact information, event/season, participation dates, venue and emergency contact where required. These are not collected in this demo.</p>
@@ -100,11 +100,11 @@ function snlRegistrationDemo(){
       <section class="snl-rp-legal-section"><h4>B | Acknowledgement of ${kind} Softball Risks</h4>
         <p><strong>${risks}</strong> I choose to participate voluntarily and understand that softball can involve serious injury, permanent disability, or other loss. Potential hazards include:</p>
         <ul>
-          <li>Injuries from strenuous play, running, dryland activities, stretching, fatigue, and cardiovascular exertion;</li>
-          <li>Falls and injuries from grass, turf, uneven or irregular surfaces, and infections or rashes;</li>
-          <li>Collisions or contact with other participants, spectators, walls, balls, bats, sporting equipment, or vehicles;</li>
-          <li>Improper use or mechanical failure of equipment and potentially severe injuries, including spinal cord injury;</li>
-          <li>Heat, cold, other weather conditions, and travel to or from related events.</li>
+          <li>Injuries from running, sprinting, sliding, diving, throwing, catching, stretching, fatigue, and vigorous physical exertion;</li>
+          <li>Slips, trips and falls on turf, grass, dirt, bases, uneven ground, or wet and other playing surfaces;</li>
+          <li>Being struck by batted or thrown balls, swinging bats, or equipment, and collisions with players, spectators or structures;</li>
+          <li>Injuries during fielding, base running and contact near bases, as well as equipment failure, fractures, head injuries, or spinal injuries;</li>
+          <li>Health risks related to physical exertion or medical conditions, and, for outdoor play, weather and environmental conditions.</li>
         </ul>
         <p>In ${indoor?"indoor multipurpose facilities":"outdoor sports facilities"}, fixed or movable structures and equipment may be located within, adjacent to, or beyond normal playing boundaries. These may include ${indoor?"soccer goalposts, bleachers, benches, netting, barriers, walls and other sporting equipment":"benches, fencing, dugouts, bleachers, bases, barriers and other sporting equipment"}. Some objects may be near foul lines or in areas where a player may field or retrieve a ball. They may not always be movable. Contact, collision, tripping or falling against these objects can result in injury.</p>
         <p>I understand that close or unexpected contact can occur; that fatigue may increase risks; that rules and safe conduct can reduce (but not eliminate) risks; and that participation may involve anxiety or physical challenge.</p>
@@ -120,41 +120,28 @@ function snlRegistrationDemo(){
         <p>I release the SNL parties from claims, demands, actions, and costs arising from my voluntary participation in the identified SNL softball activity, to the extent permitted by applicable law. The precise scope, treatment of negligence, and enforceability of this release must be reviewed by Ontario legal counsel before any participant signs it.</p>
       </section>
 
-      <section class="snl-rp-legal-section"><h4>E | Website Rosters &amp; Player Statistics</h4>
-        <p>I understand that SNL operates a public league and tournament website. As part of its ordinary sports administration and coverage, SNL may publish my name, team, team roster, game participation, scores, playing statistics, league records, achievements, and related news coverage. Such information may appear in current and historical season or tournament records.</p>
-        <p>I may contact SNL to correct inaccurate information or discuss a privacy concern. Requests concerning public display will be considered with regard to league operations and applicable privacy requirements.</p>
+      <section class="snl-rp-legal-section"><h4>E | SNL League Coverage, Player Information &amp; Media</h4>
+        <p>Sunday Night Lights operates a public league and tournament website and social media channels. SNL regularly reports on its activities. Ordinary league coverage may include approved public player names, team rosters, schedules, game results, batting statistics, standings, player achievements, transactions and trades, awards, interviews, weekly recaps, player features, photographs, game footage, video highlights, and related news. Records and articles may remain accessible as part of the league's history.</p>
+        <p>Players are informed before participating that SNL ordinarily photographs or records softball games and events, including players, teams, celebrations, and people who appear in group or background scenes. Identifiable images or clips may be featured in SNL's usual game reporting, website articles, highlights, and SNL social posts. This notice is not a blanket authorization for any use of a person's identity. SNL will use a lawful and appropriate consent approach for identifiable media, including obtaining separate permission where required.</p>
+        <p><strong>Normal editorial coverage is not a player endorsement.</strong> The fact that someone enjoys SNL articles or decides to join after viewing them does not make a weekly recap or highlight a paid advertisement. This agreement does not grant SNL unrestricted permission to use a player's name or likeness for unrelated advertising, sponsorship endorsements, third-party marketing, or another purpose outside ordinary league reporting.</p>
+        <p>Players may contact SNL to correct inaccurate information or raise a privacy concern about identifiable coverage. SNL will consider reasonable requests according to applicable law and its privacy practices. Some material already shared or republished by others may not be fully retractable.</p>
       </section>
 
-      <section class="snl-rp-legal-section"><h4>F | Game Photography &amp; Video Notice</h4>
-        <p>SNL may have photographers or cameras at its games and events. Recordings may include gameplay, celebrations, spectators, teammates, and people incidentally appearing in the background. SNL may publish ordinary event coverage and highlights according to its disclosed media practices and any consent required by law. Facility filming rules also apply.</p>
+      <section class="snl-rp-legal-section"><h4>F | Privacy &amp; Recordkeeping</h4>
+        <p>SNL intends to collect and use the information necessary to administer participation, confirm eligibility, manage rosters, contact players, maintain league records, track waiver completion and document consent. Public-facing roster names and sporting records are described in Section E. Private legal names, personal contact information, emergency contacts and signed agreements will not be published as public roster information.</p>
+        <p>SNL will restrict access to private records and establish a privacy contact, appropriate safeguards and a record-retention policy before activating live registration. <strong>Privacy contact:</strong> To be designated. <strong>Privacy policy:</strong> To be published before launch.</p>
       </section>
 
-      <section class="snl-rp-legal-section"><h4>G | SNL Media &amp; Event-Promotion Authorization</h4>
-        <p>This separate authorization covers the regular SNL media activities discussed during registration, including photos and video clips featuring me in highlights, articles, season or tournament recaps, social media, and promotion of future SNL-run leagues and tournaments. It does not authorize unrelated third-party endorsements or the facility’s independent advertising.</p>
-        <p>I understand this material may be public and shareable. I may request withdrawal of consent for future identifiable promotional uses through the SNL privacy contact; material already published may not always be fully retractable. Declining does not prevent league participation. SNL will take reasonable steps with identifiable features, but cannot guarantee that I will never appear incidentally in group or background footage.</p>
-        <div class="snl-rp-legal-choice">
-          <strong>Separate optional media choice · demo only</strong>
-          <label><input type="radio" name="snl-demo-media" data-waiver="yes"${chk(st.waiver.media==="yes")}> YES — I consent to the identifiable SNL media and promotion uses described above.</label>
-          <label><input type="radio" name="snl-demo-media" data-waiver="no"${chk(st.waiver.media==="no")}> NO — I decline optional media authorization. My league or tournament eligibility is unaffected.</label>
-        </div>
-      </section>
-
-      <section class="snl-rp-legal-section"><h4>H | Privacy &amp; Recordkeeping</h4>
-        <p>SNL collects participant information and signatures to administer registrations, confirm eligibility, contact participants, track waiver completion, maintain sports records, and document consent. Public website content is described above. Personal contact details, emergency contacts, and signed waivers are not intended for public posting.</p>
-        <p>SNL will limit access to signed records and retain them according to its final privacy and retention policy. <strong>Privacy contact:</strong> Pending designation. <strong>Full policy:</strong> Pending publication.</p>
-      </section>
-
-      <section class="snl-rp-legal-section"><h4>I | Participant Acknowledgment &amp; Signature</h4>
-        <p>By signing, I confirm that I have read and understood Sections A–D, the website-statistics disclosure in Section E, the filming notice in Section F, and the privacy terms in Section H. My separate response in Section G records my optional media choice. I am signing voluntarily.</p>
-        <p><strong>In the eventual secure version:</strong> Printed legal name, electronic signature, signing date, agreement version and reliable audit trail will be recorded privately. No real signature is taken in this demo.</p>
+      <section class="snl-rp-legal-section"><h4>G | Participant Acknowledgment &amp; Signature</h4>
+        <p>By signing the final approved version, I confirm that I have read and understand the participation terms, risks, responsibilities and proposed liability release in Sections A–D, together with the ordinary league-coverage notice and privacy terms in Sections E–F. I understand that the liability provisions are intended to affect my legal rights. I am voluntarily agreeing to the final document.</p>
+        <p><strong>In the eventual secure version:</strong> A participant will review the full agreement, intentionally sign and submit it, and receive confirmation. SNL will privately record the agreed document version, identity verification appropriate to the process, date and time, and a reliable signature audit trail. This demo does not collect legal names or real signatures.</p>
       </section>
       <div class="snl-rp-legal-end">SNL DRAFT ONLY · NOT APPROVED FOR SIGNING · ONTARIO LEGAL REVIEW REQUIRED</div>
     </article>
 
     <div class="snl-rp-demo-ack">
-      <label><input type="checkbox" data-waiver="read"${chk(st.waiver.read)}> I reviewed the <strong>full draft waiver</strong> above for testing.</label>
-      <label><input type="checkbox" data-waiver="demo"${chk(st.waiver.demo)}> I understand this is a demo and does NOT sign a real waiver or provide legally effective consent.</label>
-      <label class="snl-rp-field"><span>Demo completion code <em>Type DEMO, not your legal name or signature</em></span><input data-waiver="code" value="${e(st.waiver.code)}" maxlength="4" autocomplete="off" placeholder="DEMO"></label>
+      <p class="snl-rp-demo-sign-notice"><strong>Simulate the final signing step</strong> — In the live system, this would be a separate, deliberate electronic signature after reviewing the agreement. For this test, type <strong>DEMO</strong> only. No checkbox or media opt-in is required to test the flow.</p>
+      <label class="snl-rp-field"><span>Demo confirmation code <em>Type DEMO, not your legal name or signature</em></span><input data-waiver="code" value="${e(st.waiver.code)}" maxlength="4" autocomplete="off" placeholder="DEMO"></label>
     </div>
     ${st.error?`<p class="snl-rp-required" role="alert">${e(st.error)}</p>`:""}
     <div class="snl-rp-note"><strong>Demo safety:</strong> This page does not collect legal names, signatures or waiver records. Refresh to erase your test entries.</div>
@@ -218,8 +205,6 @@ function snlRegistrationDemo(){
     if(t.dataset.tournament)st.tournamentData[t.dataset.tournament]=t.value;
     if(t.dataset.event){st.event=t.value;st.step=1;st.error="";st.waiver=blankWaiver();st.done=false;st.editing=false;draw();return;}
     if(t.dataset.area&&t.checked)st.data.position=t.dataset.area;
-    if(t.dataset.waiver==="yes"||t.dataset.waiver==="no")st.waiver.media=t.dataset.waiver;
-    if(t.dataset.waiver==="read"||t.dataset.waiver==="demo")st.waiver[t.dataset.waiver]=t.checked;
     if(t.dataset.waiver==="code")st.waiver.code=t.value;
   });
   root.addEventListener("click",event=>{
@@ -237,7 +222,7 @@ function snlRegistrationDemo(){
     }
     if(b.dataset.action==="back"){st.step=1;st.error="";draw();return;}
     if(b.dataset.action==="finish"){
-      if(!hasWaiver()){st.error="Choose a media preference, check both statements and type DEMO.";draw();return;}
+      if(!hasWaiver()){st.error="To test completion, type DEMO into the confirmation-code field.";draw();return;}
       st.error="";st.step=3;st.done=true;st.skipped=false;
       if(st.view!=="tournament"&&!st.returning)st.joined.push({name:st.data.first.trim()+" "+st.data.last.trim(),jersey:st.data.jersey.trim(),status:"Awaiting approval · demo",good:false});
       draw();return;
