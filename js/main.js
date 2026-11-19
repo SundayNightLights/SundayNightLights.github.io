@@ -513,7 +513,7 @@ function joinPage(){return `${pageHero('JOIN','SNL','Interested in playing Sunda
 </section>
 <div id="snl-reg-preview" aria-label="Interactive SNL registration and waiver demo"></div>
 <section class="flat-card info-landing" style="margin-top:20px"><h2>BEFORE LIVE REGISTRATION OPENS</h2>
-<p class="section-note">SNL must finalize and obtain legal and facility approval for its waiver agreements, establish secure sign-in and private waiver storage, confirm its privacy and media practices, and test the captain/admin approval system.</p>
+<p class="section-note">SNL must have its own waiver agreement reviewed by Ontario legal counsel, confirm any separate venue waiver and filming requirements, establish secure sign-in and private waiver storage, and test the captain/admin approval system.</p>
 <p class="section-note"><strong>Privacy by design:</strong> The public website will show approved roster names and sports records. Captains will see waiver and registration status, not legal names or signed waiver documents.</p>
 </section>`;}
 
