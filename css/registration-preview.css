@@ -273,3 +273,43 @@
 .snl-rp-link-actions>*{width:100%;text-align:center}
 .snl-rp-invite-builder{padding:16px}
 }
+
+/* SNL two-step clearance demo: captain decisions and administrator waiver checks */
+.snl-rp-review-heading{color:#fff;font-size:18px;margin:22px 0 14px;letter-spacing:.1px}
+.snl-rp-review-legend{display:flex;flex-direction:column;gap:6px;background:#132f45;border:1px solid #5b7588;border-left:4px solid #ffde19;padding:13px 15px;border-radius:6px;margin:14px 0 17px}
+.snl-rp-review-legend strong{color:#ffe16e;font-size:12px}
+.snl-rp-review-legend span{color:#c9dbe9;font-size:12px;line-height:1.55}
+.snl-rp-review-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.snl-rp-review-card{min-width:0;border:1px solid #45657c;border-radius:9px;background:#0a263c;padding:16px;display:flex;flex-direction:column;gap:14px}
+.snl-rp-review-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.snl-rp-review-top>div{min-width:0;flex:1}
+.snl-rp-review-top strong{color:#fff;font-size:14px;display:block;overflow-wrap:anywhere}
+.snl-rp-review-top small{font-size:11px;color:#b0c7d9;display:block;line-height:1.5;margin-top:5px}
+.snl-rp-review-top .snl-rp-pill{white-space:normal;text-align:center;flex:none;max-width:45%;line-height:1.4}
+.snl-rp-review-details{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;border-top:1px solid #35546d;border-bottom:1px solid #35546d;padding:12px 0}
+.snl-rp-review-details>div{min-width:0}
+.snl-rp-review-details span{display:block;color:#9eb9ca;font-size:10px;text-transform:uppercase;letter-spacing:.6px;margin-bottom:5px}
+.snl-rp-review-details strong{color:#e7f3fa;font-size:12px;line-height:1.5;display:block}
+.snl-rp-review-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:auto}
+.snl-rp-review-actions button{border:1px solid #ffda32;border-radius:6px;padding:9px 11px;min-height:37px;background:#ffde19;color:#071e31;font-weight:900;font-size:11px;cursor:pointer;line-height:1.3}
+.snl-rp-review-actions button:hover{background:#f0cb13}
+.snl-rp-review-actions .snl-rp-review-decline{background:#1c384a;border-color:#7991a3;color:#f6e5e2}
+.snl-rp-review-actions .snl-rp-review-decline:hover{background:#2b4c61}
+.snl-rp-review-actions button:focus-visible,.snl-rp-tabs button:focus-visible{outline:2px solid #ffde19;outline-offset:3px}
+.snl-rp-review-empty{background:#0e3048;border:1px dashed #638399;color:#c9dbe9;padding:17px;border-radius:8px;font-size:13px;line-height:1.6}
+.snl-rp-admin-note{min-height:72px;background:#0c293f;border:1px solid #486b82;border-radius:7px;padding:13px;display:flex;flex-direction:column;gap:6px}
+.snl-rp-admin-note strong{font-size:13px;color:#fff}
+.snl-rp-admin-note span{font-size:12px;color:#b9ccda}
+.snl-rp-metrics{grid-template-columns:repeat(auto-fit,minmax(125px,1fr))}
+.snl-rp-tabs button{flex:1 1 142px;min-width:0;white-space:normal}
+@media(max-width:760px){.snl-rp-review-grid{grid-template-columns:1fr}}
+@media(max-width:480px){
+ .snl-rp-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+ .snl-rp-tabs button{flex:none;padding:11px 7px;font-size:11px}
+ .snl-rp-review-card{padding:13px}
+ .snl-rp-review-top{flex-direction:column}
+ .snl-rp-review-top .snl-rp-pill{max-width:100%}
+ .snl-rp-review-actions{display:grid;grid-template-columns:1fr}
+ .snl-rp-review-actions button{width:100%}
+ .snl-rp-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
