@@ -81,7 +81,7 @@ function snlRegistrationDemo(){
       <article class="snl-rp-waiver snl-rp-waiver-full" aria-label="SNL indoor player participation waiver v0.7 working draft">
         <header class="snl-rp-legal-head">
           <div class="snl-rp-waiver-label">REVIEW DRAFT · NOT A VALID SIGNING FORM</div>
-          <div class="snl-rp-waiver-brand"><img src="assets/snl-ball-logo.webp" alt="Sunday Night Lights softball logo — SNL on a ball" width="90" height="90"></div>
+          <div class="snl-rp-waiver-brand"><img src="assets/snl-ball-original-crop.webp" alt="Sunday Night Lights softball logo — SNL on a ball" width="90" height="90"></div>
           <div class="snl-rp-legal-brand">SUNDAY NIGHT LIGHTS</div>
           <h4>PLAYER PARTICIPATION &amp; LIABILITY WAIVER</h4>
           <p class="snl-rp-legal-subtitle">Indoor Softball — Leagues, Playoffs &amp; Tournaments</p>
