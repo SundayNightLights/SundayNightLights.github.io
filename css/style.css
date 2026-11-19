@@ -960,15 +960,15 @@ main{padding-bottom:30px}.hero{border:1px solid #43617a;background:#102f4d;margi
    and the same full-card gradient as all other featured stories. */
 .stories > .story{height:auto!important}
 .story.fridaylights{height:auto!important;min-height:0;background:#06192b;border-color:#56738c}
-/* Reserve a quiet strip above the flyer so the Baseline logo clears the existing SNL badge.
-   Extending the card by the same amount retains the artwork's 9:16 aspect ratio. */
-.story.fridaylights:before{content:"";display:block;padding-top:calc(177.64% + 34px)}
-.story.fridaylights .story-illustration{inset:34px 0 0;overflow:hidden;background:#06192b}
+/* The flyer itself now has an extended night sky above the logo; no exposed black CSS strip.
+   Both the shifted date block and community line remain above the regular SNL fade. */
+.story.fridaylights:before{content:"";display:block;padding-top:177.64%}
+.story.fridaylights .story-illustration{inset:0;overflow:hidden;background:#06192b}
 .story.fridaylights .story-illustration img.story-poster{
   width:100%;height:100%;max-width:none;object-fit:cover;object-position:center top;background:#06192b
 }
 /* No custom footer or overlay: .story:after and .story .story-bottom
    provide precisely the same gradients and spacing as all other cards. */
-.story.fridaylights .story-tag{display:block;top:12px;left:12px;background:var(--yellow);color:#061728}
+.story.fridaylights .story-tag{display:block;top:5px;left:12px;background:var(--yellow);color:#061728}
 .fnl-article-flyer{max-width:680px;margin-left:auto;margin-right:auto}
 .fnl-article-flyer img{width:100%;height:auto}
