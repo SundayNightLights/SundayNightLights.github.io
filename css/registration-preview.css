@@ -148,3 +148,78 @@
 .snl-rp-waiver-full .snl-rp-release p{color:#293e50!important}
 .snl-rp-waiver-full .snl-rp-legal-section a{color:#10507a;text-decoration:underline;text-underline-offset:2px}
 @media(max-width:560px){.snl-rp-waiver-brand img{width:78px;height:78px}.snl-rp-release{padding:13px 12px 3px}}
+
+/* v0.7 navy waiver refresh: preserve genuine SNL ball graphic */
+.snl-rp-waiver-full{
+  background:linear-gradient(168deg,#0a2742 0%,#071e33 48%,#091d31 100%);
+  border:1px solid #395e78;
+  color:#e8f2f9;
+  box-shadow:0 18px 45px rgba(0,0,0,.18);
+}
+.snl-rp-waiver-full .snl-rp-legal-head{border-bottom:2px solid #f2d327}
+.snl-rp-waiver-full .snl-rp-waiver-label{color:#ffdf4a;font-size:11px}
+.snl-rp-waiver-full .snl-rp-waiver-brand{margin:18px auto 10px}
+.snl-rp-waiver-full .snl-rp-waiver-brand img{
+  box-sizing:content-box;
+  width:108px;height:108px;
+  padding:11px;border-radius:50%;
+  background:#f5f1e6;
+  border:2px solid #edce35;
+  box-shadow:0 7px 22px #0007;
+  object-fit:contain;
+}
+.snl-rp-waiver-full .snl-rp-legal-brand{
+  color:#ffdf4a!important;
+  font-size:12px;
+  font-weight:900;
+  margin:11px 0 7px!important;
+}
+.snl-rp-waiver-full .snl-rp-legal-head h4{color:#fff;font-size:clamp(21px,3vw,27px)}
+.snl-rp-waiver-full .snl-rp-legal-subtitle{color:#f2de76!important}
+.snl-rp-waiver-full .snl-rp-legal-version{color:#acc6d7!important}
+.snl-rp-waiver-full .snl-rp-legal-warning{
+  background:#152f43;
+  color:#f3e5b5;
+  border-left:4px solid #f2d327;
+  border-top:1px solid #3c5260;
+  border-right:1px solid #3c5260;
+  border-bottom:1px solid #3c5260;
+  border-radius:4px;
+}
+.snl-rp-waiver-full .snl-rp-legal-section{
+  border-bottom:1px solid #33536d;
+}
+.snl-rp-waiver-full .snl-rp-legal-section h4{
+  color:#ffdf49!important;
+}
+.snl-rp-waiver-full .snl-rp-legal-section p{
+  color:#e3edf4!important;
+}
+.snl-rp-waiver-full .snl-rp-legal-section ul,
+.snl-rp-waiver-full .snl-rp-legal-section li{
+  color:#e3edf4!important;
+}
+.snl-rp-waiver-full .snl-rp-legal-section p strong,
+.snl-rp-waiver-full .snl-rp-legal-section li strong{color:#fff}
+.snl-rp-waiver-full .snl-rp-legal-section a{
+  color:#ffe465!important;text-decoration:underline;text-underline-offset:3px;
+}
+.snl-rp-waiver-full .snl-rp-release{
+  background:#16394f;
+  border:2px solid #f0cb35;
+  color:#f4f9fb;
+  padding:18px 19px 8px;
+  box-shadow:inset 0 0 0 1px #3c6179;
+}
+.snl-rp-waiver-full .snl-rp-release>strong{
+  color:#ffe45e!important;font-size:13px;letter-spacing:.4px;
+}
+.snl-rp-waiver-full .snl-rp-release p{color:#f4f8fc!important}
+.snl-rp-waiver-full .snl-rp-legal-end{
+  color:#f8df72;background:#132f46;
+  border:1px dashed #d9b83d;
+}
+@media(max-width:560px){
+  .snl-rp-waiver-full .snl-rp-waiver-brand img{width:92px;height:92px;padding:9px}
+  .snl-rp-waiver-full .snl-rp-release{padding:13px 12px 4px}
+}
