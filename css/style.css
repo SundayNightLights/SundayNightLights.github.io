@@ -954,3 +954,15 @@ main{padding-bottom:30px}.hero{border:1px solid #43617a;background:#102f4d;margi
 .snl-article .article-content .week3-video{width:min(100%,460px);margin:24px auto 28px}
 .snl-article .article-content .week3-video video{display:block;width:100%;height:auto;aspect-ratio:478/850;object-fit:contain;background:#04111f;border:1px solid #4d6a83;border-radius:11px}
 .snl-article .article-content .week3-video figcaption{margin:10px 0 0;text-align:center;font-size:12px;line-height:1.5;letter-spacing:.075em;text-transform:uppercase;color:#b9cadd}
+
+/* Friday Night Lights community spotlight: accessible text poster until the supplied image assets are on the site. */
+.story.fridaylights{background:#08111a;border-color:#f07824}
+.story.fridaylights:after{background:linear-gradient(to bottom,transparent 32%,#03070c20 52%,#03070cf5 100%)}
+.story.fridaylights .story-bottom{background:linear-gradient(transparent,#02070ce8 27%,#02070cfa);padding-top:19px}
+.fnl-card-art{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;gap:6px;padding:44px 11px 92px;background:radial-gradient(circle at 50% 8%,#a13713 0,#241118 40%,#07090b 77%);color:white;text-align:center;overflow:hidden}
+.fnl-card-art:before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(160deg,transparent 0 65px,#ff741d17 67px 69px);pointer-events:none}
+.fnl-card-brand{font-weight:1000;font-style:italic;font-size:25px;line-height:1;letter-spacing:-1px;text-shadow:0 2px 3px #000;z-index:1}.fnl-card-brand span{font-size:13px;color:#ff8d36}
+.fnl-card-title{z-index:1;font-weight:1000;font-style:italic;font-size:27px;letter-spacing:-1px;line-height:.92;margin-top:12px;text-shadow:0 2px 3px #000}.fnl-card-title strong{display:block;color:#ff7d19;font-size:54px;text-shadow:0 2px 2px #000}
+.fnl-card-kind{z-index:1;background:#f58025;color:#0b0a0b;font-size:12px;font-weight:1000;transform:skew(-6deg);padding:5px 11px;letter-spacing:.2px;margin:7px 0 8px}
+.fnl-card-detail{z-index:1;font-weight:900;font-size:11px;line-height:1.25;border-bottom:1px solid #f5802560;padding-bottom:3px}
+.fnl-card-slogan{z-index:1;color:#ffae68;font-size:13px;font-weight:1000;font-style:italic;line-height:1.1;margin-top:auto}
