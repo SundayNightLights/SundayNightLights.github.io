@@ -955,14 +955,22 @@ main{padding-bottom:30px}.hero{border:1px solid #43617a;background:#102f4d;margi
 .snl-article .article-content .week3-video video{display:block;width:100%;height:auto;aspect-ratio:478/850;object-fit:contain;background:#04111f;border:1px solid #4d6a83;border-radius:11px}
 .snl-article .article-content .week3-video figcaption{margin:10px 0 0;text-align:center;font-size:12px;line-height:1.5;letter-spacing:.075em;text-transform:uppercase;color:#b9cadd}
 
-/* Friday Night Lights: reinstate the familiar SNL yellow category and dark headline footer.
-   Keep the entire approved vertical flyer visible in its own area above the footer. */
-.story.fridaylights{background:#070b12;border-color:#56738c;min-height:450px}
+/* Friday Night Lights: preserve all details on the approved 9:16 flyer.
+   Fade only the poster's bottom edge into the navy SNL headline area. */
+.story.fridaylights{background:#06192b;border-color:#56738c;min-height:450px}
 .story.fridaylights:after{display:none}
-.story.fridaylights .story-illustration{bottom:100px;overflow:hidden;background:#070b12}
-.story.fridaylights .story-illustration img.story-poster{object-fit:contain;object-position:center center;background:#070b12}
+.story.fridaylights .story-illustration{bottom:100px;overflow:hidden;background:#06192b}
+.story.fridaylights .story-illustration img.story-poster{object-fit:contain;object-position:center center;background:#06192b}
+.story.fridaylights .story-illustration:after{
+  content:"";position:absolute;z-index:1;bottom:0;left:0;right:0;
+  height:30px;pointer-events:none;
+  background:linear-gradient(180deg,rgba(6,25,43,0) 0%,rgba(6,25,43,.15) 30%,#06192b 100%);
+}
 .story.fridaylights .story-tag{display:block;top:12px;left:12px;background:var(--yellow);color:#061728}
-.story.fridaylights .story-bottom{display:block;min-height:100px;padding:12px 13px 13px;background:#06192b;border-top:2px solid var(--yellow)}
+.story.fridaylights .story-bottom{
+  display:block;min-height:100px;padding:12px 13px 13px;
+  background:linear-gradient(180deg,#06192b 0%,#051525 100%);border-top:0;
+}
 .story.fridaylights .story-bottom h3{font-size:17px;line-height:1.17;margin:0 0 6px}
 .story.fridaylights .story-bottom small{color:#b5c3d4;letter-spacing:.04em}
 .fnl-article-flyer{max-width:680px;margin-left:auto;margin-right:auto}
