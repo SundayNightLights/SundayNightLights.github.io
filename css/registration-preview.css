@@ -245,3 +245,31 @@
     height:118px!important;
   }
 }
+
+/* SNL captain invitation demo */
+.snl-rp-captain-picker{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-bottom:19px}
+.snl-rp-invite-builder{background:#0b2c44;border:1px solid #54718c;border-left:4px solid #f5d521;border-radius:9px;padding:20px;margin-bottom:20px}
+.snl-rp-invite-heading{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+.snl-rp-invite-heading strong{font-size:17px;color:#fff}
+.snl-rp-invite-heading small{color:#ffe15f;font-size:12px;font-weight:700}
+.snl-rp-invite-builder p{font-size:12px;line-height:1.65;color:#c9dbe8;margin:8px 0 14px}
+.snl-rp-invite-builder p strong{color:#fff}
+.snl-rp-link-field{margin:12px 0}
+.snl-rp-link-field input{width:100%;font-size:12px!important;color:#0d2b42!important;background:#eff4f8!important;cursor:text}
+.snl-rp-link-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.snl-rp-link-actions button,.snl-rp-demo-invite-link{font-size:12px;padding:11px 14px}
+.snl-rp-demo-invite-link{display:inline-flex;align-items:center;justify-content:center;background:#153c58;color:#ffdf52;text-decoration:none;border:1px solid #62859a;border-radius:6px;font-weight:800}
+.snl-rp-demo-invite-link:hover{background:#1d4867;color:#fff}
+.snl-rp-copy-status{color:#ffe45f!important;font-weight:800}
+.snl-rp-invite-clarifier{color:#d1dfeb!important;margin-bottom:0!important}
+.snl-rp-locked-invite{display:flex;align-items:flex-start;flex-direction:column;gap:7px;background:#0b2e45;border:1px solid #668494;border-left:4px solid #ffde19;padding:15px 18px;margin-bottom:17px;border-radius:8px}
+.snl-rp-locked-invite strong{font-size:15px;color:#ffe75d}
+.snl-rp-locked-invite span{font-size:12px;color:#e5eff7}
+.snl-rp-locked-invite button,.snl-rp-invite-exit{background:transparent;border:0;padding:4px 0 0;color:#ffe45e;text-decoration:underline;cursor:pointer;font-weight:700;text-align:left;font-size:12px}
+.snl-rp-invite-exit{margin-top:5px}
+@media(max-width:680px){
+.snl-rp-captain-picker{grid-template-columns:1fr}
+.snl-rp-link-actions{display:grid;grid-template-columns:1fr}
+.snl-rp-link-actions>*{width:100%;text-align:center}
+.snl-rp-invite-builder{padding:16px}
+}
