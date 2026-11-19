@@ -4,9 +4,9 @@ function snlRegistrationDemo(){
   if(!root||root.dataset.initialized==="yes")return;
   root.dataset.initialized="yes";
   const events={
-    fall:{label:"2026–27 Fall League",kind:"indoor"},
-    summer:{label:"2027 Summer League",kind:"outdoor"},
-    tournament:{label:"2027 Winter Indoor Tournament",kind:"indoor"},outdoorTourney:{label:"2027 Summer Outdoor Tournament",kind:"outdoor"}
+    fall:{label:"2026–27 Fall League",kind:"indoor",date:"As listed on the official league schedule"},
+    winter:{label:"2026–27 Winter League",kind:"indoor",date:"As listed on the official league schedule"},
+    tournament:{label:"Sunday Night Lights Third Annual Holiday Tournament",kind:"indoor",date:"Sunday, December 27, 2026"}
   };
   const sample=()=>({first:"",last:"",email:"",jersey:"",bats:"",throws:"",position:""});
   const blankWaiver=()=>({code:""});
@@ -23,7 +23,7 @@ function snlRegistrationDemo(){
   function tournamentIntro(){
     const p=st.tournamentData;
     return `<div class="snl-rp-panel"><div class="snl-rp-heading"><h3>Tournament waiver only</h3><p>For players joining an SNL tournament without signing up for a league or creating a website account. Enter sample information only.</p></div>
-      <div class="snl-rp-demo-event"><small>EXAMPLE TOURNAMENT INVITATION</small><strong>${e(current().label)}</strong><span>Example Tournament Team · ${current().kind==="indoor"?"Indoor":"Outdoor"} waiver</span></div>
+      <div class="snl-rp-demo-event"><small>EXAMPLE TOURNAMENT INVITATION</small><strong>${e(current().label)}</strong><span>Example Tournament Team · Indoor waiver</span></div>
       <div class="snl-rp-grid">
         <label class="snl-rp-field"><span>Legal First Name <em>Required for real waiver · Private</em></span><input data-tournament="first" value="${e(p.first)}" maxlength="60" placeholder="e.g. Alex" autocomplete="off"></label>
         <label class="snl-rp-field"><span>Legal Last Name <em>Required for real waiver · Private</em></span><input data-tournament="last" value="${e(p.last)}" maxlength="60" placeholder="e.g. Example" autocomplete="off"></label>
@@ -50,7 +50,7 @@ function snlRegistrationDemo(){
   function profile(){
     const d=st.data;
     return `<div class="snl-rp-panel"><div class="snl-rp-heading"><h3>${st.editing?"Edit demo profile":"Player registration"}</h3><p>Enter fictional information to test this page. Nothing is saved or submitted.</p></div>
-      <div class="snl-rp-demo-event"><small>SIMULATED TEAM INVITATION</small><strong>${current().label}</strong><span>Buffaloes · ${current().kind==="indoor"?"Indoor":"Outdoor"} softball</span></div>
+      <div class="snl-rp-demo-event"><small>SIMULATED TEAM INVITATION</small><strong>${current().label}</strong><span>Buffaloes · Indoor softball</span></div>
       <div class="snl-rp-grid">
         <label class="snl-rp-field"><span>First Name <em>Required · Public</em></span><input data-field="first" value="${e(d.first)}" maxlength="60" autocomplete="off" placeholder="e.g. Mike"></label>
         <label class="snl-rp-field"><span>Last Name <em>Required · Public</em></span><input data-field="last" value="${e(d.last)}" maxlength="60" autocomplete="off" placeholder="e.g. Sample"></label>
@@ -71,88 +71,90 @@ function snlRegistrationDemo(){
     </div>`;
   }
   function waiver(){
-  const indoor=current().kind==="indoor";
-  const kind=indoor?"Indoor":"Outdoor";
-  const period=indoor?"October 1 through April 30 of the following year":"May 1 through October 31 of the same year";
-  const coverage=indoor?"Fall and Winter league seasons, indoor playoffs, and SNL-organized indoor tournaments":"Spring and Summer league seasons, outdoor playoffs, and SNL-organized outdoor tournaments";
-  const risks=indoor
-    ? "ALL SPORT, INCLUDING INDOOR SOFTBALL, HAS ITS RISKS."
-    : "ALL SPORT, INCLUDING OUTDOOR SOFTBALL, HAS ITS RISKS.";
-  return `<div class="snl-rp-panel">
-    <div class="snl-rp-heading"><h3>Full ${kind.toLowerCase()} waiver — demo</h3><p>${current().label}. Review the entire proposed SNL agreement below. This is draft language and no actual waiver is signed here.${st.view==="tournament"?" No league profile is required.":""}</p></div>
-    <article class="snl-rp-waiver snl-rp-waiver-full" aria-label="Full draft SNL ${kind} player participation waiver">
-      <header class="snl-rp-legal-head">
-        <div class="snl-rp-waiver-label">REVIEW DRAFT · NOT APPROVED FOR SIGNING</div>
-        <div class="snl-rp-waiver-brand"><img src="assets/favicon.svg" alt="SNL official site mark" width="60" height="60"><div class="snl-rp-waiver-wordmark"><strong>SUNDAY NIGHT LIGHTS</strong><span>OFFICIAL LEAGUE HUB</span></div></div>
-        <h4>PLAYER PARTICIPATION &amp; LIABILITY WAIVER</h4>
-        <p class="snl-rp-legal-subtitle">${kind} leagues, playoffs and SNL-organized tournaments</p>
-        <p class="snl-rp-legal-version">Website demo · SNL-only draft v0.3 (November 18, 2026) · Not final legal text.</p>
-      </header>
-      <div class="snl-rp-legal-warning"><strong>SNL draft — not an approved signing form.</strong> This document concerns Sunday Night Lights leagues and SNL-organized tournaments. It is not a venue-issued waiver. Any separate venue participation requirements remain independent. SNL must obtain Ontario legal review and set up secure signing and recordkeeping before this agreement can be used.</div>
-
-      <section class="snl-rp-legal-section"><h4>A | Participant &amp; Event</h4>
-        <p><strong>Private registration details, in the live system:</strong> Full legal name, team, email, relevant contact information, event/season, participation dates, venue and emergency contact where required. These are not collected in this demo.</p>
-        <p><strong>Participation:</strong> SNL regular leagues, playoffs, SNL-organized tournaments or another SNL-designated event covered by this agreement.</p>
-        <p><strong>Proposed ${kind.toLowerCase()} participation period:</strong> ${period}. Coverage would include ${coverage}. The applicable waiver is determined by the event type and covered period, not merely by the month in which a player registers.</p>
-        <p><strong>Eligibility:</strong> I confirm I am at least 18 years old. If not, a separately approved minor-participant process is required.</p>
-      </section>
-
-      <section class="snl-rp-legal-section"><h4>B | Acknowledgement of ${kind} Softball Risks</h4>
-        <p><strong>${risks}</strong> I choose to participate voluntarily and understand that softball can involve serious injury, permanent disability, or other loss. Potential hazards include:</p>
-        <ul>
-          <li>Injuries from running, sprinting, sliding, diving, throwing, catching, stretching, fatigue, and vigorous physical exertion;</li>
-          <li>Slips, trips and falls on turf, grass, dirt, bases, uneven ground, or wet and other playing surfaces;</li>
-          <li>Being struck by batted or thrown balls, swinging bats, or equipment, and collisions with players, spectators or structures;</li>
-          <li>Injuries during fielding, base running and contact near bases, as well as equipment failure, fractures, head injuries, or spinal injuries;</li>
-          <li>Health risks related to physical exertion or medical conditions, and, for outdoor play, weather and environmental conditions.</li>
-        </ul>
-        <p>In ${indoor?"indoor multipurpose facilities":"outdoor sports facilities"}, fixed or movable structures and equipment may be located within, adjacent to, or beyond normal playing boundaries. These may include ${indoor?"soccer goalposts, bleachers, benches, netting, barriers, walls and other sporting equipment":"benches, fencing, dugouts, bleachers, bases, barriers and other sporting equipment"}. Some objects may be near foul lines or in areas where a player may field or retrieve a ball. They may not always be movable. Contact, collision, tripping or falling against these objects can result in injury.</p>
-        <p>I understand that close or unexpected contact can occur; that fatigue may increase risks; that rules and safe conduct can reduce (but not eliminate) risks; and that participation may involve anxiety or physical challenge.</p>
-      </section>
-
-      <section class="snl-rp-legal-section"><h4>C | Participant Responsibilities &amp; Assumption of Risk</h4>
-        <p>I agree to follow SNL rules, facility requirements, official instructions, and reasonable sportsmanship and safety standards. I will not knowingly participate while unable to do so safely and will promptly report unsafe conditions or incidents to an organizer.</p>
-        <p>I voluntarily accept the risks described in this document and understand that I am responsible for the ordinary consequences of my participation, subject to applicable law.</p>
-      </section>
-
-      <section class="snl-rp-legal-section"><h4>D | Release of Responsibility — Draft for Legal Review</h4>
-        <p>For this proposed SNL agreement, “SNL parties” refers to Sunday Night Lights (SNL) and its league and tournament organizers, administrators, directors, officers, employees, volunteers, officials, and agents acting on SNL’s behalf. The draft does not name a venue or independent facility operator as an SNL party.</p>
-        <p>I release the SNL parties from claims, demands, actions, and costs arising from my voluntary participation in the identified SNL softball activity, to the extent permitted by applicable law. The precise scope, treatment of negligence, and enforceability of this release must be reviewed by Ontario legal counsel before any participant signs it.</p>
-      </section>
-
-      <section class="snl-rp-legal-section"><h4>E | SNL League Coverage, Player Information &amp; Media</h4>
-        <p>Sunday Night Lights operates a public league and tournament website and social media channels. SNL regularly reports on its activities. Ordinary league coverage may include approved public player names, team rosters, schedules, game results, batting statistics, standings, player achievements, transactions and trades, awards, interviews, weekly recaps, player features, photographs, game footage, video highlights, and related news. Records and articles may remain accessible as part of the league's history.</p>
-        <p>Players are informed before participating that SNL ordinarily photographs or records softball games and events, including players, teams, celebrations, and people who appear in group or background scenes. Identifiable images or clips may be featured in SNL's usual game reporting, website articles, highlights, and SNL social posts. This notice is not a blanket authorization for any use of a person's identity. SNL will use a lawful and appropriate consent approach for identifiable media, including obtaining separate permission where required.</p>
-        <p><strong>Normal editorial coverage is not a player endorsement.</strong> Routine coverage is intended to document games, players and league activities, not to imply a player's commercial endorsement of SNL or any third party. This agreement does not grant SNL unrestricted permission to use a player's name or likeness for unrelated advertising, sponsorship endorsements, third-party marketing, or another purpose outside ordinary league reporting.</p>
-        <p>Players may contact SNL to correct inaccurate information or raise a privacy concern about identifiable coverage. SNL will consider reasonable requests according to applicable law and its privacy practices. Some material already shared or republished by others may not be fully retractable.</p>
-      </section>
-
-      <section class="snl-rp-legal-section"><h4>F | Privacy &amp; Recordkeeping</h4>
-        <p>SNL intends to collect and use the information necessary to administer participation, confirm eligibility, manage rosters, contact players, maintain league records, track waiver completion and document consent. Public-facing roster names and sporting records are described in Section E. Private legal names, personal contact information, emergency contacts and signed agreements will not be published as public roster information.</p>
-        <p>SNL will restrict access to private records and establish a privacy contact, appropriate safeguards and a record-retention policy before activating live registration. <strong>Privacy contact:</strong> To be designated. <strong>Privacy policy:</strong> To be published before launch.</p>
-      </section>
-
-      <section class="snl-rp-legal-section"><h4>G | Participant Acknowledgment &amp; Signature</h4>
-        <p>By signing the final approved version, I confirm that I have read and understand the participation terms, risks, responsibilities and proposed liability release in Sections A–D, together with the ordinary league-coverage notice and privacy terms in Sections E–F. I understand that the liability provisions are intended to affect my legal rights. I am voluntarily agreeing to the final document.</p>
-        <p><strong>In the eventual secure version:</strong> A participant will review the full agreement, intentionally sign and submit it, and receive confirmation. SNL will privately record the agreed document version, identity verification appropriate to the process, date and time, and a reliable signature audit trail. This demo does not collect legal names or real signatures.</p>
-      </section>
-      <div class="snl-rp-legal-end">SNL DRAFT ONLY · NOT APPROVED FOR SIGNING · ONTARIO LEGAL REVIEW REQUIRED</div>
-    </article>
-
-    <div class="snl-rp-demo-ack">
-      <p class="snl-rp-demo-sign-notice"><strong>Simulate the final signing step</strong> — In the live system, this would be a separate, deliberate electronic signature after reviewing the agreement. For this test, type <strong>DEMO</strong> only. No checkbox or media opt-in is required to test the flow.</p>
-      <label class="snl-rp-field"><span>Demo confirmation code <em>Type DEMO, not your legal name or signature</em></span><input data-waiver="code" value="${e(st.waiver.code)}" maxlength="4" autocomplete="off" placeholder="DEMO"></label>
-    </div>
-    ${st.error?`<p class="snl-rp-required" role="alert">${e(st.error)}</p>`:""}
-    <div class="snl-rp-note"><strong>Demo safety:</strong> This page does not collect legal names, signatures or waiver records. Refresh to erase your test entries.</div>
-    <div class="snl-rp-actions"><button type="button" class="snl-rp-secondary" data-action="back">← Back</button><button type="button" class="snl-rp-primary" data-action="finish">Complete demo →</button></div>
-  </div>`;
-}
+    const isTournament=st.event==="tournament";
+    const displayName=st.view==="tournament"&&st.tournamentData.first.trim()&&st.tournamentData.last.trim()
+      ? e(st.tournamentData.first.trim()+" "+st.tournamentData.last.trim())+" (fictional example)"
+      : "[Entered privately when the live waiver is signed]";
+    const team=isTournament?"Example Tournament Team":"Buffaloes";
+    return `<div class="snl-rp-panel">
+      <div class="snl-rp-heading"><h3>Indoor participation waiver — demo</h3><p>Review SNL's indoor waiver v0.7 for the selected season. This is a demonstration only; no actual waiver is signed here.${st.view==="tournament"?" A tournament-only participant does not need an SNL website account.":""}</p></div>
+      <article class="snl-rp-waiver snl-rp-waiver-full" aria-label="SNL indoor player participation waiver v0.7 working draft">
+        <header class="snl-rp-legal-head">
+          <div class="snl-rp-waiver-label">REVIEW DRAFT · NOT A VALID SIGNING FORM</div>
+          <div class="snl-rp-waiver-brand"><img src="assets/snl-ball-logo.svg" alt="Sunday Night Lights softball logo — SNL on a ball" width="90" height="90"></div>
+          <div class="snl-rp-legal-brand">SUNDAY NIGHT LIGHTS</div>
+          <h4>PLAYER PARTICIPATION &amp; LIABILITY WAIVER</h4>
+          <p class="snl-rp-legal-subtitle">Indoor Softball — Leagues, Playoffs &amp; Tournaments</p>
+          <p class="snl-rp-legal-version">Version 0.7 · Final working draft · Demo only</p>
+        </header>
+        <div class="snl-rp-legal-warning"><strong>DEMO ONLY — NO LEGAL SIGNATURES.</strong> This agreement is displayed for review and testing. It has not been legally validated or configured for collection of actual signatures. Please use fictional details only. No submitted information or signature records are saved.</div>
+        <section class="snl-rp-legal-section"><h4>1. Participant Information &amp; Waiver Coverage</h4>
+          <p><strong>Full Legal Name:</strong> ${displayName}</p>
+          <p><strong>Team:</strong> ${e(team)} (demo assignment)</p>
+          <p><strong>Initial Event:</strong> ${e(current().label)} (automatically assigned in this example)</p>
+          <p><strong>Event Date:</strong> ${e(current().date)}</p>
+          <p><strong>Indoor Season Coverage:</strong> 2026–27 indoor season (start and end dates to be confirmed before live signing).</p>
+          <p><strong>League Officials:</strong> Rob Bebeacua and Bryan Magpayo.</p>
+          <p>I confirm that I am at least 18 years old and am voluntarily participating in softball activities organized or authorized by Sunday Night Lights (SNL).</p>
+          <p>This agreement applies to SNL indoor leagues, regular-season games, playoffs, tournaments, warmups, batting practice and directly related authorized softball activities during the coverage period identified above. It is intended to cover multiple qualifying SNL indoor events within that period without requiring a separate signature for each event.</p>
+        </section>
+        <section class="snl-rp-legal-section"><h4>2. Acknowledgment &amp; Assumption of Risks</h4>
+          <p>I understand that indoor softball involves risks that may result in serious injury, permanent disability or death.</p>
+          <p>These risks include, but are not limited to:</p>
+          <ul>
+            <li>Being struck by batted, thrown or foul softballs, swinging bats, thrown or accidentally released bats, or other equipment.</li>
+            <li>Collisions with players, officials or spectators, including collisions while fielding balls or running the bases.</li>
+            <li>Injuries from running, sliding, diving, throwing, catching, batting, fielding, warmups or other physical exertion.</li>
+            <li>Slips, trips and falls on artificial turf, bases or other playing surfaces.</li>
+            <li>Contact with walls, netting, barriers, benches, bleachers, soccer goalposts or other structures within or near the playing area.</li>
+            <li>Equipment failure, fatigue, unsafe playing conditions and other foreseeable or unforeseen hazards.</li>
+          </ul>
+          <p>Injuries may include cuts, fractures, head or facial injuries, concussions, spinal injuries and other serious or permanent harm.</p>
+          <p>I understand that some structures and equipment may be located near foul lines or in areas where players attempt to field or retrieve balls.</p>
+          <p><strong>I voluntarily accept and assume the risks associated with participating in SNL indoor softball activities.</strong></p>
+        </section>
+        <section class="snl-rp-legal-section"><h4>3. Player Responsibilities &amp; Release of Liability</h4>
+          <p>I agree to follow SNL rules, respect officials and participants, use equipment responsibly and exercise reasonable care for my safety and the safety of others.</p>
+          <p>I understand that participation is voluntary and that I may choose not to participate if I believe conditions are unsafe.</p>
+          <div class="snl-rp-release"><strong>RELEASE OF LIABILITY — PLEASE READ CAREFULLY</strong>
+            <p>In consideration of being permitted to participate, I agree to release Sunday Night Lights (SNL), its league officials, including Rob Bebeacua and Bryan Magpayo, and its organizers, administrators, directors, officers, volunteers, employees and representatives acting on behalf of SNL from claims, demands, actions, damages, losses or expenses arising from my participation in covered SNL indoor softball activities, including claims involving personal injury, permanent disability, death or property loss, and claims alleging negligence by these parties, to the extent permitted by applicable law.</p>
+            <p><strong>I understand that by signing this agreement, I may be giving up certain legal rights, including the right to bring a claim against the released parties for injuries arising from their negligence, to the extent permitted by law.</strong></p>
+          </div>
+        </section>
+        <section class="snl-rp-legal-section"><h4>4. League Coverage, Statistics &amp; Media</h4>
+          <p>I understand that SNL operates a public website and social media channels providing regular league and tournament coverage.</p>
+          <p>This may include player names, team rosters, game results, statistics, standings, awards, trades, player features, interviews, weekly recaps, photographs, video highlights and historical league records.</p>
+          <p>I understand that I may appear in photographs or videos taken during SNL activities and that identifiable content may be published as part of ordinary league coverage, subject to applicable privacy and consent requirements.</p>
+          <p>This coverage documents SNL activities and does not imply commercial endorsement by any player. Uses outside ordinary league coverage may require separate permission.</p>
+          <p><strong>Questions, corrections or privacy concerns:</strong> <a href="mailto:sundaynightlights416@gmail.com">sundaynightlights416@gmail.com</a> · Instagram <a href="https://www.instagram.com/snl_416/" target="_blank" rel="noopener noreferrer">@snl_416</a>.</p>
+          <p>Personal contact information, private legal identity details and signed waiver records will not be publicly displayed. Access to these records will be restricted to authorized SNL administrators for legitimate league administration and recordkeeping.</p>
+        </section>
+        <section class="snl-rp-legal-section"><h4>5. Participant Acknowledgment &amp; Signature</h4>
+          <p>By signing, I confirm that:</p>
+          <ul><li>I have read and understand this agreement.</li>
+            <li>I understand the risks associated with indoor softball.</li>
+            <li>I voluntarily accept those risks.</li>
+            <li>I understand the release of liability and its intended effect on my legal rights.</li>
+            <li>I acknowledge SNL's ordinary league and tournament coverage practices.</li></ul>
+          <p>I am signing this agreement voluntarily.</p>
+          <p><strong>Electronic Signature:</strong> [Participant would sign in a future secure system]</p>
+          <p><strong>Date Signed:</strong> [Automatically recorded only when real signing is enabled]</p>
+        </section>
+        <div class="snl-rp-legal-end">SNL · INDOOR WAIVER v0.7 · DEMO ONLY · NO REAL SIGNATURES</div>
+      </article>
+      <div class="snl-rp-demo-ack"><p class="snl-rp-demo-sign-notice"><strong>Simulate completing the waiver.</strong> Type DEMO below. This does not create an agreement, obtain consent, or submit any private information.</p>
+        <label class="snl-rp-field"><span>Demo confirmation code <em>Type DEMO, not your legal name or signature</em></span><input data-waiver="code" value="${e(st.waiver.code)}" maxlength="4" autocomplete="off" placeholder="DEMO"></label>
+      </div>
+      ${st.error?`<p class="snl-rp-required" role="alert">${e(st.error)}</p>`:""}
+      <div class="snl-rp-note"><strong>Demo safety:</strong> No personal details, electronic signatures or waiver records are uploaded or stored by this page. Refresh to erase test entries.</div>
+      <div class="snl-rp-actions"><button type="button" class="snl-rp-secondary" data-action="back">← Back</button><button type="button" class="snl-rp-primary" data-action="finish">Complete demo →</button></div>
+    </div>`;
+  }
   function completed(){
     const d=st.data;
     return `<div class="snl-rp-panel snl-rp-complete"><div class="snl-rp-success-icon" aria-hidden="true">✓</div><h3>Demo registration complete</h3><p>This is a simulated confirmation. No real registration was submitted, no waiver was signed and no SNL player ID was created.</p>
       <div class="snl-rp-summary">${status("Player profile",e(d.first+" "+d.last)+" · #"+e(d.jersey),"Sample complete",true)}
-        ${status((current().kind==="indoor"?"Indoor":"Outdoor")+" waiver",st.skipped?"Existing sample waiver reused":"Sample acknowledgments completed","Demo only",true)}
+        ${status("Indoor waiver",st.skipped?"Existing sample waiver reused":"Sample waiver demo completed","Demo only",true)}
         ${status("Team roster","Buffaloes · Administrator review","Pending · demo",false)}
         ${status("SNL Player ID","Issued only after live registration","Not issued",false)}
       </div>
@@ -161,10 +163,10 @@ function snlRegistrationDemo(){
   function returning(){
     return `<div class="snl-rp-panel"><div class="snl-rp-heading"><h3>Returning player — demo</h3><p>Test how SNL would reuse an existing player account and an already valid waiver.</p></div>
       <div class="snl-rp-example-profile"><div class="snl-rp-avatar">#27</div><div><small>SAMPLE PLAYER ID · SNL-DEMO-104</small><h4>Mike Sample</h4><p>Buffaloes · Bats R · Throws R</p></div><span class="snl-rp-pill">Example</span></div>
-      <div class="snl-rp-summary">${status("2026–27 Indoor waiver","Fall, Winter and covered events","Valid · sample",true)}${status("2027 Outdoor waiver","Spring, Summer and covered events","Not signed · sample",false)}
-      ${status("Selected activity",current().label,current().kind==="indoor"?"Covered by sample indoor waiver":"Would require outdoor waiver",current().kind==="indoor")}</div>
+      <div class="snl-rp-summary">${status("2026–27 Indoor waiver","Fall, Winter and covered events","Valid · sample",true)}${status("2027–28 Indoor waiver","A new indoor season would require a new signature","Future · sample",false)}
+      ${status("Selected activity",current().label,"Covered by sample indoor waiver",true)}</div>
       <div class="snl-rp-note">A player keeps the same SNL ID when changing teams or jersey numbers. Their permanent career stats remain connected, while substitute games can be excluded from official individual stats.</div>
-      <div class="snl-rp-actions"><button type="button" class="snl-rp-secondary" data-action="edit-returning">Edit sample profile</button><button type="button" class="snl-rp-primary" data-action="join-returning">${current().kind==="indoor"?"Test reusing valid waiver":"Test outdoor waiver"} →</button></div>
+      <div class="snl-rp-actions"><button type="button" class="snl-rp-secondary" data-action="edit-returning">Edit sample profile</button><button type="button" class="snl-rp-primary" data-action="join-returning">Test reusing valid waiver →</button></div>
     </div>`;
   }
   function captain(){
@@ -187,7 +189,9 @@ function snlRegistrationDemo(){
   function draw(){
     const steps=`<div class="snl-rp-stepper" aria-label="Registration progress"><span class="${st.step>=1?"current":""}">1 · Profile</span><span class="${st.step>=2?"current":""}">2 · Waiver</span><span class="${st.step>=3?"current":""}">3 · Confirmation</span></div>`;
     root.innerHTML=`<div class="snl-rp-top"><div><span class="snl-rp-eyebrow">SNL REGISTRATION & WAIVERS</span><h2>Try the complete experience</h2><p>League player registration or a simple waiver for tournament-only participants.</p></div><span class="snl-rp-demo-badge">INTERACTIVE DEMO · NO REAL SIGNATURES</span></div>
-      <div class="snl-rp-demo-switch"><label><strong>Test invitation type</strong><span>Demo control only. Real player invitations will assign the event automatically.</span></label><select data-event>${st.view==="tournament"?`<option value="tournament"${sel(st.event,"tournament")}>Winter Tournament · Indoor</option><option value="outdoorTourney"${sel(st.event,"outdoorTourney")}>Summer Tournament · Outdoor</option>`:`<option value="fall"${sel(st.event,"fall")}>Fall League · Indoor</option><option value="summer"${sel(st.event,"summer")}>Summer League · Outdoor</option><option value="tournament"${sel(st.event,"tournament")}>Winter Tournament · Indoor</option><option value="outdoorTourney"${sel(st.event,"outdoorTourney")}>Summer Tournament · Outdoor</option>`}</select></div>
+      <div class="snl-rp-demo-switch"><label><strong>Choose example indoor invitation</strong><span>Demo control only. Real invitations will assign an event automatically; one valid indoor-season waiver can cover multiple SNL indoor events.</span></label><select data-event>${st.view==="tournament"?
+        `<option value="tournament" selected>Third Annual Holiday Tournament · Dec 27, 2026</option>`:
+        `<option value="fall"${sel(st.event,"fall")}>Fall League · 2026–27</option><option value="winter"${sel(st.event,"winter")}>Winter League · 2026–27</option><option value="tournament"${sel(st.event,"tournament")}>Third Annual Holiday Tournament · Dec 27, 2026</option>`}</select></div>
       <div class="snl-rp-tabs" role="group" aria-label="Choose demo experience"><button type="button" data-view="new" aria-pressed="${st.view==="new"}">League signup</button><button type="button" data-view="tournament" aria-pressed="${st.view==="tournament"}">Tournament waiver only</button><button type="button" data-view="returning" aria-pressed="${st.view==="returning"}">Returning player</button><button type="button" data-view="captain" aria-pressed="${st.view==="captain"}">Team captain</button></div>
       ${st.view==="new"?steps+(st.step===1?profile():st.step===2?waiver():completed()):st.view==="tournament"?`<div class="snl-rp-stepper" aria-label="Tournament waiver steps"><span class="${st.step>=1?"current":""}">1 · Participant</span><span class="${st.step>=2?"current":""}">2 · Full waiver</span><span class="${st.step>=3?"current":""}">3 · Confirmation</span></div>`+(st.step===1?tournamentIntro():st.step===2?waiver():tournamentComplete()):st.view==="returning"?returning():captain()}
       <p class="snl-rp-footer">Test only. Information exists in this page's temporary memory, not a server or database. Refresh to clear it. Please use fictional details, not real signatures.</p>`;
@@ -209,7 +213,7 @@ function snlRegistrationDemo(){
   });
   root.addEventListener("click",event=>{
     const b=event.target.closest("button");if(!b)return;
-    if(b.dataset.view){st.view=b.dataset.view;if(st.view==="tournament"){if(st.event!=="outdoorTourney")st.event="tournament";st.step=1;st.waiver=blankWaiver();}else if(st.view==="new"){st.step=1;}st.error="";draw();return;}
+    if(b.dataset.view){st.view=b.dataset.view;if(st.view==="tournament"){st.event="tournament";st.step=1;st.waiver=blankWaiver();}else if(st.view==="new"){if(st.event==="tournament")st.event="fall";st.step=1;}st.error="";draw();return;}
     if(b.dataset.filter){st.filter=b.dataset.filter;draw();return;}
     if(b.dataset.action==="clear-area"){st.data.position="";draw();return;}
     if(b.dataset.action==="tournament-next"){if(!hasTournamentFields()){st.error="Please enter a fictional legal first name, legal last name and valid email to continue.";draw();return;}st.error="";st.step=2;draw();return;}
@@ -234,7 +238,7 @@ function snlRegistrationDemo(){
     if(b.dataset.action==="edit-returning"||b.dataset.action==="join-returning"){
       st.data={first:"Mike",last:"Sample",email:"mike@example.com",jersey:"27",bats:"R",throws:"R",position:"IF"};
       st.waiver=blankWaiver();st.error="";st.returning=true;st.view="new";st.editing=b.dataset.action==="edit-returning";
-      st.step=st.editing?1:current().kind==="indoor"?3:2;st.skipped=st.step===3;draw();return;
+      st.step=st.editing?1:3;st.skipped=st.step===3;draw();return;
     }
   });
   draw();
