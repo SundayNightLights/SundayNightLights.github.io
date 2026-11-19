@@ -127,3 +127,14 @@
 
 /* Four demo paths remain readable on small screens. */
 @media(max-width:740px){.snl-rp-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* Branded SNL-only waiver (review draft v0.3) */
+.snl-rp-waiver-brand{display:flex;align-items:center;justify-content:center;gap:13px;margin:13px auto 11px;max-width:420px}
+.snl-rp-waiver-brand img{height:60px;width:60px;display:block;flex:none;object-fit:contain}
+.snl-rp-waiver-wordmark{text-align:left;display:flex;flex-direction:column;gap:5px}
+.snl-rp-waiver-wordmark strong{font-size:clamp(15px,3vw,20px);line-height:1.14;letter-spacing:.3px;color:#122e45}
+.snl-rp-waiver-wordmark span{font-size:10px;letter-spacing:1.4px;font-weight:800;color:#7a6215}
+.snl-rp-demo-sign-notice{margin:0!important;line-height:1.65;font-size:13px;color:#eef6fb}
+.snl-rp-demo-sign-notice strong{color:#ffe169}
+.snl-rp-demo-ack .snl-rp-field{max-width:500px}
+@media(max-width:420px){.snl-rp-waiver-brand{gap:9px}.snl-rp-waiver-brand img{height:49px;width:49px}.snl-rp-waiver-wordmark span{font-size:9px}}
