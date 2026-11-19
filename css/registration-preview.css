@@ -223,3 +223,26 @@
   .snl-rp-waiver-full .snl-rp-waiver-brand img{width:92px;height:92px;padding:9px}
   .snl-rp-waiver-full .snl-rp-release{padding:13px 12px 4px}
 }
+
+/* SNL waiver logo: show only interior white ball; hide the original artwork's outer black ring */
+.snl-rp-waiver-full .snl-rp-waiver-brand img{
+  display:block;
+  width:136px!important;
+  height:136px!important;
+  box-sizing:border-box!important;
+  max-width:none;
+  margin:0;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  object-fit:contain;
+  clip-path:circle(40% at 50% 50.5%);
+}
+@media(max-width:560px){
+  .snl-rp-waiver-full .snl-rp-waiver-brand img{
+    width:124px!important;
+    height:124px!important;
+  }
+}
