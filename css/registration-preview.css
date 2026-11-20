@@ -313,3 +313,14 @@
  .snl-rp-review-actions button{width:100%}
  .snl-rp-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
+
+/* SNL staff-role preview: appearance and visibility are illustrative only */
+.snl-rp-access-preview{background:linear-gradient(135deg,#102f46,#0b263a);border:1px solid #536f84;border-radius:9px;padding:17px 19px;margin-bottom:17px}
+.snl-rp-access-head{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.snl-rp-access-head strong{font-size:15px;font-weight:900;color:#fff}
+.snl-rp-access-head span{font-size:9px;font-weight:900;letter-spacing:.8px;color:#ffe058;border:1px solid #957b2b;border-radius:4px;padding:5px 7px;white-space:nowrap}
+.snl-rp-access-preview>p{font-size:12px;line-height:1.55;color:#c9dbe9;margin:9px 0}
+.snl-rp-access-controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:12px}
+.snl-rp-access-description{color:#f8e077!important;font-weight:750}
+.snl-rp-access-warning{font-size:11px!important;color:#aebfcf!important;margin-bottom:0!important}
+@media(max-width:520px){.snl-rp-access-preview{padding:14px}.snl-rp-access-head{align-items:flex-start;flex-direction:column}}
