@@ -528,8 +528,13 @@ function joinPage(){return `${pageHero('JOIN','SNL','Interested in playing Sunda
 <div class="notice">Already on an SNL team? The separate <a href="registration.html">Registration &amp; Waivers</a> page is for existing-player administration once that process opens.</div>`;}
  function registrationPage(){return `${pageHero('PLAYER','REGISTRATION & WAIVERS','Explore the new SNL player signup and waiver experience')}
 <section class="flat-card info-landing"><span class="info-kicker">SNL PLAYER REGISTRATION</span>
-<h2>LEAGUE REGISTRATION OR TOURNAMENT WAIVER.</h2>
-<p class="section-note">League players can test a profile and the SNL indoor waiver. Players joining the Third Annual Holiday Tournament can test the indoor waiver without creating a website account. Both paths are simulations; outdoor waivers will be handled separately later.</p>
+<h2>PLAYER REGISTRATION & STAFF DASHBOARD DEMOS.</h2>
+<p class="section-note">Choose a demo below. The captain and administrator dashboards open directly to their own screens, rather than the player signup form. All experiences are simulations; no accounts or real signatures are collected.</p>
+<div class="snl-rp-demo-entrances" role="navigation" aria-label="Open registration and staff demo">
+  <a class="snl-rp-demo-entrance" href="registration.html?snl_demo_role=captain"><strong>Captain dashboard</strong><span>View a team roster, invitations and captain approvals</span></a>
+  <a class="snl-rp-demo-entrance" href="registration.html?snl_demo_role=admin"><strong>SNL administrator dashboard</strong><span>Review league waivers and tournament-only checks</span></a>
+  <a class="snl-rp-demo-entrance" href="registration.html"><strong>Player registration</strong><span>Try league signup or the Holiday Tournament waiver</span></a>
+</div>
 <div class="notice"><strong>TEST MODE — REGISTRATION IS NOT OPEN.</strong> Use fictional details only. The sample waiver is not a legal agreement and the test does not save information, collect signatures, send invitations or create accounts.</div>
 </section>
 <div id="snl-reg-preview" aria-label="Interactive SNL registration and waiver demo"></div>

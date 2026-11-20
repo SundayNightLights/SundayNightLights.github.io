@@ -324,3 +324,13 @@
 .snl-rp-access-description{color:#f8e077!important;font-weight:750}
 .snl-rp-access-warning{font-size:11px!important;color:#aebfcf!important;margin-bottom:0!important}
 @media(max-width:520px){.snl-rp-access-preview{padding:14px}.snl-rp-access-head{align-items:flex-start;flex-direction:column}}
+
+/* Explicit dashboard entrances for staff role preview v2 */
+.snl-rp-demo-entrances{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:20px 0 4px}
+.snl-rp-demo-entrance{display:flex;flex-direction:column;justify-content:center;gap:6px;padding:17px;border-radius:8px;border:1px solid #647e93;background:#0c2a42;color:#f6f9ff!important;text-decoration:none!important;min-height:98px}
+.snl-rp-demo-entrance:hover,.snl-rp-demo-entrance:focus-visible{border-color:#ffde19;background:#153c55;outline:2px solid #e8c936;outline-offset:2px}
+.snl-rp-demo-entrance strong{font-size:14px;color:#ffdf52}
+.snl-rp-demo-entrance span{font-size:11px;line-height:1.5;color:#d0e0ed}
+.snl-rp-demo-entrance:nth-child(2){border-color:#a48a31}
+.snl-rp-top h2{line-height:1.2}
+@media(max-width:760px){.snl-rp-demo-entrances{grid-template-columns:1fr}.snl-rp-demo-entrance{min-height:76px}}

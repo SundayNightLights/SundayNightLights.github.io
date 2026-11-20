@@ -20,11 +20,18 @@ function snlRegistrationDemo(){
     }catch(_){return null;}
   };
   const incomingInvite=readDemoInvite();
+  // Public URLs select a fictional demo screen only — never grant actual staff privileges.
+  const demoParam=(name)=>{try{
+    const match=(window.location.search||"").match(new RegExp("(?:[?&])"+name+"=([A-Za-z0-9-]+)"));
+    return match?match[1]:"";
+  }catch(_){return "";}};
+  const initialRole=["captain","admin"].includes(demoParam("snl_demo_role"))?demoParam("snl_demo_role"):"public";
+  const initialTeam=teams[demoParam("snl_demo_team")]?demoParam("snl_demo_team"):incomingInvite?.team||"BUF";
   const invitationUrl=(team,event)=>"https://sundaynightlights.github.io/registration.html?snl_demo_invite="+encodeURIComponent(team+"-"+demoSeasons[event]);
   const teamChoices=selected=>Object.entries(teams).map(([code,name])=>`<option value="${code}"${sel(selected,code)}>${e(name)}</option>`).join("");
   const sample=()=>({first:"",last:"",email:"",jersey:"",bats:"",throws:"",position:""});
   const blankWaiver=()=>({code:""});
-  const st={view:"new",step:1,event:incomingInvite?.event||"fall",team:incomingInvite?.team||"BUF",captainTeam:incomingInvite?.team||"BUF",captainEvent:incomingInvite?.event||"fall",invite:incomingInvite,copyStatus:"",samples:{},tournamentRecords:[],nextId:0,adminTeam:incomingInvite?.team||"BUF",adminEvent:incomingInvite?.event||"fall",accessRole:"public",assignedTeam:incomingInvite?.team||"BUF",data:sample(),waiver:blankWaiver(),error:"",done:false,skipped:false,editing:false,returning:false,filter:"all",joined:[],tournamentData:{first:"",last:"",email:""}};
+  const st={view:initialRole==="public"?"new":initialRole,step:1,event:incomingInvite?.event||"fall",team:incomingInvite?.team||"BUF",captainTeam:initialTeam,captainEvent:incomingInvite?.event||"fall",invite:incomingInvite,copyStatus:"",samples:{},tournamentRecords:[],nextId:0,adminTeam:initialTeam,adminEvent:incomingInvite?.event||"fall",accessRole:initialRole,assignedTeam:initialTeam,data:sample(),waiver:blankWaiver(),error:"",done:false,skipped:false,editing:false,returning:false,filter:"all",joined:[],tournamentData:{first:"",last:"",email:""}};
   const e=s=>String(s??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
   const sel=(x,y)=>x===y?" selected":"";
   const chk=v=>v?" checked":"";
@@ -323,14 +330,21 @@ function snlRegistrationDemo(){
   }
   function draw(){
     const steps=`<div class="snl-rp-stepper" aria-label="Registration progress"><span class="${st.step>=1?"current":""}">1 · Profile</span><span class="${st.step>=2?"current":""}">2 · Waiver</span><span class="${st.step>=3?"current":""}">3 · Confirmation</span></div>`;
-    root.innerHTML=`<div class="snl-rp-top"><div><span class="snl-rp-eyebrow">SNL REGISTRATION & WAIVERS</span><h2>Try the complete experience</h2><p>League player registration or a simple waiver for tournament-only participants.</p></div><span class="snl-rp-demo-badge">INTERACTIVE DEMO · NO REAL SIGNATURES</span></div>
-      ${st.invite&&st.view==="new"
+    root.innerHTML=`<div class="snl-rp-top"><div><span class="snl-rp-eyebrow">SNL REGISTRATION & WAIVERS</span><h2>${st.view==="captain"&&st.accessRole==="captain"?"Captain dashboard":st.view==="admin"&&st.accessRole==="admin"?"SNL administrator dashboard":"Player registration & waiver demo"}</h2><p>${st.view==="captain"&&st.accessRole==="captain"?"Review your fictional team roster, invitations and approvals.":st.view==="admin"&&st.accessRole==="admin"?"Review fictional league and tournament waiver statuses.":"Test league signup and the indoor tournament waiver-only path."}</p></div><span class="snl-rp-demo-badge">INTERACTIVE DEMO · NO REAL SIGNATURES</span></div>
+      ${st.view==="captain"||st.view==="admin"?"":`
+${st.invite&&st.view==="new"
         ?`<div class="snl-rp-locked-invite"><strong>Captain invitation · ${e(teamName(st.team))}</strong><span>${e(current().label)} · Automatically assigned by demo invitation</span><button type="button" data-action="leave-invite">Try a different example</button></div>`
         :`<div class="snl-rp-demo-switch"><label><strong>Demo indoor event</strong><span>Opening a captain invitation link fills in the team and season automatically.</span></label><select data-event>${st.view==="tournament"
           ?`<option value="tournament" selected>Third Annual Holiday Tournament · Dec 27, 2026</option>`
-          :`<option value="fall"${sel(st.event,"fall")}>Fall League · 2026–27</option><option value="winter"${sel(st.event,"winter")}>Winter League · 2026–27</option>`}</select></div>`}
+          :`<option value="fall"${sel(st.event,"fall")}>Fall League · 2026–27</option><option value="winter"${sel(st.event,"winter")}>Winter League · 2026–27</option>`}</select></div>`}`}
       ${accessPanel()}
-      <div class="snl-rp-tabs" role="group" aria-label="Choose demo experience"><button type="button" data-view="new" aria-pressed="${st.view==="new"}">League signup</button><button type="button" data-view="tournament" aria-pressed="${st.view==="tournament"}">Tournament waiver only</button><button type="button" data-view="returning" aria-pressed="${st.view==="returning"}">Returning player</button>${st.accessRole==="captain"?`<button type="button" data-view="captain" aria-pressed="${st.view==="captain"}">Team captain</button>`:""}${st.accessRole==="admin"?`<button type="button" data-view="admin" aria-pressed="${st.view==="admin"}">SNL admin</button>`:""}</div>
+      <div class="snl-rp-tabs" role="group" aria-label="Choose demo experience">
+        ${st.accessRole==="captain"
+          ?`<button type="button" data-view="captain" aria-pressed="${st.view==="captain"}">Captain dashboard</button><button type="button" data-view="new" aria-pressed="${st.view==="new"}">Preview player signup</button>`
+          :st.accessRole==="admin"
+            ?`<button type="button" data-view="admin" aria-pressed="${st.view==="admin"}">SNL admin dashboard</button><button type="button" data-view="tournament" aria-pressed="${st.view==="tournament"}">Preview tournament waiver</button>`
+            :`<button type="button" data-view="new" aria-pressed="${st.view==="new"}">League signup</button><button type="button" data-view="tournament" aria-pressed="${st.view==="tournament"}">Tournament waiver only</button><button type="button" data-view="returning" aria-pressed="${st.view==="returning"}">Returning player</button>`}
+      </div>
       ${st.view==="new"?steps+(st.step===1?profile():st.step===2?waiver():completed()):st.view==="tournament"?`<div class="snl-rp-stepper" aria-label="Tournament waiver steps"><span class="${st.step>=1?"current":""}">1 · Participant</span><span class="${st.step>=2?"current":""}">2 · Full waiver</span><span class="${st.step>=3?"current":""}">3 · Confirmation</span></div>`+(st.step===1?tournamentIntro():st.step===2?waiver():tournamentComplete()):st.view==="returning"?returning():st.view==="captain"&&st.accessRole==="captain"?captain():st.view==="admin"&&st.accessRole==="admin"?admin():profile()}
       <p class="snl-rp-footer">Test only. Information exists in this page's temporary memory, not a server or database. Refresh to clear it. Please use fictional details, not real signatures.</p>`;
   }
