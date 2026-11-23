@@ -334,3 +334,18 @@
 .snl-rp-demo-entrance:nth-child(2){border-color:#a48a31}
 .snl-rp-top h2{line-height:1.2}
 @media(max-width:760px){.snl-rp-demo-entrances{grid-template-columns:1fr}.snl-rp-demo-entrance{min-height:76px}}
+
+/* Coming-soon screen in place of unfinished public waiver text */
+.snl-rp-waiver-placeholder{display:flex;flex-direction:column;gap:14px;padding:24px;background:linear-gradient(145deg,#0a293e,#123a51);border:1px solid #597b8c;border-left:4px solid #ffe148;border-radius:10px;margin:14px 0 23px}
+.snl-rp-waiver-placeholder-brand{display:flex;gap:17px;align-items:center}
+.snl-rp-waiver-placeholder-brand img{width:66px;height:66px;object-fit:contain;flex:none}
+.snl-rp-waiver-placeholder-brand div{display:flex;flex-direction:column;gap:3px}
+.snl-rp-waiver-placeholder-brand small{color:#f2dc71;font-size:11px;letter-spacing:1.5px;font-weight:800}
+.snl-rp-waiver-placeholder-brand strong{color:#fff;font-size:21px;font-weight:900;letter-spacing:.3px}
+.snl-rp-waiver-placeholder p{margin:0;color:#d9e9f4;font-size:13px;line-height:1.7}
+.snl-rp-waiver-placeholder p strong{color:#fff}
+.snl-rp-waiver-placeholder-event{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:6px;border-top:1px solid #43667c;border-bottom:1px solid #43667c;padding:12px 0}
+.snl-rp-waiver-placeholder-event span{font-size:11px;color:#aec5d6;text-transform:uppercase;letter-spacing:.5px}
+.snl-rp-waiver-placeholder-event strong{font-size:12px;color:#ffe36e}
+.snl-rp-placeholder-disclaimer{font-size:12px!important;color:#ffdf88!important}
+@media(max-width:520px){.snl-rp-waiver-placeholder{padding:16px}.snl-rp-waiver-placeholder-brand strong{font-size:18px}}

@@ -526,21 +526,21 @@ function joinPage(){return `${pageHero('JOIN','SNL','Interested in playing Sunda
 <section class="flat-card join-detail" id="join-team"><span class="info-kicker">PROSPECTIVE TEAMS</span><h2>BRING YOUR TEAM TO SNL</h2><p class="section-note">Contact the league to express interest in a future season. Team spots and league arrangements will be confirmed directly by SNL.</p><a class="neutral-link" href="https://www.instagram.com/snl_416/" target="_blank" rel="noopener noreferrer">MESSAGE SNL ON INSTAGRAM ↗</a></section>
 <section class="flat-card join-detail" id="join-free-agent"><span class="info-kicker">INDIVIDUAL PLAYERS</span><h2>LOOKING FOR A TEAM?</h2><p class="section-note">Free agents can get in touch to introduce themselves and ask about possible openings. Placement is not guaranteed and no personal information is collected on this website.</p><a class="neutral-link" href="https://www.instagram.com/snl_416/" target="_blank" rel="noopener noreferrer">MESSAGE SNL ON INSTAGRAM ↗</a></section>
 <div class="notice">Already on an SNL team? The separate <a href="registration.html">Registration &amp; Waivers</a> page is for existing-player administration once that process opens.</div>`;}
- function registrationPage(){return `${pageHero('PLAYER','REGISTRATION & WAIVERS','Explore the new SNL player signup and waiver experience')}
+ function registrationPage(){return `${pageHero('PLAYER','REGISTRATION & WAIVERS','Explore the SNL registration demo — waiver signing is not available')}
 <section class="flat-card info-landing"><span class="info-kicker">SNL PLAYER REGISTRATION</span>
 <h2>PLAYER REGISTRATION & STAFF DASHBOARD DEMOS.</h2>
-<p class="section-note">Choose a demo below. The captain and administrator dashboards open directly to their own screens, rather than the player signup form. All experiences are simulations; no accounts or real signatures are collected.</p>
+<p class="section-note">Choose a demo below. The captain and administrator dashboards open directly to their own screens. All registration flows are demonstrations using fictional data. The SNL participation waiver is still being finalized and is not displayed or available to sign.</p>
 <div class="snl-rp-demo-entrances" role="navigation" aria-label="Open registration and staff demo">
   <a class="snl-rp-demo-entrance" href="registration.html?snl_demo_role=captain"><strong>Captain dashboard</strong><span>View a team roster, invitations and captain approvals</span></a>
   <a class="snl-rp-demo-entrance" href="registration.html?snl_demo_role=admin"><strong>SNL administrator dashboard</strong><span>Review league waivers and tournament-only checks</span></a>
-  <a class="snl-rp-demo-entrance" href="registration.html"><strong>Player registration</strong><span>Try league signup or the Holiday Tournament waiver</span></a>
+  <a class="snl-rp-demo-entrance" href="registration.html"><strong>Player registration</strong><span>Try league signup or the Holiday Tournament entry preview</span></a>
 </div>
-<div class="notice"><strong>TEST MODE — REGISTRATION IS NOT OPEN.</strong> Use fictional details only. The sample waiver is not a legal agreement and the test does not save information, collect signatures, send invitations or create accounts.</div>
+<div class="notice"><strong>TEST MODE — REGISTRATION AND WAIVER SIGNING ARE NOT OPEN.</strong> Use fictional details only. The waiver text has been removed while SNL finalizes it; no agreement or signature can be completed here. This page does not save information, send invitations or create accounts.</div>
 </section>
 <div id="snl-reg-preview" aria-label="Interactive SNL registration and waiver demo"></div>
 <section class="flat-card info-landing" style="margin-top:20px"><h2>BEFORE LIVE REGISTRATION OPENS</h2>
-<p class="section-note">Before real registration opens, SNL must address its uninsured liability exposure, verify any separate venue requirements, establish a secure signing and private recordkeeping system, confirm privacy/consent practices, and test captain/admin permissions. The draft release has not been legally validated.</p>
-<p class="section-note"><strong>Privacy by design:</strong> The public website will show approved roster names and sports records. Captains will see waiver and registration status, not legal names or signed waiver documents.</p>
+<p class="section-note">Before real registration opens, SNL must address its uninsured liability exposure, verify any separate venue requirements, establish a secure signing and private recordkeeping system, confirm privacy/consent practices, and test captain/admin permissions. The unfinished waiver is not being shown on this website.</p>
+<p class="section-note"><strong>Privacy by design:</strong> The public website will show approved roster names and sports records. Captains will eventually see permitted waiver and registration statuses, not private signing details. There are currently no real waivers.</p>
 </section>`;}
 
  async function init(){
