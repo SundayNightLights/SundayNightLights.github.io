@@ -1025,3 +1025,15 @@ main{padding-bottom:30px}.hero{border:1px solid #43617a;background:#102f4d;margi
   margin:25px auto 30px;
 }
 .snl-article .article-content .week5-video video { background:#04111f; }
+
+/* Week 5 playable video card clearance: badge sits on independent navy strip. */
+.story.week5 .story-illustration video.story-video {
+  top:44px;
+  bottom:auto;
+  height:calc(100% - 44px);
+  width:100%;
+  object-fit:cover;
+  object-position:center top;
+}
+/* Keep original-resolution video comfortable and clear in the article. */
+.snl-article .article-content .week5-video { width:min(100%,420px); }
