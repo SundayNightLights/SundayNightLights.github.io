@@ -1,0 +1,42 @@
+name: Reassemble SNL Week 5 HQ reel (diagnostic branch only)
+on:
+  push:
+    branches: [snl-week5-hq-video-20261123]
+    paths:
+      - '.github/workflows/snl-week5-video-assemble.yml'
+permissions:
+  contents: write
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Reconstruct original-quality SNL reel
+        shell: bash
+        run: |
+          python - <<'PY'
+          import base64, hashlib, pathlib
+          root=pathlib.Path('.snl-week5-transfer')
+          files=sorted(root.glob('part*.txt'))
+          assert len(files)==18, f'Expected 18 transfer parts, got {len(files)}'
+          encoded=''.join(f.read_text(encoding='ascii').strip() for f in files)
+          raw=base64.b64decode(encoded,validate=True)
+          digest=hashlib.sha256(raw).hexdigest()
+          assert len(raw)==10770803, f'Unexpected size {len(raw)}'
+          assert digest=='2db1f94ff51929dfc234a5a769a71bff62d454e11cfca0bfeac4b6bee4756eb0', f'Checksum mismatch {digest}'
+          dest=pathlib.Path('assets/SNL_Week5_Under_the_Dome_HQ.mp4')
+          dest.parent.mkdir(parents=True,exist_ok=True)
+          dest.write_bytes(raw)
+          print(f'Validated high-quality MP4: {len(raw)} bytes, SHA256 {digest}')
+          PY
+      - name: Commit video to diagnostic branch; remove transfer pieces
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm -r .snl-week5-transfer
+          git add assets/SNL_Week5_Under_the_Dome_HQ.mp4
+          git commit -m 'Assemble high-quality Week 5 SNL reel from original footage'
+          git push origin HEAD:snl-week5-hq-video-20261123
