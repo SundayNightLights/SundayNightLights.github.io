@@ -1007,3 +1007,21 @@ main{padding-bottom:30px}.hero{border:1px solid #43617a;background:#102f4d;margi
   margin-top:9px;text-align:center;color:#b9cadd;
   font-size:12px;line-height:1.5;
 }
+
+/* Week 5 card-safe heading clearance, November 23 2026:
+   the yellow WEEK 5 PREVIEW badge must not cover letters baked into the cover. */
+.story.week5 { background:#06192b; }
+.story.week5 .story-illustration { background:#06192b; }
+.story.week5 .story-illustration img.story-poster {
+  top:44px;
+  bottom:auto;
+  height:calc(100% - 44px);
+  width:100%;
+  object-fit:cover;
+  object-position:center top;
+}
+.snl-article .article-content .week5-video {
+  width:min(100%,460px);
+  margin:25px auto 30px;
+}
+.snl-article .article-content .week5-video video { background:#04111f; }
