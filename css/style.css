@@ -972,3 +972,38 @@ main{padding-bottom:30px}.hero{border:1px solid #43617a;background:#102f4d;margi
 .story.fridaylights .story-tag{display:block;top:5px;left:12px;background:var(--yellow);color:#061728}
 .fnl-article-flyer{max-width:680px;margin-left:auto;margin-right:auto}
 .fnl-article-flyer img{width:100%;height:auto}
+
+/* Week 5: genuine SNL venue artwork until team footage is selected.
+   Keep the existing featured-card fade; no imitation play button or empty video. */
+.story.week5 .story-illustration img.story-poster{
+  width:100%;height:100%;object-fit:cover;object-position:center center;
+}
+.story.week5 .week5-card-placeholder{
+  position:absolute;z-index:3;top:46px;left:12px;right:12px;
+  width:max-content;max-width:calc(100% - 24px);
+  padding:5px 8px;border:1px solid #ffdc5799;border-radius:3px;
+  color:#fff0b9;background:#04182bcc;font-size:9px;font-weight:800;
+  letter-spacing:.09em;text-transform:uppercase;
+}
+.snl-article .article-content .week5-footage-placeholder{
+  margin:28px 0 32px;
+}
+.snl-article .article-content .week5-footage-visual{
+  width:100%;aspect-ratio:16/9;min-height:220px;
+  border-radius:11px;border:1px solid #537088;
+  background-image:linear-gradient(180deg,#07162880 2%,#04101dc9 100%),url("../assets/snl-dome-banner.webp");
+  background-size:cover;background-position:center;
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  gap:16px;text-align:center;padding:24px;
+}
+.snl-article .article-content .week5-footage-kicker{
+  color:#ffde4d;font-size:12px;font-weight:900;letter-spacing:.24em;
+}
+.snl-article .article-content .week5-footage-message{
+  color:#fff;font-size:clamp(23px,4vw,38px);font-weight:900;
+  letter-spacing:.06em;line-height:1.12;text-shadow:0 3px 8px #000;
+}
+.snl-article .article-content .week5-footage-placeholder figcaption{
+  margin-top:9px;text-align:center;color:#b9cadd;
+  font-size:12px;line-height:1.5;
+}
