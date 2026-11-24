@@ -374,7 +374,7 @@
 
   function leaders(){return `<div class="leader-cards">${[['Batting Average','AVG'],['Home Runs','HR'],['Runs Batted In','RBI'],['Hits','H']].map(([t,s])=>`<div class="leader-card"><b>${t.toUpperCase()}</b><small>${s}</small><strong>—</strong><span>Awaiting verified player statistics</span></div>`).join('')}</div>`;}
  function storyArt(s){if(s.id==='opener')return `${im('raccoons','one','')}${im('buffaloes','two','')}`;if(s.id==='expansion')return `${im('morsl','one','')}${im('iht','two','')}${im('maul','three','')}`;if(s.id==='trade')return `${im('maul','one','')}${im('iht','two','')}`;return ''}
- function stories(){return `<div class="stories-viewport"><button type="button" class="story-arrow story-arrow-prev" data-story-step="-1" aria-label="Previous featured stories"><span aria-hidden="true">‹</span></button><div class="stories" aria-label="Featured story carousel">${D.stories.map(s=>`<a class="story ${s.id}" href="article.html?id=${s.id}" aria-label="Read ${s.title}"><div class="story-illustration">${s.id==='week5'?`<video class="story-poster story-video" muted loop playsinline preload="metadata" poster="assets/SNL_Week5_Carousel_Approved.webp?v=20261123" aria-hidden="true" tabindex="-1"><source src="assets/SNL_Week5_Under_the_Dome_HQ.mp4?v=20261123-hq" type="video/mp4"></video>`:(s.id==='week3'||s.id==='week4')?`<video class="story-poster story-video" muted loop playsinline preload="metadata" poster="${s.id==='week4'?'assets/SNL_Week3_Approved_Video_Poster.webp':'assets/story-week3.webp'}" aria-hidden="true" tabindex="-1"><source src="${s.id==='week4'?'assets/SNL_Week_3_Highlights_FIXED_Web.mp4':'assets/week3-highlight.mp4'}" type="video/mp4"></video>`:s.id==='fridaylights'?`<img class="story-poster" src="assets/story-fridaylights.webp?v=snl-fnl-composition-20261119" alt="Baseline Sports Friday Night Lights poster: Friday nights, 9:00 PM–11:00 PM, November 20, 2026 through April 2027; holidays excluded" loading="lazy">`:`<img class="story-poster" src="${s.id==='week4'?'assets/snl-dome-banner.webp':`assets/story-${s.id}.webp${s.id==='week2'?'?v=snl-week2-rob-magzz-lowered-20261108':''}`}" alt="" loading="lazy">`}</div><span class="story-tag">${s.tag}</span><div class="story-bottom"><h3>${s.title}</h3><small>${s.id==='fridaylights'?'SNL NEWS · COMMUNITY':'SNL NEWS · FEATURE'}</small></div></a>`).join('')}</div><button type="button" class="story-arrow story-arrow-next" data-story-step="1" aria-label="Next featured stories"><span aria-hidden="true">›</span></button></div>`;}
+ function stories(){return `<div class="stories-viewport"><button type="button" class="story-arrow story-arrow-prev" data-story-step="-1" aria-label="Previous featured stories"><span aria-hidden="true">‹</span></button><div class="stories" aria-label="Featured story carousel">${D.stories.map(s=>`<a class="story ${s.id}" href="article.html?id=${s.id}" aria-label="Read ${s.title}"><div class="story-illustration">${s.id==='week5'?`<img class="story-poster week5-cover" src="assets/SNL_Week5_Carousel_Approved.webp?v=20261123" alt="" fetchpriority="high"><video class="story-video week5-preview" muted playsinline preload="metadata" aria-hidden="true" tabindex="-1"><source src="assets/SNL_Week5_Under_the_Dome_HQ.mp4?v=20261123-hq" type="video/mp4"></video>`:(s.id==='week3'||s.id==='week4')?`<video class="story-poster story-video" muted loop playsinline preload="metadata" poster="${s.id==='week4'?'assets/SNL_Week3_Approved_Video_Poster.webp':'assets/story-week3.webp'}" aria-hidden="true" tabindex="-1"><source src="${s.id==='week4'?'assets/SNL_Week_3_Highlights_FIXED_Web.mp4':'assets/week3-highlight.mp4'}" type="video/mp4"></video>`:s.id==='fridaylights'?`<img class="story-poster" src="assets/story-fridaylights.webp?v=snl-fnl-composition-20261119" alt="Baseline Sports Friday Night Lights poster: Friday nights, 9:00 PM–11:00 PM, November 20, 2026 through April 2027; holidays excluded" loading="lazy">`:`<img class="story-poster" src="${s.id==='week4'?'assets/snl-dome-banner.webp':`assets/story-${s.id}.webp${s.id==='week2'?'?v=snl-week2-rob-magzz-lowered-20261108':''}`}" alt="" loading="lazy">`}</div>${s.id==='week5'?'':`<span class="story-tag">${s.tag}</span>`}<div class="story-bottom">${s.id==='week5'?`<span class="story-tag">${s.tag}</span>`:''}<h3>${s.title}</h3><small>${s.id==='fridaylights'?'SNL NEWS · COMMUNITY':'SNL NEWS · FEATURE'}</small></div></a>`).join('')}</div><button type="button" class="story-arrow story-arrow-next" data-story-step="1" aria-label="Next featured stories"><span aria-hidden="true">›</span></button></div>`;}
  function initFeaturedVideoPlayback(){
    document.querySelectorAll('.stories-viewport').forEach(viewport=>{
      const track=viewport.querySelector('.stories');
@@ -387,6 +387,40 @@
      const reduced=typeof window.matchMedia==='function'&&
        window.matchMedia('(prefers-reduced-motion: reduce)').matches;
      videos.forEach(video=>{video.muted=true;video.pause();});
+     // Week 5 uses an independent cover, never a transient video poster.
+     const week5=track.querySelector('.story.week5');
+     const preview=week5?.querySelector('video.week5-preview');
+     let coverTimer=null;
+     let week5Active=false;
+     const rewind=()=>{
+       if(!preview)return;
+       preview.pause();
+       try{preview.currentTime=0;}catch(_){}
+       week5.classList.remove('week5-playing');
+     };
+     const stopWeek5=()=>{
+       if(coverTimer!==null){window.clearTimeout(coverTimer);coverTimer=null;}
+       week5Active=false;
+       rewind();
+     };
+     const showWeek5Cover=()=>{
+       rewind();
+       if(!week5Active||!preview)return;
+       if(coverTimer!==null)window.clearTimeout(coverTimer);
+       coverTimer=window.setTimeout(()=>{
+         coverTimer=null;
+         if(!week5Active||document.hidden)return;
+         preview.play().catch(()=>week5.classList.remove('week5-playing'));
+       },3000);
+     };
+     if(preview){
+       preview.addEventListener('playing',()=>{
+         if(week5Active&&!document.hidden)week5.classList.add('week5-playing');
+         else rewind();
+       });
+       preview.addEventListener('ended',showWeek5Cover);
+       preview.addEventListener('error',()=>week5.classList.remove('week5-playing'));
+     }
      let activeIndex=-1;
      let scheduled=false;
      const update=()=>{
@@ -403,7 +437,14 @@
        const switched=index!==activeIndex;
        activeIndex=index;
        const current=cards[index]?.querySelector('video.story-video')||null;
+       const eligible=!reduced&&!document.hidden&&visible&&!!current;
+       if(preview){
+         if(eligible&&current===preview){
+           if(!week5Active){week5Active=true;showWeek5Cover();}
+         }else if(week5Active)stopWeek5();
+       }
        videos.forEach(video=>{if(video!==current&&!video.paused)video.pause();});
+       if(current===preview)return;
        if(switched&&current){
          current.pause();
          try{current.currentTime=0;}catch(_){}
